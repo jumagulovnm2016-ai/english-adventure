@@ -9,7 +9,7 @@ import { loadContent } from '../src/content/load';
 const tiny: MapDef = {
   id: 'home',
   tiles: ['#######', '#.....#', '#.###.#', '#.....#', '#######'],
-  furniture: [], items: [], spawn: { tx: 1, ty: 1, dir: 'down' },
+  furniture: [], items: [], npcs: [], spots: {}, decor: {}, spawn: { tx: 1, ty: 1, dir: 'down' },
 };
 
 describe('Grid', () => {
@@ -104,6 +104,42 @@ describe('Карта дома', () => {
     for (const it of HOME.items) {
       const stands = g.standCellsAround(it.tx, it.ty, it.tw, it.th).filter((c) => reach.has(g.key(c)));
       expect(stands.length, `к ${it.itemId} не подойти`).toBeGreaterThan(0);
+    }
+  });
+  it('с персонажами, предметами квестов на полу и украшениями дом остаётся проходимым', () => {
+    const g2 = new Grid(HOME);
+    for (const n of HOME.npcs) g2.setDynamic(n.tx, n.ty, true);
+    for (const set of Object.values(HOME.spots)) for (const s of set) if (!s.onFurniture) g2.setDynamic(s.tx, s.ty, true);
+    for (const d of Object.values(HOME.decor)) g2.setDynamic(d.tx, d.ty, true);
+    const r = g2.reachableFrom(spawn);
+    // к каждому персонажу, месту и предмету можно подойти
+    const check = (name: string, tx: number, ty: number) => {
+      const stands = g2.standCellsAround(tx, ty, 1, 1).filter((c) => r.has(g2.key(c)));
+      expect(stands.length, `${name}: не подойти`).toBeGreaterThan(0);
+    };
+    for (const n of HOME.npcs) check(n.npcId, n.tx, n.ty);
+    for (const [k, set] of Object.entries(HOME.spots)) set.forEach((s, i) => check(`${k}[${i}]`, s.tx, s.ty));
+    for (const it of HOME.items) check(it.itemId, it.tx, it.ty);
+  });
+  it('квесты дома: их персонажи стоят на карте, зон и мест для предметов хватает', () => {
+    for (const q of content.quests().filter((q) => q.location === 'home')) {
+      expect(HOME.npcs.some((n) => n.npcId === q.giver), `${q.id}: нет ${q.giver} на карте`).toBe(true);
+      for (const s of q.steps) {
+        if (s.type === 'find_item') {
+          const set = HOME.spots[s.zone!];
+          expect(set, `${q.id}/${s.id}: нет зоны ${s.zone}`).toBeDefined();
+          expect(set.length).toBeGreaterThanOrEqual(1 + s.distractors!.length);
+        }
+        if (s.type === 'give_item') expect(HOME.npcs.some((n) => n.npcId === s.npc)).toBe(true);
+      }
+      for (const d of q.rewards.decor ?? []) expect(HOME.decor[d], `нет места для ${d}`).toBeDefined();
+    }
+  });
+  it('места для предметов на мебели действительно на мебели, на полу — на свободном полу', () => {
+    for (const set of Object.values(HOME.spots)) for (const s of set) {
+      const onF = HOME.furniture.some((f) => !f.walkable && s.tx >= f.tx && s.tx < f.tx + f.tw && s.ty >= f.ty && s.ty < f.ty + f.th);
+      expect(onF, `место ${s.tx},${s.ty}`).toBe(s.onFurniture);
+      if (!s.onFurniture) expect(g.isBlocked(s.tx, s.ty), `место ${s.tx},${s.ty} занято`).toBe(false);
     }
   });
   it('предметы на карте есть в контенте', () => {

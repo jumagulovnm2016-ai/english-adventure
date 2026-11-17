@@ -1,4 +1,4 @@
-// Точка входа: загрузка контента и прогресса, стартовый экран, запуск мира, интерфейс.
+// Точка входа: загрузка контента и прогресса, стартовый экран, запуск мира, интерфейс, квесты.
 import Phaser from 'phaser';
 import { systemClock } from './core/clock';
 import { EventBus, type GameEvents } from './core/events';
@@ -7,10 +7,17 @@ import { openStore, requestPersistentStorage } from './storage/db';
 import { AutoSaver } from './storage/autosave';
 import type { Profile, Settings, WorldState } from './storage/types';
 import { BrowserAudioPlayer } from './speech/audioPlayer';
+import { setSfxVolume } from './speech/sfx';
+import { LearningService } from './learning/learningService';
 import { WorldScene, type WorldSceneDeps } from './game/scenes/WorldScene';
 import { HOME } from './game/maps/home';
 import { ItemCard } from './ui/itemCard';
 import { SettingsPanel } from './ui/settingsPanel';
+import { DialogueBox } from './ui/dialogueBox';
+import { TaskPanel } from './ui/taskPanel';
+import { QuestHud, isAnyModalOpen } from './ui/questUi';
+import { TaskController } from './app/taskController';
+import { QuestController } from './app/questController';
 import { $, isTouch } from './ui/dom';
 
 async function boot() {
@@ -19,15 +26,18 @@ async function boot() {
   const store = await openStore(clock);
   let profile: Profile = await store.getProfile();
   const savedWorld = await store.getWorld();
+  const questStates = await store.getQuests();
+  const learning = await LearningService.create(store.learning, clock);
   const bus = new EventBus<GameEvents>();
   const audio = new BrowserAudioPlayer(import.meta.env.VITE_AUDIO_FILES === '1');
 
+  const card = new ItemCard(content, audio);
   const applySettings = (s: Settings) => {
     document.documentElement.style.setProperty('--ui-scale', String(s.uiScale));
     audio.setVoice({ accent: s.accent, narrator: s.narrator, volume: s.volume });
+    setSfxVolume(s.volume);
     card.setRuHints(s.ruHints);
   };
-  const card = new ItemCard(content, audio);
   const updateSettings = (patch: Partial<Settings>) => {
     profile = { ...profile, settings: { ...profile.settings, ...patch } };
     applySettings(profile.settings);
@@ -58,13 +68,58 @@ async function boot() {
     addEventListener('pagehide', flush);
     document.addEventListener('visibilitychange', () => { if (document.hidden) flush(); });
 
+    // ---------- интерфейс ----------
+    $('hud').hidden = false;
+    const help = $('help');
+    help.textContent = isTouch()
+      ? 'Нажми на персонажа с «!» — он попросит о помощи. Нажми на пол, чтобы идти.'
+      : 'Ходи стрелками или WASD (можно мышкой). Подойди к персонажу с «!» и нажми E или пробел.';
+    help.hidden = false;
+
+    const action = $('btn-action');
+    const actionLabel = action.querySelector('span')!;
+    let nearby: GameEvents['nearby-target'] = null;
+    let inputBlocked = false;
+    const refreshAction = () => { action.hidden = !nearby || inputBlocked || isAnyModalOpen(); };
+    const LABELS = { item: ['👀', 'Посмотреть'], npc: ['💬', 'Поговорить'], pick: ['✋', 'Взять'] } as const;
+    bus.on('nearby-target', (t) => {
+      nearby = t;
+      if (t) { action.firstChild!.textContent = `${LABELS[t.kind][0]} `; actionLabel.textContent = LABELS[t.kind][1]; }
+      refreshAction();
+    });
+    action.addEventListener('click', () => { if (nearby) bus.emit('interact', nearby); });
+
+    const block = (b: boolean) => { inputBlocked = b; bus.emit('input-blocked', { blocked: b }); refreshAction(); };
+    bus.on('interact', ({ kind, id }) => {
+      help.hidden = true;
+      if (kind !== 'item' || card.isOpen()) return;
+      block(true);
+      card.open(id, () => block(false));
+    });
+    $('btn-settings').addEventListener('click', () => { block(true); settings.open(() => block(false)); });
+
+    const tasks = new TaskController(content, learning, new TaskPanel(audio));
+    const quests = new QuestController({
+      content, learning, bus, clock, audio, tasks,
+      dialogue: new DialogueBox(audio),
+      hud: new QuestHud(audio),
+      states: questStates,
+      saveQuest: (id, s) => store.saveQuest(id, s),
+      inventory: () => world.inventory,
+      setInventory: (items) => { world = { ...world, inventory: items }; saver.update(world); void saver.flush(); },
+      ageMode: () => profile.ageMode,
+      ruHints: () => profile.settings.ruHints,
+      block,
+    });
+
     const deps: WorldSceneDeps = {
       map: HOME,
       content,
       bus,
       look: 'kid_1',
-      start: savedWorld && savedWorld.location === 'home' ? { x: savedWorld.x, y: savedWorld.y } : null,
+      start: savedWorld && savedWorld.location === 'home' && savedWorld.x >= 0 ? { x: savedWorld.x, y: savedWorld.y } : null,
       onMoved: (p) => { world = { ...world, x: Math.round(p.x * 10) / 10, y: Math.round(p.y * 10) / 10 }; saver.update(world); },
+      onReady: (scene) => quests.attach(scene),
     };
 
     const game = new Phaser.Game({
@@ -78,29 +133,8 @@ async function boot() {
       banner: false,
     });
     game.scene.add('world', WorldScene, true, deps);
-    (window as unknown as { __game: Phaser.Game }).__game = game; // для автотестов
-
-    // ---------- интерфейс поверх игры ----------
-    $('hud').hidden = false;
-    const help = $('help');
-    help.textContent = isTouch()
-      ? 'Нажми на пол — герой пойдёт туда. Нажми на предмет — узнаешь, как он называется.'
-      : 'Ходи стрелками или WASD (можно мышкой). Подойди к предмету и нажми E или пробел.';
-    help.hidden = false;
-
-    const action = $('btn-action');
-    let nearby: string | null = null;
-    bus.on('nearby-item', ({ itemId }) => { nearby = itemId; action.hidden = !itemId || card.isOpen() || settings.isOpen(); });
-    action.addEventListener('click', () => { if (nearby) bus.emit('inspect-item', { itemId: nearby }); });
-
-    const block = (b: boolean) => { bus.emit('input-blocked', { blocked: b }); action.hidden = b || !nearby; };
-    bus.on('inspect-item', ({ itemId }) => {
-      if (card.isOpen()) return;
-      help.hidden = true;
-      block(true);
-      card.open(itemId, () => block(false));
-    });
-    $('btn-settings').addEventListener('click', () => { block(true); settings.open(() => block(false)); });
+    // для автотестов
+    Object.assign(window as object, { __game: game, __quests: quests, __learning: learning, __tasks: tasks });
   }
 }
 

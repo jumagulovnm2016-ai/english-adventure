@@ -48,7 +48,8 @@
     {
       "id": "it.decor_blue_lamp",
       "words": [
-        "w.blue"
+        "w.blue",
+        "w.lamp"
       ],
       "sprite": "lamp_blue",
       "pickable": false
@@ -69,6 +70,24 @@
         "w.book"
       ],
       "sprite": "book_green",
+      "pickable": true
+    },
+    {
+      "id": "it.ball_blue",
+      "words": [
+        "w.blue",
+        "w.ball"
+      ],
+      "sprite": "ball_blue",
+      "pickable": true
+    },
+    {
+      "id": "it.book_red",
+      "words": [
+        "w.red",
+        "w.book"
+      ],
+      "sprite": "book_red",
       "pickable": true
     }
   ]

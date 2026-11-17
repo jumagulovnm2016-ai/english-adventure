@@ -7,7 +7,10 @@
       "role_ru": "Мама героя",
       "location": "home",
       "sprite": "mum",
-      "gender": "f"
+      "gender": "f",
+      "name_ru": "мама",
+      "ru_with": "с мамой",
+      "ru_to": "маме"
     },
     {
       "id": "npc.dad",
@@ -15,7 +18,21 @@
       "role_ru": "Папа героя",
       "location": "home",
       "sprite": "dad",
-      "gender": "m"
+      "gender": "m",
+      "name_ru": "папа",
+      "ru_with": "с папой",
+      "ru_to": "папе"
+    },
+    {
+      "id": "npc.amy",
+      "name_en": "Amy",
+      "role_ru": "Соседская девочка",
+      "location": "home",
+      "gender": "f",
+      "sprite": "amy",
+      "name_ru": "Эми",
+      "ru_with": "с Эми",
+      "ru_to": "Эми"
     }
   ]
 }

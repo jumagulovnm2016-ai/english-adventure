@@ -17,12 +17,22 @@ export interface ItemPlacement {
   px: number; py: number;
 }
 
+export interface NpcPlacement { npcId: string; tx: number; ty: number; dir: 'down' | 'up' | 'left' | 'right' }
+
+/** Место, куда квест «найди» раскладывает предметы. onFurniture — предмет лежит на мебели (клетки уже заняты). */
+export interface Spot { tx: number; ty: number; px: number; py: number; onFurniture: boolean }
+
 export interface MapDef {
   id: Location;
   /** Строки клеток. Обозначения — в TILE_LEGEND. */
   tiles: string[];
   furniture: Furniture[];
   items: ItemPlacement[];
+  npcs: NpcPlacement[];
+  /** Наборы мест для предметов квестов «найди» (по одному набору на часть комнаты). */
+  spots: Record<string, Spot[]>;
+  /** Куда ставится украшение-награда. */
+  decor: Record<string, { tx: number; ty: number; px: number; py: number }>;
   spawn: { tx: number; ty: number; dir: 'down' | 'up' | 'left' | 'right' };
 }
 

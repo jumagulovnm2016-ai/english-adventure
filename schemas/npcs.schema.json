@@ -30,6 +30,18 @@
           "gender": {
             "$ref": "common.schema.json#/$defs/gender",
             "description": "Пол голоса NPC; акцент берётся из настроек игрока"
+          },
+          "name_ru": {
+            "type": "string",
+            "description": "Как называть по-русски: «мама»"
+          },
+          "ru_with": {
+            "type": "string",
+            "description": "«Поговори …»: «с мамой»"
+          },
+          "ru_to": {
+            "type": "string",
+            "description": "«Отнеси …»: «маме»"
           }
         },
         "required": [
@@ -38,7 +50,10 @@
           "role_ru",
           "location",
           "gender",
-          "sprite"
+          "sprite",
+          "name_ru",
+          "ru_with",
+          "ru_to"
         ],
         "additionalProperties": false
       }

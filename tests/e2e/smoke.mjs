@@ -93,18 +93,17 @@ const T = 16;
     assert(s.y >= 2 * T + 5 - 0.01, `ноги заехали в стену: y=${s.y}`);
   });
 
-  await check('касание мяча: герой идёт к нему и открывается карточка «red ball»', async () => {
-    const p = await toScreen(page, 15 * T + 8, 7 * T - 6);
+  await check('касание книги: герой идёт к ней и открывается карточка «green book» / «зелёная книга»', async () => {
+    const p = await toScreen(page, 10 * T + 8, 5 * T - 6);
     await page.mouse.click(p.x, p.y);
-    await page.waitForFunction(() => !document.getElementById('card').hidden, { timeout: 8000 });
+    await page.waitForFunction(() => !document.getElementById('card').hidden, { timeout: 10000 });
     const en = await page.$eval('#card-en', (e) => e.textContent);
     const ru = await page.$eval('#card-ru', (e) => e.textContent);
-    assert(en === 'red ball', `в карточке «${en}»`);
-    assert(ru === 'красный мяч', `перевод «${ru}»`);
+    assert(en === 'green book' && ru === 'зелёная книга', `«${en}» / «${ru}»`);
     const chips = await page.$$eval('#card-words .chip .en', (els) => els.map((e) => e.textContent));
-    assert(chips.join(',') === 'red,ball', `слова: ${chips}`);
+    assert(chips.join(',') === 'green,book', `слова: ${chips}`);
     await sleep(350);
-    await page.screenshot({ path: join(SHOTS, 'desktop-3-card-ball.png') });
+    await page.screenshot({ path: join(SHOTS, 'desktop-3-card-book.png') });
   });
 
   await check('пока карточка открыта, герой не ходит', async () => {
@@ -114,21 +113,18 @@ const T = 16;
     assert(a.y === b.y, 'герой сдвинулся под открытой карточкой');
   });
 
-  await check('Esc закрывает карточку, и E не открывает её сразу снова', async () => {
+  await check('Esc закрывает карточку', async () => {
     await page.keyboard.press('Escape');
     await sleep(100);
     assert(!(await visible(page, '#card')), 'карточка не закрылась');
-    await page.keyboard.press('KeyE');  // закрытие клавишей E проверяем отдельно ниже
-    await sleep(150);
-    // E рядом с мячом через ≥250 мс после закрытия — это уже новое действие, карточка откроется
-    const open = await visible(page, '#card');
-    if (open) { await page.keyboard.press('Escape'); await sleep(100); }
   });
 
   await check('кнопка «Посмотреть» видна рядом с предметом', async () => {
     const s = await state(page);
-    assert(s.nearby === 'it.ball_red', `рядом: ${s.nearby}`);
+    assert(s.nearby === 'item:it.book_green', `рядом: ${s.nearby}`);
     assert(await visible(page, '#btn-action'), 'кнопки нет');
+    const label = await page.$eval('#btn-action span', (e) => e.textContent);
+    assert(label === 'Посмотреть', label);
   });
 
   await check('клавиша E открывает и закрывает карточку', async () => {
@@ -139,26 +135,6 @@ const T = 16;
     await page.keyboard.press('KeyE');
     await sleep(150);
     assert(!(await visible(page, '#card')), 'не закрылась');
-  });
-
-  await check('касание чашки на столе → «blue cup» / «синяя чашка»', async () => {
-    const p = await toScreen(page, 3 * T, 7 * T);
-    await page.mouse.click(p.x, p.y);
-    await page.waitForFunction(() => !document.getElementById('card').hidden, { timeout: 10000 });
-    const en = await page.$eval('#card-en', (e) => e.textContent);
-    const ru = await page.$eval('#card-ru', (e) => e.textContent);
-    assert(en === 'blue cup' && ru === 'синяя чашка', `«${en}» / «${ru}»`);
-    await page.keyboard.press('Escape'); await sleep(100);
-  });
-
-  await check('касание книги → «green book» / «зелёная книга»', async () => {
-    const p = await toScreen(page, 10 * T + 8, 5 * T - 6);
-    await page.mouse.click(p.x, p.y);
-    await page.waitForFunction(() => !document.getElementById('card').hidden, { timeout: 10000 });
-    const en = await page.$eval('#card-en', (e) => e.textContent);
-    const ru = await page.$eval('#card-ru', (e) => e.textContent);
-    assert(en === 'green book' && ru === 'зелёная книга', `«${en}» / «${ru}»`);
-    await page.keyboard.press('Escape'); await sleep(100);
   });
 
   await check('касание пола: герой идёт в точку', async () => {
@@ -235,8 +211,13 @@ const T = 16;
     assert(Math.hypot(b.x - a.x, b.y - a.y) > 20, `сдвиг ${a.x},${a.y} → ${b.x},${b.y}`);
   });
 
-  await check('телефон: касание чашки открывает карточку', async () => {
-    const p = await toScreen(page, 3 * T, 7 * T);
+  await check('телефон: касание книги открывает карточку', async () => {
+    // на вертикальном экране видно ~8 клеток — сначала подходим ближе
+    const near = await toScreen(page, 8 * T + 8, 7 * T + 6);
+    await page.touchscreen.tap(near.x, near.y);
+    await page.waitForFunction(() => !window.__game.scene.getScene('world').debugState().walking, { timeout: 10000 });
+    await sleep(400);
+    const p = await toScreen(page, 10 * T + 8, 5 * T - 6);
     await page.touchscreen.tap(p.x, p.y);
     await page.waitForFunction(() => !document.getElementById('card').hidden, { timeout: 10000 });
     await sleep(350);
@@ -247,7 +228,7 @@ const T = 16;
   });
 
   await check('телефон: кнопка «Посмотреть» крупная (≥ 48 px)', async () => {
-    const r = await page.$eval('#btn-action', (b) => { b.hidden = false; const r = b.getBoundingClientRect(); return { w: r.width, h: r.height }; });
+    const r = await page.$eval('#btn-action', (b) => { b.hidden = false; return { w: b.offsetWidth, h: b.offsetHeight }; }); // offset* — без учёта анимации появления
     assert(r.w >= 48 && r.h >= 48, `${r.w}×${r.h}`);
   });
 

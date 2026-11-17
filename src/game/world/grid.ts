@@ -10,6 +10,8 @@ export class Grid {
   readonly cols: number;
   readonly rows: number;
   private blocked: boolean[];
+  /** Временные препятствия: персонажи, предметы квестов на полу. */
+  private dynamic = new Set<number>();
 
   constructor(readonly map: MapDef) {
     this.rows = map.tiles.length;
@@ -31,7 +33,15 @@ export class Grid {
   }
 
   inside(tx: number, ty: number) { return tx >= 0 && ty >= 0 && tx < this.cols && ty < this.rows; }
-  isBlocked(tx: number, ty: number) { return !this.inside(tx, ty) || this.blocked[ty * this.cols + tx]; }
+  isBlocked(tx: number, ty: number) {
+    if (!this.inside(tx, ty)) return true;
+    const k = ty * this.cols + tx;
+    return this.blocked[k] || this.dynamic.has(k);
+  }
+  setDynamic(tx: number, ty: number, on: boolean) {
+    const k = ty * this.cols + tx;
+    if (on) this.dynamic.add(k); else this.dynamic.delete(k);
+  }
   isBlockedAt(x: number, y: number) { return this.isBlocked(Math.floor(x / TILE), Math.floor(y / TILE)); }
 
   cellOf(p: Point): Cell { return { tx: Math.floor(p.x / TILE), ty: Math.floor(p.y / TILE) }; }

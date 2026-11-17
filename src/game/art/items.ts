@@ -71,7 +71,9 @@ export const ITEM_ART = {
   cup_green: () => cup('g', 'G', 'a'),
   plate_blue: () => plate('b', 'B', 'l'),
   ball_red: () => ball('e', 'E'),
+  ball_blue: () => ball('b', 'B'),
   book_green: () => book('g', 'G'),
+  book_red: () => book('e', 'E'),
   cake,
   lamp_blue: () => lamp('b', 'B'),
 };

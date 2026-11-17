@@ -32,13 +32,33 @@ export const HOME: MapDef = {
     { key: 'rug', tx: 12, ty: 4, tw: 4, th: 3, walkable: true },
     { key: 'tv', tx: 13, ty: 10, tw: 2, th: 1 },
   ],
+  // предметы, которые всегда лежат в комнате и которые можно рассмотреть
   items: [
-    // синяя чашка на столе
-    { itemId: 'it.cup_blue', tx: 2, ty: 7, tw: 2, th: 1, px: 3 * T, py: 7 * T + 5 },
-    // красный мяч на ковре
-    { itemId: 'it.ball_red', tx: 15, ty: 6, tw: 1, th: 1, px: 15 * T + 8, py: 7 * T },
-    // зелёная книга на полу у полки
     { itemId: 'it.book_green', tx: 10, ty: 4, tw: 1, th: 1, px: 10 * T + 8, py: 5 * T },
   ],
+  npcs: [
+    { npcId: 'npc.mum', tx: 5, ty: 5, dir: 'down' },
+    { npcId: 'npc.dad', tx: 13, ty: 5, dir: 'down' },
+    { npcId: 'npc.amy', tx: 17, ty: 8, dir: 'left' },
+  ],
+  spots: {
+    // на кухне: на столешнице и на столе
+    kitchen: [
+      { tx: 1, ty: 2, px: 1 * T + 8, py: 2 * T - 1, onFurniture: true },
+      { tx: 3, ty: 2, px: 3 * T + 8, py: 2 * T - 1, onFurniture: true },
+      { tx: 2, ty: 7, px: 2 * T + 8, py: 7 * T + 5, onFurniture: true },
+      { tx: 3, ty: 7, px: 3 * T + 8, py: 7 * T + 5, onFurniture: true },
+    ],
+    // в комнате: на полу
+    living: [
+      { tx: 11, ty: 7, px: 11 * T + 8, py: 8 * T, onFurniture: false },
+      { tx: 17, ty: 4, px: 17 * T + 8, py: 5 * T, onFurniture: false },
+      { tx: 10, ty: 10, px: 10 * T + 8, py: 11 * T, onFurniture: false },
+      { tx: 16, ty: 11, px: 16 * T + 8, py: 12 * T, onFurniture: false },
+    ],
+  },
+  decor: {
+    'it.decor_blue_lamp': { tx: 18, ty: 11, px: 18 * T + 8, py: 12 * T },
+  },
   spawn: { tx: 9, ty: 11, dir: 'up' },
 };

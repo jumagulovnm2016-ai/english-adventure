@@ -16,14 +16,14 @@ export class EventBus<Events extends Record<string, unknown>> {
   }
 }
 
-/** События, которыми обмениваются сцены и интерфейс на этапе 1. */
+export type TargetKind = 'item' | 'npc' | 'pick';
+
+/** События между сценой, интерфейсом и квестовым контроллером. */
 export type GameEvents = {
-  /** Игрок подошёл к предмету (или отошёл: itemId = null). */
-  'nearby-item': { itemId: string | null };
-  /** Игрок хочет рассмотреть предмет. */
-  'inspect-item': { itemId: string };
-  /** Карточка предмета закрыта — можно снова управлять героем. */
-  'card-closed': Record<string, never>;
-  /** Интерфейс перекрывает игру (карточка, настройки) — герой не должен ходить. */
+  /** Рядом с героем цель взаимодействия (или null). item — рассмотреть, npc — поговорить, pick — взять. */
+  'nearby-target': { kind: TargetKind; id: string } | null;
+  /** Игрок хочет взаимодействовать с целью (клавиша, кнопка или касание). */
+  'interact': { kind: TargetKind; id: string };
+  /** Интерфейс перекрывает игру — герой не должен ходить. */
   'input-blocked': { blocked: boolean };
 };

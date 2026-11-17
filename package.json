@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest run && node --test tests/*.test.mjs",
-    "test:e2e": "node tests/e2e/smoke.mjs",
+    "test:e2e": "node tests/e2e/smoke.mjs && node tests/e2e/quests.mjs",
     "validate-content": "node tools/validate-content.mjs",
     "validate-content:assets": "node tools/validate-content.mjs --assets"
   },

@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "q.home.dad_ball",
+  "location": "home",
+  "order": 3,
+  "title": {
+    "junior": "Мяч для папы",
+    "senior": "Пропавший мяч"
+  },
+  "intro": {
+    "junior": "Папа хочет поиграть, но не может найти мяч. Помоги ему!",
+    "senior": "Папин мяч куда-то закатился, а вокруг — куча похожих вещей. Найди нужную."
+  },
+  "giver": "npc.dad",
+  "requires": [
+    "q.home.amy_hello"
+  ],
+  "introduces": [
+    "w.red",
+    "w.ball",
+    "p.here_you_are"
+  ],
+  "practices": [
+    "p.hello",
+    "w.find",
+    "p.goodbye"
+  ],
+  "steps": [
+    {
+      "id": "talk_start",
+      "type": "dialogue",
+      "dialogue": "d.home.dad_ball_start"
+    },
+    {
+      "id": "find_ball",
+      "type": "find_item",
+      "zone": "living",
+      "instruction": "p.find_the_red_ball",
+      "target": "it.ball_red",
+      "distractors": [
+        "it.ball_blue",
+        "it.book_red",
+        "it.cup_green"
+      ],
+      "hint": {
+        "ru": {
+          "junior": "Red — это красный. Ball — мяч. Нужен красный мяч!",
+          "senior": "Цвет red и предмет ball. Красная книга — не то, синий мяч — тоже."
+        },
+        "say": "p.find_the_red_ball"
+      }
+    },
+    {
+      "id": "give_ball",
+      "type": "give_item",
+      "npc": "npc.dad",
+      "item": "it.ball_red",
+      "hint": {
+        "ru": {
+          "junior": "Отнеси мяч папе!",
+          "senior": "Верни мяч папе."
+        }
+      }
+    },
+    {
+      "id": "talk_end",
+      "type": "dialogue",
+      "dialogue": "d.home.dad_ball_end"
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

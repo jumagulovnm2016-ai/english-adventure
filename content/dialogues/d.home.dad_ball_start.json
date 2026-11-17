@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "d.home.dad_ball_start",
+  "npc": "npc.dad",
+  "start": "greet",
+  "nodes": {
+    "greet": {
+      "speaker": "npc.dad",
+      "say": "p.hello_mum",
+      "ru_hint": { "junior": "Папа здоровается.", "senior": "Папа здоровается." },
+      "action": { "type": "emote", "emote": "wave" },
+      "next": "greet_back"
+    },
+    "greet_back": {
+      "speaker": "player",
+      "ru_hint": { "junior": "Поздоровайся с папой!", "senior": "Ответь." },
+      "task": { "type": "auto", "target": "p.hello" },
+      "on_correct": "ask",
+      "on_wrong": "ask"
+    },
+    "ask": {
+      "speaker": "npc.dad",
+      "say": "p.find_the_red_ball",
+      "ru_hint": { "junior": "Папа просит что-то найти в комнате. Послушай ещё раз, если нужно.", "senior": "Папа о чём-то просит. Можно переслушать." },
+      "next": "end"
+    }
+  }
+}

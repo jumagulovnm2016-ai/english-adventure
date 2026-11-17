@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "id": "d.home.dad_ball_end",
+  "npc": "npc.dad",
+  "start": "give",
+  "nodes": {
+    "give": {
+      "speaker": "player",
+      "ru_hint": { "junior": "Протяни мяч папе. Что говорят, когда что-то дают?", "senior": "Что говорят, протягивая вещь?" },
+      "task": { "type": "auto", "target": "p.here_you_are" },
+      "on_correct": "thanks",
+      "on_wrong": "thanks"
+    },
+    "thanks": {
+      "speaker": "npc.dad",
+      "say": "p.thank_you",
+      "action": { "type": "take_player_item", "item": "it.ball_red" },
+      "next": "ask_colour"
+    },
+    "ask_colour": {
+      "speaker": "npc.dad",
+      "say": "p.what_colour_is_it",
+      "ru_hint": { "junior": "Папа спрашивает, какого цвета мяч.", "senior": "Вопрос про цвет." },
+      "task": { "type": "auto", "target": "w.red", "options": ["w.red", "w.pink", "w.orange"], "allowed_types": ["listen_choose", "say_aloud", "type_word"] },
+      "on_correct": "praise",
+      "on_wrong": "model_answer"
+    },
+    "model_answer": {
+      "speaker": "npc.dad",
+      "say": "p.its_red",
+      "ru_hint": { "junior": "Он красный — red!", "senior": "Красный — red." },
+      "next": "praise"
+    },
+    "praise": {
+      "speaker": "npc.dad",
+      "say": "p.yes_well_done",
+      "action": { "type": "emote", "emote": "happy" },
+      "next": "bye"
+    },
+    "bye": {
+      "speaker": "npc.dad",
+      "say": "p.bye_sweetie",
+      "next": "bye_back"
+    },
+    "bye_back": {
+      "speaker": "player",
+      "ru_hint": { "junior": "Попрощайся!", "senior": "Попрощайся." },
+      "task": { "type": "auto", "target": "p.goodbye" },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

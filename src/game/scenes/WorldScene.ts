@@ -1,11 +1,13 @@
-// Сцена локации: пол, мебель, предметы, герой, камера, управление.
+// Сцена локации: пол, мебель, персонажи, предметы, герой, камера, управление.
+// Сцена ничего не знает об обучении: она сообщает «игрок хочет взаимодействовать с X» через шину,
+// а квестовый контроллер вызывает её методы (показать предметы, поставить «!» над персонажем и т. п.).
 import Phaser from 'phaser';
-import type { EventBus, GameEvents } from '../../core/events';
+import type { EventBus, GameEvents, TargetKind } from '../../core/events';
 import type { ContentRegistry } from '../../content/registry';
 import { registerTextures, kidFrameKey } from '../art/textures';
 import { CHAR_H } from '../art/character';
 import { hash } from '../art/pixels';
-import { TILE_LEGEND, type ItemPlacement, type MapDef, type TileChar } from '../maps/types';
+import { TILE_LEGEND, type MapDef, type TileChar } from '../maps/types';
 import { Grid, TILE, type Point } from '../world/grid';
 import { findPath, smoothPath } from '../world/pathfinding';
 import { distToRect, facingFor, moveWithCollision, type Facing } from '../world/movement';
@@ -17,11 +19,21 @@ export interface WorldSceneDeps {
   look: string;
   start: { x: number; y: number } | null;
   onMoved: (p: Point) => void;
+  onReady: (scene: WorldScene) => void;
 }
 
-const SPEED = 62;          // пикселей мира в секунду
-const REACH = 12;          // на каком расстоянии от предмета можно взаимодействовать
-// сколько клеток минимум видно: на горизонтальном экране 16×11, на вертикальном (телефон) 8×14
+interface Target {
+  kind: TargetKind;
+  id: string;
+  tx: number; ty: number; tw: number; th: number;
+  obj: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
+  /** клетка была занята этим объектом (снять при удалении) */
+  dynamicCell?: { tx: number; ty: number };
+}
+
+const SPEED = 62;
+const REACH = 12;
+const NPC_REACH = 14;
 const VISIBLE_LANDSCAPE = { w: 16, h: 11 };
 const VISIBLE_PORTRAIT = { w: 8, h: 14 };
 
@@ -32,16 +44,19 @@ export class WorldScene extends Phaser.Scene {
   private facing: Facing = 'down';
   private hero!: Phaser.GameObjects.Sprite;
   private heroShadow!: Phaser.GameObjects.Image;
+  private carried: Phaser.GameObjects.Image | null = null;
   private keys!: Record<'up' | 'down' | 'left' | 'right' | 'w' | 'a' | 's' | 'd' | 'act' | 'act2' | 'act3', Phaser.Input.Keyboard.Key>;
   private path: Point[] = [];
-  private pendingInspect: string | null = null;
-  private itemSprites = new Map<string, Phaser.GameObjects.Image>();
+  private pendingTarget: Target | null = null;
+  private targets: Target[] = [];
+  private npcMarkers = new Map<string, Phaser.GameObjects.Text>();
   private marker!: Phaser.GameObjects.Text;
-  private nearby: ItemPlacement | null = null;
+  private nearby: Target | null = null;
   private blocked = false;
   private unblockedAt = 0;
   private tapMark!: Phaser.GameObjects.Image;
   private lastFrameAt = 0;
+  private highlighted: string | null = null;
 
   constructor() { super('world'); }
 
@@ -54,44 +69,35 @@ export class WorldScene extends Phaser.Scene {
 
     this.drawFloor();
     this.drawFurniture();
-    this.drawItems();
+    for (const it of map.items) this.addItemTarget('item', it.itemId, it.px, it.py, { tx: it.tx, ty: it.ty, tw: it.tw, th: it.th }, false);
 
-    // герой
     const start = this.deps.start && !this.grid.isBlockedAt(this.deps.start.x, this.deps.start.y - 2)
       ? this.deps.start
       : this.grid.feetOf({ tx: map.spawn.tx, ty: map.spawn.ty });
     if (!this.deps.start) this.facing = map.spawn.dir;
     this.pos = { ...start };
-    this.heroShadow = this.add.image(0, 0, 'shadow').setAlpha(0.35).setOrigin(0.5, 0.5);
+    this.heroShadow = this.add.image(0, 0, 'shadow').setAlpha(0.35);
     this.hero = this.add.sprite(0, 0, kidFrameKey(this.deps.look, this.facing, 0)).setOrigin(0.5, 1);
     this.syncHero();
 
-    // отметка цели касания
     this.tapMark = this.add.image(0, 0, 'shadow').setTint(0xffe27a).setAlpha(0).setDepth(1);
+    this.marker = this.makeBubble('!', '#ffffff').setVisible(false);
 
-    // «!» над предметом рядом
-    this.marker = this.add.text(0, 0, '!', { fontFamily: 'system-ui, sans-serif', fontSize: '12px', color: '#fff', stroke: '#2b2232', strokeThickness: 3, fontStyle: 'bold' })
-      .setOrigin(0.5, 1).setResolution(4).setVisible(false).setDepth(10000);
-
-    // камера
     const cam = this.cameras.main;
     cam.setRoundPixels(true);
     cam.startFollow(this.hero, true, 0.15, 0.15, 0, CHAR_H / 2);
     this.fitCamera();
     this.scale.on('resize', () => this.fitCamera());
 
-    // клавиатура
     const K = Phaser.Input.Keyboard.KeyCodes;
     this.keys = this.input.keyboard!.addKeys({
       up: K.UP, down: K.DOWN, left: K.LEFT, right: K.RIGHT, w: K.W, a: K.A, s: K.S, d: K.D,
       act: K.E, act2: K.SPACE, act3: K.ENTER,
     }, false) as typeof this.keys;
-    for (const k of ['act', 'act2', 'act3'] as const) this.keys[k].on('down', () => this.tryInspectNearby());
+    for (const k of ['act', 'act2', 'act3'] as const) this.keys[k].on('down', () => this.interactNearby());
 
-    // касание / мышь
     this.input.on('pointerup', (p: Phaser.Input.Pointer) => {
-      if (this.blocked) return;
-      if (p.getDistance() > 12) return; // это было перетаскивание, а не касание
+      if (this.blocked || p.getDistance() > 12) return;
       this.onTap({ x: p.worldX, y: p.worldY });
     });
 
@@ -99,10 +105,154 @@ export class WorldScene extends Phaser.Scene {
       this.blocked = blocked;
       if (blocked) this.stopWalking(); else this.unblockedAt = this.time.now;
     });
-    bus.on('inspect-item', () => this.stopWalking());
+    this.deps.onReady(this);
   }
 
-  /** Масштаб — целое число (пиксели остаются чёткими). Если комната меньше экрана — она по центру, а не прижата к углу. */
+  // ---------- API для квестового контроллера ----------
+
+  /** Показать/спрятать персонажа. */
+  setNpcVisible(npcId: string, visible: boolean) {
+    const existing = this.targets.find((t) => t.kind === 'npc' && t.id === npcId);
+    if (visible && !existing) {
+      const pl = this.deps.map.npcs.find((n) => n.npcId === npcId);
+      if (!pl) throw new Error(`На карте нет ${npcId}`);
+      const look = this.deps.content.npc(npcId).sprite;
+      const feet = this.grid.feetOf({ tx: pl.tx, ty: pl.ty });
+      const spr = this.add.sprite(feet.x, feet.y + 1, kidFrameKey(look, pl.dir, 0)).setOrigin(0.5, 1).setDepth(feet.y);
+      spr.setData('look', look);
+      this.add.image(feet.x, feet.y, 'shadow').setAlpha(0.35).setDepth(feet.y - 0.5).setName(`shadow_${npcId}`);
+      spr.setInteractive({ useHandCursor: true });
+      this.grid.setDynamic(pl.tx, pl.ty, true);
+      this.targets.push({ kind: 'npc', id: npcId, tx: pl.tx, ty: pl.ty, tw: 1, th: 1, obj: spr, dynamicCell: { tx: pl.tx, ty: pl.ty } });
+      this.pushHeroOut();
+    } else if (!visible && existing) {
+      this.removeTarget(existing);
+      this.children.getByName(`shadow_${npcId}`)?.destroy();
+    }
+  }
+
+  /** «!» над персонажем: есть, что ему сказать. */
+  setNpcMarker(npcId: string, on: boolean) {
+    const t = this.targets.find((x) => x.kind === 'npc' && x.id === npcId);
+    let m = this.npcMarkers.get(npcId);
+    if (on && t && !m) {
+      m = this.makeBubble('!', '#ffe27a');
+      this.npcMarkers.set(npcId, m);
+    } else if ((!on || !t) && m) {
+      m.destroy();
+      this.npcMarkers.delete(npcId);
+    }
+  }
+
+  /** Повернуть персонажа к герою и «подпрыгнуть» от радости/помахать. */
+  npcReact(npcId: string, emote?: string) {
+    const t = this.targets.find((x) => x.kind === 'npc' && x.id === npcId);
+    if (!t) return;
+    const spr = t.obj as Phaser.GameObjects.Sprite;
+    const dir = facingFor(this.pos.x - spr.x, this.pos.y - spr.y, 'down');
+    spr.setTexture(kidFrameKey(spr.getData('look'), dir, 0));
+    if (emote === 'happy' || emote === 'wave') this.tweens.add({ targets: spr, y: spr.y - 3, yoyo: true, duration: 120, repeat: emote === 'happy' ? 1 : 0 });
+  }
+
+  /** Разложить предметы квеста «найди» по местам набора spotSet. */
+  spawnPickables(itemIds: string[], spotSet: string) {
+    this.clearPickables();
+    const spots = this.deps.map.spots[spotSet];
+    if (!spots || spots.length < itemIds.length) throw new Error(`Мест «${spotSet}» не хватает для ${itemIds.length} предметов`);
+    itemIds.forEach((id, i) => {
+      const s = spots[i];
+      this.addItemTarget('pick', id, s.px, s.py, { tx: s.tx, ty: s.ty, tw: 1, th: 1 }, !s.onFurniture);
+    });
+    this.pushHeroOut();
+  }
+
+  clearPickables() {
+    for (const t of this.targets.filter((x) => x.kind === 'pick')) this.removeTarget(t);
+    this.highlighted = null;
+  }
+
+  /** Подсветить предмет (подсказка «вот он»). */
+  highlightPickable(itemId: string) {
+    this.highlighted = itemId;
+    const t = this.targets.find((x) => x.kind === 'pick' && x.id === itemId);
+    if (t) this.tweens.add({ targets: t.obj, scale: 1.3, yoyo: true, repeat: 3, duration: 250 });
+  }
+
+  /** Убрать один предмет «найди» (его взяли). */
+  removePickable(itemId: string) {
+    const t = this.targets.find((x) => x.kind === 'pick' && x.id === itemId);
+    if (t) this.removeTarget(t);
+  }
+
+  /** Предмет в руках героя (рисуется над головой). */
+  setCarried(itemId: string | null) {
+    this.carried?.destroy();
+    this.carried = null;
+    if (itemId) {
+      const sprite = this.deps.content.item(itemId).sprite;
+      this.carried = this.add.image(0, 0, `item_${sprite}`).setOrigin(0.5, 1).setDepth(9000);
+      this.syncHero();
+    }
+  }
+
+  /** Поставить украшение-награду в комнату. */
+  addDecor(itemId: string) {
+    const d = this.deps.map.decor[itemId];
+    if (!d || this.children.getByName(`decor_${itemId}`)) return;
+    const sprite = this.deps.content.item(itemId).sprite;
+    this.add.image(d.px, d.py, `item_${sprite}`).setOrigin(0.5, 1).setDepth(d.py).setName(`decor_${itemId}`);
+    this.grid.setDynamic(d.tx, d.ty, true);
+    this.pushHeroOut();
+  }
+
+  /** Экранные координаты точки мира (для автотестов и всплывающих подсказок). */
+  worldToScreen(x: number, y: number) {
+    const cam = this.cameras.main;
+    return { x: (x - cam.worldView.x) * cam.zoom, y: (y - cam.worldView.y) * cam.zoom };
+  }
+
+  /** Где сейчас цель (для автотестов). */
+  targetPosition(kind: TargetKind, id: string): Point | null {
+    const t = this.targets.find((x) => x.kind === kind && x.id === id);
+    if (!t) return null;
+    const b = t.obj.getBounds();
+    return { x: b.centerX, y: b.centerY };
+  }
+
+  // ---------- построение сцены ----------
+
+  private makeBubble(text: string, color: string) {
+    return this.add.text(0, 0, text, { fontFamily: 'system-ui, sans-serif', fontSize: '12px', color, stroke: '#2b2232', strokeThickness: 3, fontStyle: 'bold' })
+      .setOrigin(0.5, 1).setResolution(4).setDepth(10000);
+  }
+
+  private addItemTarget(kind: TargetKind, itemId: string, px: number, py: number, cells: { tx: number; ty: number; tw: number; th: number }, blocksFloor: boolean) {
+    const item = this.deps.content.item(itemId);
+    const img = this.add.image(px, py, `item_${item.sprite}`).setOrigin(0.5, 1).setDepth((cells.ty + cells.th) * TILE + 1);
+    img.setInteractive({ useHandCursor: true });
+    this.tweens.add({ targets: img, scaleY: 1.06, yoyo: true, repeat: -1, duration: 900 + hash(cells.tx, cells.ty) * 400, ease: 'Sine.inOut' });
+    const t: Target = { kind, id: itemId, ...cells, obj: img };
+    if (blocksFloor) { this.grid.setDynamic(cells.tx, cells.ty, true); t.dynamicCell = { tx: cells.tx, ty: cells.ty }; }
+    this.targets.push(t);
+  }
+
+  private removeTarget(t: Target) {
+    this.tweens.killTweensOf(t.obj);
+    t.obj.destroy();
+    if (t.dynamicCell) this.grid.setDynamic(t.dynamicCell.tx, t.dynamicCell.ty, false);
+    this.targets = this.targets.filter((x) => x !== t);
+    if (this.nearby === t) this.nearby = null;
+    if (this.pendingTarget === t) this.pendingTarget = null;
+  }
+
+  /** Если на героя поставили препятствие — сдвинуть его на ближайшую свободную клетку. */
+  private pushHeroOut() {
+    const c = this.grid.cellOf({ x: this.pos.x, y: this.pos.y - 2 });
+    if (!this.grid.isBlocked(c.tx, c.ty)) return;
+    const free = this.grid.nearestWalkable(c, this.pos);
+    if (free) { this.pos = this.grid.feetOf(free); this.syncHero(); this.deps.onMoved(this.pos); }
+  }
+
   private fitCamera() {
     const w = this.scale.width, h = this.scale.height;
     const vis = w >= h ? VISIBLE_LANDSCAPE : VISIBLE_PORTRAIT;
@@ -111,17 +261,14 @@ export class WorldScene extends Phaser.Scene {
     cam.setZoom(z);
     const W = this.grid.cols * TILE, H = this.grid.rows * TILE;
     const viewW = w / z, viewH = h / z;
-    const bx = viewW > W ? -(viewW - W) / 2 : 0;
-    const by = viewH > H ? -(viewH - H) / 2 : 0;
-    cam.setBounds(bx, by, Math.max(W, viewW), Math.max(H, viewH));
+    cam.setBounds(viewW > W ? -(viewW - W) / 2 : 0, viewH > H ? -(viewH - H) / 2 : 0, Math.max(W, viewW), Math.max(H, viewH));
   }
 
   private drawFloor() {
     const { map } = this.deps;
     const rt = this.add.renderTexture(0, 0, this.grid.cols * TILE, this.grid.rows * TILE).setOrigin(0, 0).setDepth(-1000);
     for (let ty = 0; ty < this.grid.rows; ty++) for (let tx = 0; tx < this.grid.cols; tx++) {
-      const ch = map.tiles[ty][tx] as TileChar;
-      let art: string = TILE_LEGEND[ch].art;
+      let art: string = TILE_LEGEND[map.tiles[ty][tx] as TileChar].art;
       if (art === 'floor_wood') art = hash(tx, ty, 5) > 0.7 ? 'floor_wood_1' : 'floor_wood_0';
       rt.draw(`tile_${art}`, tx * TILE, ty * TILE);
     }
@@ -129,69 +276,48 @@ export class WorldScene extends Phaser.Scene {
 
   private drawFurniture() {
     for (const f of this.deps.map.furniture) {
-      const cx = (f.tx + f.tw / 2) * TILE;
-      const bottom = (f.ty + f.th) * TILE;
-      const img = this.add.image(cx, bottom, `furn_${f.key}`).setOrigin(0.5, 1);
-      if (f.walkable) {
-        img.setOrigin(0, 0).setPosition(f.tx * TILE, f.ty * TILE).setDepth(-500);
-      } else {
-        img.setDepth(bottom);
-      }
+      const img = this.add.image((f.tx + f.tw / 2) * TILE, (f.ty + f.th) * TILE, `furn_${f.key}`).setOrigin(0.5, 1);
+      if (f.walkable) img.setOrigin(0, 0).setPosition(f.tx * TILE, f.ty * TILE).setDepth(-500);
+      else img.setDepth((f.ty + f.th) * TILE);
     }
   }
 
-  private drawItems() {
-    for (const it of this.deps.map.items) {
-      const item = this.deps.content.item(it.itemId);
-      const img = this.add.image(it.px, it.py, `item_${item.sprite}`).setOrigin(0.5, 1).setDepth((it.ty + it.th) * TILE + 1);
-      img.setInteractive({ useHandCursor: true, pixelPerfect: false });
-      this.itemSprites.set(it.itemId, img);
-      // лёгкое «дыхание», чтобы предметы были заметны
-      this.tweens.add({ targets: img, scaleY: 1.06, yoyo: true, repeat: -1, duration: 900 + hash(it.tx, it.ty) * 400, ease: 'Sine.inOut' });
-    }
-  }
+  // ---------- управление ----------
 
   private onTap(world: Point) {
-    // нажали на предмет → идём к нему и смотрим
-    for (const it of this.deps.map.items) {
-      const img = this.itemSprites.get(it.itemId)!;
-      const b = img.getBounds();
+    // сначала — персонажи и предметы под пальцем (берём верхний)
+    const hit = [...this.targets].sort((a, b) => b.obj.depth - a.obj.depth).find((t) => {
+      const b = t.obj.getBounds();
       Phaser.Geom.Rectangle.Inflate(b, 4, 4);
-      if (b.contains(world.x, world.y)) { this.walkToItem(it); return; }
-    }
+      return b.contains(world.x, world.y);
+    });
+    if (hit) { this.walkToTarget(hit); return; }
     const cell = this.grid.nearestWalkable(this.grid.cellOf(world), world);
     if (!cell) return;
-    this.pendingInspect = null;
-    const goalExact = !this.grid.isBlockedAt(world.x, world.y) ? { x: world.x, y: world.y + 4 } : null;
-    this.walkTo(cell, goalExact);
-  }
-
-  private walkToItem(it: ItemPlacement) {
-    if (distToRect(this.pos, it.tx, it.ty, it.tw, it.th) <= REACH) {
-      this.faceTowards(it);
-      this.inspect(it.itemId);
-      return;
-    }
-    const stands = this.grid.standCellsAround(it.tx, it.ty, it.tw, it.th);
-    let best: Point[] | null = null;
-    let bestLen = Infinity;
-    for (const s of stands) {
-      const cells = findPath(this.grid, this.heroCell(), s);
-      if (cells && cells.length < bestLen) { bestLen = cells.length; best = smoothPath(this.grid, this.pos, cells); }
-    }
-    if (!best) return;
-    this.path = best;
-    this.pendingInspect = it.itemId;
-    this.showTapMark(best[best.length - 1]);
-  }
-
-  private walkTo(cell: { tx: number; ty: number }, exact: Point | null) {
+    this.pendingTarget = null;
+    const exact = !this.grid.isBlockedAt(world.x, world.y) ? { x: world.x, y: world.y + 4 } : null;
     const cells = findPath(this.grid, this.heroCell(), cell);
     if (!cells) return;
     const pts = smoothPath(this.grid, this.pos, cells);
     if (exact && pts.length) pts[pts.length - 1] = exact;
     this.path = pts;
     this.showTapMark(pts[pts.length - 1] ?? this.pos);
+  }
+
+  private reachOf(t: Target) { return t.kind === 'npc' ? NPC_REACH : REACH; }
+
+  private walkToTarget(t: Target) {
+    if (distToRect(this.pos, t.tx, t.ty, t.tw, t.th) <= this.reachOf(t)) { this.faceTowards(t); this.interact(t); return; }
+    let best: Point[] | null = null;
+    let bestLen = Infinity;
+    for (const s of this.grid.standCellsAround(t.tx, t.ty, t.tw, t.th)) {
+      const cells = findPath(this.grid, this.heroCell(), s);
+      if (cells && cells.length < bestLen) { bestLen = cells.length; best = smoothPath(this.grid, this.pos, cells); }
+    }
+    if (!best) return;
+    this.path = best;
+    this.pendingTarget = t;
+    this.showTapMark(best[best.length - 1]);
   }
 
   private heroCell() {
@@ -205,14 +331,10 @@ export class WorldScene extends Phaser.Scene {
     this.tweens.add({ targets: this.tapMark, alpha: 0, scale: 1.6, duration: 600 });
   }
 
-  private stopWalking() {
-    this.path = [];
-    this.pendingInspect = null;
-  }
+  private stopWalking() { this.path = []; this.pendingTarget = null; }
 
   update() {
-    // Время берём по реальным часам: Phaser сглаживает время кадра и при низком FPS занижает его —
-    // тогда на слабых устройствах герой ходил бы медленнее. Предел 100 мс: шаг ≤ 6 px, сквозь стену (16 px) не проскочить.
+    // время по реальным часам (D20); предел 100 мс: шаг ≤ 6 px, сквозь стену не проскочить
     const now = performance.now();
     const dt = this.lastFrameAt ? Math.min(now - this.lastFrameAt, 100) / 1000 : 0;
     this.lastFrameAt = now;
@@ -233,21 +355,20 @@ export class WorldScene extends Phaser.Scene {
       const vx = target.x - this.pos.x, vy = target.y - this.pos.y;
       const dist = Math.hypot(vx, vy);
       const stepLen = SPEED * dt;
+      const before = { ...this.pos };
       if (dist <= stepLen) {
-        const before = { ...this.pos };
         this.step(vx, vy);
         this.path.shift();
-        if (this.pos.x === before.x && this.pos.y === before.y && dist > 0.5) this.path = []; // упёрлись
+        if (this.pos.x === before.x && this.pos.y === before.y && dist > 0.5) this.path = [];
       } else {
-        const before = { ...this.pos };
         this.step((vx / dist) * stepLen, (vy / dist) * stepLen);
-        if (Math.hypot(this.pos.x - before.x, this.pos.y - before.y) < stepLen * 0.2) this.path = []; // застряли
+        if (stepLen > 0 && Math.hypot(this.pos.x - before.x, this.pos.y - before.y) < stepLen * 0.2) this.path = [];
       }
       moving = true;
-      if (!this.path.length && this.pendingInspect) {
-        const it = this.deps.map.items.find((i) => i.itemId === this.pendingInspect)!;
-        this.pendingInspect = null;
-        if (distToRect(this.pos, it.tx, it.ty, it.tw, it.th) <= REACH + 4) { this.faceTowards(it); this.inspect(it.itemId); }
+      if (!this.path.length && this.pendingTarget) {
+        const t = this.pendingTarget;
+        this.pendingTarget = null;
+        if (this.targets.includes(t) && distToRect(this.pos, t.tx, t.ty, t.tw, t.th) <= this.reachOf(t) + 4) { this.faceTowards(t); this.interact(t); }
       }
     }
 
@@ -260,62 +381,76 @@ export class WorldScene extends Phaser.Scene {
     }
     this.syncHero();
     this.updateNearby();
+    this.updateMarkers();
   }
 
   private step(dx: number, dy: number) {
     this.facing = facingFor(dx, dy, this.facing);
     const next = moveWithCollision(this.grid, this.pos, dx, dy);
-    if (next.x !== this.pos.x || next.y !== this.pos.y) {
-      this.pos = next;
-      this.deps.onMoved(this.pos);
-    }
+    if (next.x !== this.pos.x || next.y !== this.pos.y) { this.pos = next; this.deps.onMoved(this.pos); }
   }
 
   private syncHero() {
-    this.hero.setPosition(Math.round(this.pos.x), Math.round(this.pos.y) + 1).setDepth(this.pos.y);
-    this.heroShadow.setPosition(Math.round(this.pos.x), Math.round(this.pos.y)).setDepth(this.pos.y - 0.5);
+    const x = Math.round(this.pos.x), y = Math.round(this.pos.y);
+    this.hero.setPosition(x, y + 1).setDepth(this.pos.y);
+    this.heroShadow.setPosition(x, y).setDepth(this.pos.y - 0.5);
+    this.carried?.setPosition(x, y - CHAR_H - 1);
   }
 
-  private faceTowards(it: ItemPlacement) {
-    const cx = (it.tx + it.tw / 2) * TILE, cy = (it.ty + it.th / 2) * TILE;
+  private faceTowards(t: Target) {
+    const cx = (t.tx + t.tw / 2) * TILE, cy = (t.ty + t.th / 2) * TILE;
     this.facing = facingFor(cx - this.pos.x, cy - (this.pos.y - 4), this.facing);
   }
 
   private updateNearby() {
-    let best: ItemPlacement | null = null;
-    let bestD = REACH;
-    for (const it of this.deps.map.items) {
-      const d = distToRect(this.pos, it.tx, it.ty, it.tw, it.th);
-      if (d <= bestD) { bestD = d; best = it; }
+    let best: Target | null = null;
+    let bestScore = Infinity;
+    for (const t of this.targets) {
+      const d = distToRect(this.pos, t.tx, t.ty, t.tw, t.th);
+      if (d > this.reachOf(t)) continue;
+      const score = d - (t.kind === 'pick' ? 4 : 0); // предметы квеста — в приоритете
+      if (score < bestScore) { bestScore = score; best = t; }
     }
     if (best !== this.nearby) {
-      if (this.nearby) this.itemSprites.get(this.nearby.itemId)?.clearTint();
+      if (this.nearby && this.nearby.kind !== 'npc') (this.nearby.obj as Phaser.GameObjects.Image).clearTint();
       this.nearby = best;
-      if (best) this.itemSprites.get(best.itemId)?.setTint(0xfff3b0);
-      this.deps.bus.emit('nearby-item', { itemId: best?.itemId ?? null });
+      if (best && best.kind !== 'npc') (best.obj as Phaser.GameObjects.Image).setTint(0xfff3b0);
+      this.deps.bus.emit('nearby-target', best ? { kind: best.kind, id: best.id } : null);
     }
-    if (best) {
-      const img = this.itemSprites.get(best.itemId)!;
-      const bob = Math.round(Math.sin(this.time.now / 180) * 1.5);
-      this.marker.setVisible(true).setPosition(img.x, img.y - img.height - 2 + bob);
-    } else {
-      this.marker.setVisible(false);
+    const bob = Math.round(Math.sin(this.time.now / 180) * 1.5);
+    if (best && best.kind !== 'npc') {
+      this.marker.setVisible(true).setPosition(best.obj.x, best.obj.y - best.obj.height - 2 + bob);
+    } else this.marker.setVisible(false);
+  }
+
+  private updateMarkers() {
+    const bob = Math.round(Math.sin(this.time.now / 180) * 1.5);
+    for (const [npcId, m] of this.npcMarkers) {
+      const t = this.targets.find((x) => x.kind === 'npc' && x.id === npcId);
+      if (t) m.setPosition(t.obj.x, t.obj.y - t.obj.height - 1 + bob);
     }
   }
 
-  private tryInspectNearby() {
-    // клавиша, закрывшая карточку, не должна сразу открыть её снова
+  private interactNearby() {
     if (this.blocked || !this.nearby || this.time.now - this.unblockedAt < 250) return;
     this.faceTowards(this.nearby);
-    this.inspect(this.nearby.itemId);
+    this.interact(this.nearby);
   }
 
-  private inspect(itemId: string) {
-    this.deps.bus.emit('inspect-item', { itemId });
+  private interact(t: Target) {
+    this.deps.bus.emit('interact', { kind: t.kind, id: t.id });
   }
 
   /** Для отладки и автотестов. */
   debugState() {
-    return { x: this.pos.x, y: this.pos.y, facing: this.facing, nearby: this.nearby?.itemId ?? null, walking: this.path.length > 0 };
+    return {
+      x: this.pos.x, y: this.pos.y, facing: this.facing,
+      nearby: this.nearby ? `${this.nearby.kind}:${this.nearby.id}` : null,
+      walking: this.path.length > 0,
+      pickables: this.targets.filter((t) => t.kind === 'pick').map((t) => t.id),
+      npcs: this.targets.filter((t) => t.kind === 'npc').map((t) => t.id),
+      markers: [...this.npcMarkers.keys()],
+      highlighted: this.highlighted,
+    };
   }
 }

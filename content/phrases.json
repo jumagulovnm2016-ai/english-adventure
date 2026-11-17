@@ -173,6 +173,58 @@
         "i am"
       ],
       "why_ru": "Дословно «моё имя есть …». Имя ребёнок подставляет своё — распознаётся только начало фразы."
+    },
+    {
+      "id": "p.hello_im_amy",
+      "en": "Hello! I'm Amy.",
+      "ru": "Привет! Я Эми.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.hello"
+      ]
+    },
+    {
+      "id": "p.nice_to_meet_you",
+      "en": "Nice to meet you!",
+      "ru": "Приятно познакомиться!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": []
+    },
+    {
+      "id": "p.find_the_red_ball",
+      "en": "Find the red ball, please.",
+      "ru": "Найди красный мяч, пожалуйста.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.find",
+        "w.red",
+        "w.ball",
+        "w.please"
+      ],
+      "why_ru": "Цвет стоит перед предметом: red ball — «красный мяч»."
+    },
+    {
+      "id": "p.its_red",
+      "en": "It's red.",
+      "ru": "Он красный.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.red"
+      ],
+      "pieces": [
+        "It's",
+        "red"
+      ],
+      "accept": [
+        "it's red",
+        "it is red",
+        "red"
+      ],
+      "why_ru": "It's = It is. Без is по-английски не скажешь."
     }
   ]
 }

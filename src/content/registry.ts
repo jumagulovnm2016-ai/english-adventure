@@ -1,4 +1,5 @@
-import type { Item, Npc, Phrase, RawContent, Word } from './types';
+import type { CanDoSkill } from '../learning/canDo';
+import type { DialogueDef, Item, Npc, Phrase, QuestDef, RawContent, Word } from './types';
 
 /** Индексы контента. Только чтение. Не зависит от Phaser и DOM. */
 export class ContentRegistry {
@@ -6,13 +7,40 @@ export class ContentRegistry {
   private phrases = new Map<string, Phrase>();
   private items = new Map<string, Item>();
   private npcs = new Map<string, Npc>();
+  private questsById = new Map<string, QuestDef>();
+  private dialoguesById = new Map<string, DialogueDef>();
+  readonly skills: CanDoSkill[];
 
   constructor(raw: RawContent) {
     for (const w of raw.vocabulary.words) this.words.set(w.id, w);
     for (const p of raw.phrases.phrases) this.phrases.set(p.id, p);
     for (const i of raw.items.items) this.items.set(i.id, i);
     for (const n of raw.npcs.npcs) this.npcs.set(n.id, n);
+    for (const q of raw.quests ?? []) this.questsById.set(q.id, q);
+    for (const d of raw.dialogues ?? []) this.dialoguesById.set(d.id, d);
+    this.skills = [...(raw.canDo?.skills ?? [])].sort((a, b) => a.order - b.order);
   }
+
+  quest(id: string): QuestDef {
+    const q = this.questsById.get(id);
+    if (!q) throw new Error(`Нет квеста ${id}`);
+    return q;
+  }
+  quests(): QuestDef[] { return [...this.questsById.values()].sort((a, b) => a.location.localeCompare(b.location) || a.order - b.order); }
+  dialogue(id: string): DialogueDef {
+    const d = this.dialoguesById.get(id);
+    if (!d) throw new Error(`Нет диалога ${id}`);
+    return d;
+  }
+  isWord(id: string) { return id.startsWith('w.'); }
+  /** Слово или фраза: английский текст и перевод. */
+  learnable(id: string): { id: string; en: string; ru: string; accept?: string[]; pieces?: string[]; topic?: string } {
+    if (id.startsWith('w.')) { const w = this.word(id); return { id, en: w.en, ru: w.ru, accept: w.accept, topic: w.topic }; }
+    const p = this.phrase(id); return { id, en: p.en, ru: p.ru, accept: p.accept, pieces: p.pieces };
+  }
+  wordsByTopic(topic: string): Word[] { return [...this.words.values()].filter((w) => w.topic === topic); }
+  productivePhrases(): Phrase[] { return [...this.phrases.values()].filter((p) => p.role === 'productive'); }
+  topicOf(id: string): string | undefined { return id.startsWith('w.') ? this.words.get(id)?.topic : undefined; }
 
   word(id: string): Word {
     const w = this.words.get(id);

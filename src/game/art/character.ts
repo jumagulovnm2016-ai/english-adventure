@@ -14,7 +14,13 @@ export interface KidLook {
 
 export const LOOKS: Record<string, KidLook> = {
   kid_1: { skin: 's', skinShade: 'S', hair: 'h', hairDark: 'H', shirt: 'c', shirtDark: 'C', pants: 'j', pantsDark: 'J' },
+  // взрослые (рисуются выше — см. drawPerson)
+  mum: { skin: 's', skinShade: 'S', hair: 'O', hairDark: 'v', shirt: 'e', shirtDark: 'E', pants: 'x', pantsDark: 'X', longHair: true },
+  dad: { skin: 'S', skinShade: 'v', hair: 'H', hairDark: 'k', shirt: 'b', shirtDark: 'B', pants: 'M', pantsDark: 'k' },
+  // соседская девочка
+  amy: { skin: 's', skinShade: 'S', hair: 'y', hairDark: 'O', shirt: 'g', shirtDark: 'G', pants: 'b', pantsDark: 'B', longHair: true },
 };
+export const ADULTS = new Set(['mum', 'dad']);
 
 const O = 1; // отступ сверху под контур
 
@@ -91,6 +97,18 @@ export function drawKid(look: KidLook, dir: Dir, frame: 0 | 1 | 2): Px {
   body(p, look, frame, side);
   head(p, look, dir);
   return p.outline();
+}
+
+/** Взрослый выше ребёнка: удлиняем туловище и ноги (повторяем строки). */
+export function drawPerson(lookKey: string, dir: Dir, frame: 0 | 1 | 2): Px {
+  const kid = drawKid(LOOKS[lookKey], dir, frame);
+  if (!ADULTS.has(lookKey)) return kid;
+  const rows = kid.data().map((r) => r.split(''));
+  const torso = 12 + O, leg = 16 + O;
+  const out = [...rows.slice(0, torso), rows[torso], ...rows.slice(torso, leg), rows[leg], rows[leg], ...rows.slice(leg)];
+  const p = new Px(CHAR_W, out.length);
+  out.forEach((r, y) => r.forEach((c, x) => p.px(x, y, c)));
+  return p;
 }
 
 /** Тень под персонажем. */

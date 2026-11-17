@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "q.home.amy_hello",
+  "location": "home",
+  "order": 2,
+  "title": { "junior": "Новая соседка", "senior": "Кто такая Эми?" },
+  "intro": {
+    "junior": "К вам в гости зашла соседская девочка. Познакомься с ней!",
+    "senior": "В гостиной незнакомая девчонка. Говорит только по-английски. Знакомься."
+  },
+  "giver": "npc.amy",
+  "requires": ["q.home.blue_cup"],
+  "introduces": ["p.whats_your_name", "p.my_name_is"],
+  "practices": ["p.hello", "p.goodbye"],
+  "steps": [
+    { "id": "talk", "type": "dialogue", "dialogue": "d.home.amy_hello" },
+    { "id": "review", "type": "review_slot", "count": 2, "prefer_topics": ["colours", "home"] }
+  ],
+  "rewards": { "stars": 3 }
+}

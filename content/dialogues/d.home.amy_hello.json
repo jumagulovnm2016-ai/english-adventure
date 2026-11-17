@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "d.home.amy_hello",
+  "npc": "npc.amy",
+  "start": "hi",
+  "nodes": {
+    "hi": {
+      "speaker": "npc.amy",
+      "say": "p.hello_im_amy",
+      "ru_hint": { "junior": "Это соседка Эми. Она здоровается и говорит, как её зовут.", "senior": "Соседка представилась." },
+      "action": { "type": "emote", "emote": "wave" },
+      "next": "greet_back"
+    },
+    "greet_back": {
+      "speaker": "player",
+      "ru_hint": { "junior": "Поздоровайся с Эми!", "senior": "Поздоровайся." },
+      "task": { "type": "auto", "target": "p.hello" },
+      "on_correct": "ask_name",
+      "on_wrong": "ask_name"
+    },
+    "ask_name": {
+      "speaker": "npc.amy",
+      "say": "p.whats_your_name",
+      "ru_hint": { "junior": "Эми спрашивает, как тебя зовут.", "senior": "Тебя спросили об имени." },
+      "next": "name_answer"
+    },
+    "name_answer": {
+      "speaker": "player",
+      "ru_hint": { "junior": "Скажи: «Меня зовут …»", "senior": "Назови себя." },
+      "task": { "type": "auto", "target": "p.my_name_is", "allowed_types": ["listen_choose", "build_phrase"] },
+      "on_correct": "nice",
+      "on_wrong": "nice"
+    },
+    "nice": {
+      "speaker": "npc.amy",
+      "say": "p.nice_to_meet_you",
+      "ru_hint": { "junior": "Эми рада познакомиться!", "senior": "«Приятно познакомиться»." },
+      "action": { "type": "emote", "emote": "happy" },
+      "next": "bye"
+    },
+    "bye": {
+      "speaker": "npc.amy",
+      "say": "p.bye_sweetie",
+      "next": "bye_back"
+    },
+    "bye_back": {
+      "speaker": "player",
+      "ru_hint": { "junior": "Попрощайся с Эми!", "senior": "Попрощайся." },
+      "task": { "type": "auto", "target": "p.goodbye" },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

@@ -4,7 +4,7 @@ import { PALETTE, Px } from './pixels';
 import { TILE_ART } from './tiles';
 import { FURNITURE_ART } from './furniture';
 import { ITEM_ART } from './items';
-import { LOOKS, drawKid, shadow, type Dir } from './character';
+import { LOOKS, drawPerson, shadow, type Dir } from './character';
 
 const DIRS: Dir[] = ['down', 'up', 'left', 'right'];
 
@@ -21,7 +21,7 @@ export function registerTextures(scene: Phaser.Scene) {
   for (const [k, f] of Object.entries(ITEM_ART)) gen(scene, `item_${k}`, f());
   gen(scene, 'shadow', shadow());
   for (const look of Object.keys(LOOKS)) {
-    for (const dir of DIRS) for (const fr of [0, 1, 2] as const) gen(scene, kidFrameKey(look, dir, fr), drawKid(LOOKS[look], dir, fr));
+    for (const dir of DIRS) for (const fr of [0, 1, 2] as const) gen(scene, kidFrameKey(look, dir, fr), drawPerson(look, dir, fr));
     for (const dir of DIRS) {
       const key = `${look}_walk_${dir}`;
       if (scene.anims.exists(key)) continue;

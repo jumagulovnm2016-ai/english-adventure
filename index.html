@@ -21,8 +21,58 @@
   </section>
 
   <div id="hud" hidden>
-    <div class="hud-place"><span class="ru">Дом</span> · <span class="en">Home</span></div>
+    <div class="hud-left">
+      <div class="hud-place"><span class="ru">Дом</span> · <span class="en">Home</span></div>
+      <div id="hud-stars" class="hud-stars" aria-label="Звёзды">⭐ <span>0</span></div>
+    </div>
+    <div id="quest-goal" class="quest-goal" hidden>
+      <div id="quest-title" class="quest-title"></div>
+      <div class="quest-row"><span id="quest-text"></span><button id="quest-say" class="btn btn-mini" type="button" aria-label="Послушать ещё раз" hidden>🔊</button></div>
+    </div>
     <button id="btn-settings" class="btn btn-round" type="button" aria-label="Настройки">⚙</button>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <section id="dialogue" class="dialogue" aria-live="polite" hidden>
+    <div class="dlg-box">
+      <div id="dlg-speaker" class="dlg-speaker"></div>
+      <div class="dlg-line"><span id="dlg-en" class="dlg-en"></span><button id="dlg-say" class="btn btn-mini" type="button" aria-label="Послушать ещё раз">🔊</button></div>
+      <div id="dlg-ru" class="dlg-ru"></div>
+      <div class="dlg-actions"><button id="dlg-next" class="btn btn-primary" type="button">Дальше ▶</button></div>
+    </div>
+  </section>
+
+  <section id="task" class="task" role="dialog" aria-modal="true" aria-labelledby="task-title" hidden>
+    <div class="task-box">
+      <div class="task-head">
+        <div id="task-title" class="task-title"></div>
+        <button id="task-say" class="btn btn-round" type="button" aria-label="Послушать">🔊</button>
+      </div>
+      <div id="task-hint" class="task-hint" hidden></div>
+      <div id="task-body" class="task-body"></div>
+      <div id="task-feedback" class="task-feedback" aria-live="assertive"></div>
+    </div>
+  </section>
+
+  <div id="quest-intro" class="modal" role="dialog" aria-modal="true" aria-labelledby="qi-title" hidden>
+    <div class="modal-box card-box">
+      <div class="qi-icon">📜</div>
+      <h2 id="qi-title"></h2>
+      <p id="qi-text" class="qi-text"></p>
+      <div class="row"><button id="qi-go" class="btn btn-primary btn-big" type="button" data-close>Поехали!</button></div>
+    </div>
+  </div>
+
+  <div id="reward" class="modal" role="dialog" aria-modal="true" aria-labelledby="rw-title" hidden>
+    <div class="modal-box card-box">
+      <div id="rw-stars" class="rw-stars"></div>
+      <h2 id="rw-title">Готово!</h2>
+      <p id="rw-quest" class="qi-text"></p>
+      <div id="rw-words" class="chips"></div>
+      <p id="rw-extra" class="notes"></p>
+      <div class="row"><button class="btn btn-primary btn-big" type="button" data-close>Ура!</button></div>
+    </div>
   </div>
 
   <div id="help" class="help" hidden></div>

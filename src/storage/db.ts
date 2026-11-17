@@ -2,15 +2,18 @@
 import { openDB, type DBSchema, type IDBPDatabase } from 'idb';
 import type { Clock } from '../core/clock';
 import { DEFAULT_PROFILE, sanitizeSettings, type Profile, type WorldState } from './types';
+import type { ItemState, LearnEvent } from '../learning/types';
+import { MAX_EVENTS, MemoryLearningRepo, type LearningRepo } from '../learning/learningService';
+import type { QuestState } from '../quests/questRunner';
 
 export const DB_NAME = 'english-adventure';
 export const SCHEMA_VERSION = 1;
 
 interface GameDB extends DBSchema {
   profile: { key: string; value: Profile };
-  items: { key: string; value: unknown };
-  events: { key: number; value: unknown };
-  quests: { key: string; value: unknown };
+  items: { key: string; value: ItemState };
+  events: { key: number; value: LearnEvent };
+  quests: { key: string; value: QuestState };
   world: { key: string; value: WorldState };
   canDo: { key: string; value: unknown };
   playtime: { key: string; value: number };
@@ -24,6 +27,10 @@ export interface Store {
   saveProfile(p: Profile): Promise<void>;
   getWorld(): Promise<WorldState | null>;
   saveWorld(w: WorldState): Promise<void>;
+  getQuests(): Promise<Map<string, QuestState>>;
+  saveQuest(id: string, q: QuestState): Promise<void>;
+  /** Хранилище учебного прогресса (состояния слов и журнал событий). */
+  learning: LearningRepo;
   clearAll(): Promise<void>;
 }
 
@@ -55,7 +62,35 @@ function normalizeProfile(p: Profile | undefined): Profile {
 
 class IdbStore implements Store {
   readonly persistent = true;
-  constructor(private db: IDBPDatabase<GameDB>) {}
+  readonly learning: LearningRepo;
+  constructor(private db: IDBPDatabase<GameDB>) {
+    this.learning = {
+      loadStates: async () => {
+        const tx = db.transaction('items');
+        const [keys, vals] = await Promise.all([tx.store.getAllKeys(), tx.store.getAll()]);
+        return new Map(keys.map((k, i) => [k, vals[i]]));
+      },
+      saveState: async (id, st) => { await db.put('items', st, id); },
+      loadEvents: async () => db.getAll('events'),
+      appendEvent: async (e) => {
+        const tx = db.transaction('events', 'readwrite');
+        await tx.store.add(e);
+        // кольцевой буфер: храним последние MAX_EVENTS событий
+        const count = await tx.store.count();
+        if (count > MAX_EVENTS) {
+          let cur = await tx.store.openCursor();
+          for (let i = 0; i < count - MAX_EVENTS && cur; i++) { await cur.delete(); cur = await cur.continue(); }
+        }
+        await tx.done;
+      },
+    };
+  }
+  async getQuests() {
+    const tx = this.db.transaction('quests');
+    const [keys, vals] = await Promise.all([tx.store.getAllKeys(), tx.store.getAll()]);
+    return new Map(keys.map((k, i) => [k, vals[i]]));
+  }
+  async saveQuest(id: string, q: QuestState) { await this.db.put('quests', q, id); }
   async getProfile() { return normalizeProfile(await this.db.get('profile', 'main')); }
   async saveProfile(p: Profile) { await this.db.put('profile', { ...p, settings: sanitizeSettings(p.settings) }, 'main'); }
   async getWorld() { return (await this.db.get('world', 'main')) ?? null; }
@@ -69,13 +104,17 @@ class IdbStore implements Store {
 
 class MemoryStore implements Store {
   readonly persistent = false;
+  learning = new MemoryLearningRepo();
+  private quests = new Map<string, QuestState>();
+  async getQuests() { return new Map(this.quests); }
+  async saveQuest(id: string, q: QuestState) { this.quests.set(id, q); }
   private profile: Profile | undefined;
   private world: WorldState | null = null;
   async getProfile() { return normalizeProfile(this.profile); }
   async saveProfile(p: Profile) { this.profile = { ...p, settings: sanitizeSettings(p.settings) }; }
   async getWorld() { return this.world; }
   async saveWorld(w: WorldState) { this.world = w; }
-  async clearAll() { this.profile = undefined; this.world = null; }
+  async clearAll() { this.profile = undefined; this.world = null; this.quests.clear(); this.learning = new MemoryLearningRepo(); }
 }
 
 /** Просим браузер не удалять данные (важно для Safari, см. RISKS R5). */

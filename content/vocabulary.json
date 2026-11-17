@@ -591,6 +591,19 @@
       "accept": [
         "listen"
       ]
+    },
+    {
+      "id": "w.lamp",
+      "en": "lamp",
+      "ru": "лампа",
+      "topic": "home",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "lamp.png",
+      "accept": [
+        "lamp",
+        "a lamp"
+      ]
     }
   ]
 }
