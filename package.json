@@ -5,12 +5,28 @@
   "description": "English Adventure: Little Town — браузерная обучающая игра, английский Pre-A1 для детей 6–15 лет",
   "type": "module",
   "scripts": {
+    "dev": "vite",
+    "build": "npm run validate-content && tsc --noEmit && vite build",
+    "build:single": "vite build --mode single",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run && node --test tests/*.test.mjs",
+    "test:e2e": "node tests/e2e/smoke.mjs",
     "validate-content": "node tools/validate-content.mjs",
-    "validate-content:assets": "node tools/validate-content.mjs --assets",
-    "test": "node --test tests/*.test.mjs"
+    "validate-content:assets": "node tools/validate-content.mjs --assets"
   },
   "devDependencies": {
     "ajv": "^8.17.1",
-    "ajv-formats": "^3.0.1"
+    "ajv-formats": "^3.0.1",
+    "fake-indexeddb": "^6.2.8",
+    "puppeteer-core": "^25.18.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.8",
+    "vite-plugin-singlefile": "^2.3.4",
+    "vitest": "^3.2.7"
+  },
+  "dependencies": {
+    "idb": "^8.0.4",
+    "phaser": "^3.90.0"
   }
 }

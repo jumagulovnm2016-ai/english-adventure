@@ -52,6 +52,24 @@
       ],
       "sprite": "lamp_blue",
       "pickable": false
+    },
+    {
+      "id": "it.ball_red",
+      "words": [
+        "w.red",
+        "w.ball"
+      ],
+      "sprite": "ball_red",
+      "pickable": true
+    },
+    {
+      "id": "it.book_green",
+      "words": [
+        "w.green",
+        "w.book"
+      ],
+      "sprite": "book_green",
+      "pickable": true
     }
   ]
 }

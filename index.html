@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#1b1626" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Crect width=%2716%27 height=%2716%27 rx=%273%27 fill=%27%23f2a93b%27/%3E%3Ctext x=%278%27 y=%2712%27 font-size=%2710%27 text-anchor=%27middle%27 font-family=%27sans-serif%27 font-weight=%27bold%27 fill=%27%232b2232%27%3EE%3C/text%3E%3C/svg%3E" />
+  <title>English Adventure — Little Town</title>
+  <link rel="stylesheet" href="/src/ui/style.css" />
+</head>
+<body>
+  <div id="game" aria-hidden="true"></div>
+
+  <section id="start" class="screen" aria-labelledby="start-title">
+    <div class="start-box">
+      <h1 id="start-title">English Adventure</h1>
+      <p class="sub">Little Town</p>
+      <button id="btn-play" class="btn btn-primary btn-big" type="button">▶ Играть</button>
+      <p id="start-notes" class="notes"></p>
+    </div>
+  </section>
+
+  <div id="hud" hidden>
+    <div class="hud-place"><span class="ru">Дом</span> · <span class="en">Home</span></div>
+    <button id="btn-settings" class="btn btn-round" type="button" aria-label="Настройки">⚙</button>
+  </div>
+
+  <div id="help" class="help" hidden></div>
+
+  <button id="btn-action" class="btn btn-primary btn-action" type="button" hidden>👀 <span>Посмотреть</span></button>
+
+  <div id="card" class="modal" role="dialog" aria-modal="true" aria-labelledby="card-en" hidden>
+    <div class="modal-box card-box">
+      <button class="btn btn-round btn-close" data-close type="button" aria-label="Закрыть">✕</button>
+      <img id="card-img" alt="" width="144" height="144" />
+      <div id="card-en" class="card-en"></div>
+      <div id="card-ru" class="card-ru"></div>
+      <div id="card-words" class="chips"></div>
+      <div class="row">
+        <button id="card-play" class="btn btn-primary" type="button">🔊 Ещё раз</button>
+        <button id="card-slow" class="btn" type="button">🐢 Медленно</button>
+      </div>
+      <p id="card-note" class="notes"></p>
+    </div>
+  </div>
+
+  <div id="settings" class="modal" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden>
+    <div class="modal-box settings-box">
+      <button class="btn btn-round btn-close" data-close type="button" aria-label="Закрыть">✕</button>
+      <h2 id="settings-title">Настройки</h2>
+      <label class="field">Громкость
+        <input id="set-volume" type="range" min="0" max="1" step="0.05" />
+      </label>
+      <fieldset class="field"><legend>Размер кнопок и текста</legend>
+        <div class="seg" data-setting="uiScale">
+          <button type="button" data-value="1">Обычный</button>
+          <button type="button" data-value="1.25">Крупный</button>
+          <button type="button" data-value="1.5">Очень крупный</button>
+        </div>
+      </fieldset>
+      <fieldset class="field"><legend>Английский</legend>
+        <div class="seg" data-setting="accent">
+          <button type="button" data-value="uk">🇬🇧 Британский</button>
+          <button type="button" data-value="us">🇺🇸 Американский</button>
+        </div>
+      </fieldset>
+      <fieldset class="field"><legend>Голос</legend>
+        <div class="seg" data-setting="narrator">
+          <button type="button" data-value="f">Женский</button>
+          <button type="button" data-value="m">Мужской</button>
+        </div>
+      </fieldset>
+      <div class="row">
+        <button id="set-test" class="btn" type="button">🔊 Проверить звук</button>
+      </div>
+      <p id="set-voice" class="notes"></p>
+      <p id="set-storage" class="notes"></p>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
