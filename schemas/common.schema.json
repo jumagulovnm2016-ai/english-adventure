@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://english-adventure.local/schemas/common.schema.json",
+  "title": "Общие определения",
+  "$defs": {
+    "wordId": {
+      "type": "string",
+      "pattern": "^w\\.[a-z0-9_]+$"
+    },
+    "phraseId": {
+      "type": "string",
+      "pattern": "^p\\.[a-z0-9_]+$"
+    },
+    "learnId": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/wordId"
+        },
+        {
+          "$ref": "#/$defs/phraseId"
+        }
+      ]
+    },
+    "itemId": {
+      "type": "string",
+      "pattern": "^it\\.[a-z0-9_]+$"
+    },
+    "npcId": {
+      "type": "string",
+      "pattern": "^npc\\.[a-z0-9_]+$"
+    },
+    "questId": {
+      "type": "string",
+      "pattern": "^q\\.[a-z]+\\.[a-z0-9_]+$"
+    },
+    "dialogueId": {
+      "type": "string",
+      "pattern": "^d\\.[a-z]+\\.[a-z0-9_]+$"
+    },
+    "canDoId": {
+      "type": "string",
+      "pattern": "^cd\\.[a-z0-9_]+$"
+    },
+    "localId": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "location": {
+      "enum": [
+        "home",
+        "street",
+        "shop",
+        "school"
+      ]
+    },
+    "level": {
+      "enum": [
+        "preA1"
+      ]
+    },
+    "voice": {
+      "enum": [
+        "us_f",
+        "us_m",
+        "uk_f",
+        "uk_m"
+      ],
+      "description": "Папка с озвучкой: акцент_пол"
+    },
+    "topic": {
+      "enum": [
+        "greetings",
+        "personal",
+        "colours",
+        "numbers",
+        "family",
+        "animals",
+        "home",
+        "school",
+        "food",
+        "toys",
+        "instructions",
+        "politeness"
+      ]
+    },
+    "ageText": {
+      "description": "Текст на русском для двух возрастных режимов. senior необязателен — тогда берётся junior.",
+      "type": "object",
+      "properties": {
+        "junior": {
+          "type": "string",
+          "minLength": 1
+        },
+        "senior": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "junior"
+      ],
+      "additionalProperties": false
+    },
+    "accept": {
+      "description": "Допустимые варианты ответа голосом/вводом (в нижнем регистре, без знаков препинания).",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "task": {
+      "description": "Учебное задание. type=auto — режим выбирает ModeSelector по состоянию слова и возрастному режиму.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "auto",
+            "listen_choose",
+            "build_phrase",
+            "say_aloud",
+            "type_word"
+          ]
+        },
+        "target": {
+          "$ref": "#/$defs/learnId"
+        },
+        "prompt": {
+          "type": "object",
+          "properties": {
+            "say": {
+              "$ref": "#/$defs/learnId",
+              "description": "Что звучит как вопрос (фраза/слово из контента)"
+            },
+            "ru_hint": {
+              "$ref": "#/$defs/ageText"
+            }
+          },
+          "additionalProperties": false
+        },
+        "options": {
+          "description": "Варианты для listen_choose. Если нет — берутся из confusable и той же темы.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/learnId"
+          },
+          "minItems": 2,
+          "maxItems": 4
+        },
+        "allowed_types": {
+          "description": "Ограничить режимы для type=auto",
+          "type": "array",
+          "items": {
+            "enum": [
+              "listen_choose",
+              "build_phrase",
+              "say_aloud",
+              "type_word"
+            ]
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "type",
+        "target"
+      ],
+      "additionalProperties": false
+    },
+    "accent": {
+      "enum": [
+        "us",
+        "uk"
+      ]
+    },
+    "gender": {
+      "enum": [
+        "f",
+        "m"
+      ]
+    }
+  }
+}

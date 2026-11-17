@@ -1,0 +1,596 @@
+{
+  "schemaVersion": 1,
+  "words": [
+    {
+      "id": "w.hello",
+      "en": "hello",
+      "ru": "привет",
+      "topic": "greetings",
+      "pos": "interjection",
+      "level": "preA1",
+      "image": "hello.png"
+    },
+    {
+      "id": "w.goodbye",
+      "en": "goodbye",
+      "ru": "до свидания",
+      "topic": "greetings",
+      "pos": "interjection",
+      "level": "preA1",
+      "image": "goodbye.png",
+      "accept": [
+        "bye",
+        "goodbye"
+      ]
+    },
+    {
+      "id": "w.mum",
+      "en": "mum",
+      "ru": "мама",
+      "topic": "family",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "mum.png",
+      "accept": [
+        "mum",
+        "mom",
+        "mummy",
+        "mommy"
+      ],
+      "confusable": [
+        "w.dad"
+      ]
+    },
+    {
+      "id": "w.dad",
+      "en": "dad",
+      "ru": "папа",
+      "topic": "family",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "dad.png",
+      "accept": [
+        "dad",
+        "daddy"
+      ],
+      "confusable": [
+        "w.mum"
+      ]
+    },
+    {
+      "id": "w.cup",
+      "en": "cup",
+      "ru": "чашка",
+      "topic": "home",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "cup.png",
+      "accept": [
+        "cup",
+        "a cup"
+      ],
+      "confusable": [
+        "w.plate"
+      ]
+    },
+    {
+      "id": "w.plate",
+      "en": "plate",
+      "ru": "тарелка",
+      "topic": "home",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "plate.png",
+      "accept": [
+        "plate",
+        "a plate"
+      ],
+      "confusable": [
+        "w.cup"
+      ]
+    },
+    {
+      "id": "w.ball",
+      "en": "ball",
+      "ru": "мяч",
+      "topic": "toys",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "ball.png",
+      "accept": [
+        "ball",
+        "a ball"
+      ]
+    },
+    {
+      "id": "w.book",
+      "en": "book",
+      "ru": "книга",
+      "topic": "school",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "book.png",
+      "accept": [
+        "book",
+        "a book"
+      ]
+    },
+    {
+      "id": "w.table",
+      "en": "table",
+      "ru": "стол",
+      "topic": "home",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "table.png",
+      "accept": [
+        "table",
+        "a table"
+      ],
+      "confusable": [
+        "w.chair"
+      ]
+    },
+    {
+      "id": "w.chair",
+      "en": "chair",
+      "ru": "стул",
+      "topic": "home",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "chair.png",
+      "accept": [
+        "chair",
+        "a chair"
+      ],
+      "confusable": [
+        "w.table"
+      ]
+    },
+    {
+      "id": "w.red",
+      "en": "red",
+      "ru": "красный",
+      "topic": "colours",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "red.png",
+      "accept": [
+        "red"
+      ],
+      "confusable": [
+        "w.pink",
+        "w.orange"
+      ]
+    },
+    {
+      "id": "w.blue",
+      "en": "blue",
+      "ru": "синий",
+      "topic": "colours",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "blue.png",
+      "accept": [
+        "blue"
+      ],
+      "confusable": [
+        "w.green"
+      ]
+    },
+    {
+      "id": "w.green",
+      "en": "green",
+      "ru": "зелёный",
+      "topic": "colours",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "green.png",
+      "accept": [
+        "green"
+      ],
+      "confusable": [
+        "w.blue",
+        "w.yellow"
+      ]
+    },
+    {
+      "id": "w.yellow",
+      "en": "yellow",
+      "ru": "жёлтый",
+      "topic": "colours",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "yellow.png",
+      "accept": [
+        "yellow"
+      ],
+      "confusable": [
+        "w.orange",
+        "w.green"
+      ]
+    },
+    {
+      "id": "w.pink",
+      "en": "pink",
+      "ru": "розовый",
+      "topic": "colours",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "pink.png",
+      "accept": [
+        "pink"
+      ],
+      "confusable": [
+        "w.red"
+      ]
+    },
+    {
+      "id": "w.orange",
+      "en": "orange",
+      "ru": "оранжевый",
+      "topic": "colours",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "orange.png",
+      "accept": [
+        "orange"
+      ],
+      "confusable": [
+        "w.yellow",
+        "w.red"
+      ]
+    },
+    {
+      "id": "w.one",
+      "en": "one",
+      "ru": "один",
+      "topic": "numbers",
+      "pos": "number",
+      "level": "preA1",
+      "image": "one.png",
+      "accept": [
+        "one",
+        "1"
+      ]
+    },
+    {
+      "id": "w.two",
+      "en": "two",
+      "ru": "два",
+      "topic": "numbers",
+      "pos": "number",
+      "level": "preA1",
+      "image": "two.png",
+      "accept": [
+        "two",
+        "2",
+        "to",
+        "too"
+      ],
+      "confusable": [
+        "w.three"
+      ]
+    },
+    {
+      "id": "w.three",
+      "en": "three",
+      "ru": "три",
+      "topic": "numbers",
+      "pos": "number",
+      "level": "preA1",
+      "image": "three.png",
+      "accept": [
+        "three",
+        "3",
+        "free",
+        "tree"
+      ],
+      "confusable": [
+        "w.two"
+      ]
+    },
+    {
+      "id": "w.find",
+      "en": "find",
+      "ru": "найди",
+      "topic": "instructions",
+      "pos": "verb",
+      "level": "preA1",
+      "image": "find.png",
+      "accept": [
+        "find"
+      ]
+    },
+    {
+      "id": "w.give",
+      "en": "give",
+      "ru": "дай",
+      "topic": "instructions",
+      "pos": "verb",
+      "level": "preA1",
+      "image": "give.png",
+      "accept": [
+        "give",
+        "give me"
+      ]
+    },
+    {
+      "id": "w.please",
+      "en": "please",
+      "ru": "пожалуйста",
+      "topic": "politeness",
+      "pos": "adverb",
+      "level": "preA1",
+      "image": "please.png",
+      "accept": [
+        "please"
+      ]
+    },
+    {
+      "id": "w.yes",
+      "en": "yes",
+      "ru": "да",
+      "topic": "politeness",
+      "pos": "interjection",
+      "level": "preA1",
+      "image": "yes.png",
+      "accept": [
+        "yes",
+        "yeah"
+      ],
+      "confusable": [
+        "w.no"
+      ]
+    },
+    {
+      "id": "w.no",
+      "en": "no",
+      "ru": "нет",
+      "topic": "politeness",
+      "pos": "interjection",
+      "level": "preA1",
+      "image": "no.png",
+      "accept": [
+        "no"
+      ],
+      "confusable": [
+        "w.yes"
+      ]
+    },
+    {
+      "id": "w.cake",
+      "en": "cake",
+      "ru": "торт, пирожное",
+      "topic": "food",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "cake.png",
+      "accept": [
+        "cake",
+        "a cake"
+      ]
+    },
+    {
+      "id": "w.brown",
+      "en": "brown",
+      "ru": "коричневый",
+      "topic": "colours",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "brown.png",
+      "accept": [
+        "brown"
+      ],
+      "confusable": [
+        "w.orange"
+      ]
+    },
+    {
+      "id": "w.black",
+      "en": "black",
+      "ru": "чёрный",
+      "topic": "colours",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "black.png",
+      "accept": [
+        "black"
+      ],
+      "confusable": [
+        "w.brown"
+      ]
+    },
+    {
+      "id": "w.white",
+      "en": "white",
+      "ru": "белый",
+      "topic": "colours",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "white.png",
+      "accept": [
+        "white"
+      ]
+    },
+    {
+      "id": "w.purple",
+      "en": "purple",
+      "ru": "фиолетовый",
+      "topic": "colours",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "purple.png",
+      "accept": [
+        "purple"
+      ],
+      "confusable": [
+        "w.pink",
+        "w.blue"
+      ]
+    },
+    {
+      "id": "w.four",
+      "en": "four",
+      "ru": "четыре",
+      "topic": "numbers",
+      "pos": "number",
+      "level": "preA1",
+      "image": "four.png",
+      "accept": [
+        "four",
+        "4",
+        "for"
+      ],
+      "confusable": [
+        "w.five"
+      ]
+    },
+    {
+      "id": "w.five",
+      "en": "five",
+      "ru": "пять",
+      "topic": "numbers",
+      "pos": "number",
+      "level": "preA1",
+      "image": "five.png",
+      "accept": [
+        "five",
+        "5"
+      ],
+      "confusable": [
+        "w.four"
+      ]
+    },
+    {
+      "id": "w.six",
+      "en": "six",
+      "ru": "шесть",
+      "topic": "numbers",
+      "pos": "number",
+      "level": "preA1",
+      "image": "six.png",
+      "accept": [
+        "six",
+        "6",
+        "sex"
+      ],
+      "confusable": [
+        "w.seven"
+      ]
+    },
+    {
+      "id": "w.seven",
+      "en": "seven",
+      "ru": "семь",
+      "topic": "numbers",
+      "pos": "number",
+      "level": "preA1",
+      "image": "seven.png",
+      "accept": [
+        "seven",
+        "7"
+      ],
+      "confusable": [
+        "w.six"
+      ]
+    },
+    {
+      "id": "w.eight",
+      "en": "eight",
+      "ru": "восемь",
+      "topic": "numbers",
+      "pos": "number",
+      "level": "preA1",
+      "image": "eight.png",
+      "accept": [
+        "eight",
+        "8",
+        "ate"
+      ],
+      "confusable": [
+        "w.nine"
+      ]
+    },
+    {
+      "id": "w.nine",
+      "en": "nine",
+      "ru": "девять",
+      "topic": "numbers",
+      "pos": "number",
+      "level": "preA1",
+      "image": "nine.png",
+      "accept": [
+        "nine",
+        "9"
+      ],
+      "confusable": [
+        "w.eight"
+      ]
+    },
+    {
+      "id": "w.ten",
+      "en": "ten",
+      "ru": "десять",
+      "topic": "numbers",
+      "pos": "number",
+      "level": "preA1",
+      "image": "ten.png",
+      "accept": [
+        "ten",
+        "10"
+      ],
+      "confusable": [
+        "w.nine"
+      ]
+    },
+    {
+      "id": "w.open",
+      "en": "open",
+      "ru": "открой",
+      "topic": "instructions",
+      "pos": "verb",
+      "level": "preA1",
+      "image": "open.png",
+      "accept": [
+        "open"
+      ]
+    },
+    {
+      "id": "w.close",
+      "en": "close",
+      "ru": "закрой",
+      "topic": "instructions",
+      "pos": "verb",
+      "level": "preA1",
+      "image": "close.png",
+      "accept": [
+        "close"
+      ]
+    },
+    {
+      "id": "w.look",
+      "en": "look",
+      "ru": "смотри",
+      "topic": "instructions",
+      "pos": "verb",
+      "level": "preA1",
+      "image": "look.png",
+      "accept": [
+        "look"
+      ]
+    },
+    {
+      "id": "w.listen",
+      "en": "listen",
+      "ru": "слушай",
+      "topic": "instructions",
+      "pos": "verb",
+      "level": "preA1",
+      "image": "listen.png",
+      "accept": [
+        "listen"
+      ]
+    }
+  ]
+}

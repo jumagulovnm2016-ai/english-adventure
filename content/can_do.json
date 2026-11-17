@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "id": "cd.greetings",
+      "order": 1,
+      "level": "preA1",
+      "title_ru": "Может поздороваться и попрощаться",
+      "explain_ru": "Правильно поздоровался или попрощался в 3 разных диалогах, минимум в 2 разных дня, хотя бы раз — голосом.",
+      "rule": {
+        "type": "uses_in_contexts",
+        "items": [
+          "p.hello",
+          "p.goodbye"
+        ],
+        "kinds": [
+          "production",
+          "spoken"
+        ],
+        "min_successes": 3,
+        "min_distinct_contexts": 3,
+        "min_distinct_days": 2,
+        "min_spoken": 1
+      }
+    },
+    {
+      "id": "cd.name",
+      "order": 2,
+      "level": "preA1",
+      "title_ru": "Может назвать своё имя",
+      "explain_ru": "Ответил на «What's your name?» 3 раза в разных ситуациях, хотя бы раз — голосом.",
+      "rule": {
+        "type": "uses_in_contexts",
+        "items": [
+          "p.my_name_is"
+        ],
+        "kinds": [
+          "production",
+          "spoken"
+        ],
+        "min_successes": 3,
+        "min_distinct_contexts": 2,
+        "min_distinct_days": 2,
+        "min_spoken": 1
+      }
+    },
+    {
+      "id": "cd.colours",
+      "order": 3,
+      "level": "preA1",
+      "title_ru": "Знает основные цвета",
+      "explain_ru": "Правильно определил 8 цветов из 10, когда они встретились снова — не раньше чем через 2 дня после первого знакомства.",
+      "rule": {
+        "type": "accuracy_after_delay",
+        "items": [
+          "w.red",
+          "w.blue",
+          "w.green",
+          "w.yellow",
+          "w.pink",
+          "w.orange",
+          "w.brown",
+          "w.black",
+          "w.white",
+          "w.purple"
+        ],
+        "kinds": [
+          "comprehension",
+          "production",
+          "spoken"
+        ],
+        "min_correct_items": 8,
+        "min_days_since_first_seen": 2
+      }
+    },
+    {
+      "id": "cd.numbers_10",
+      "order": 4,
+      "level": "preA1",
+      "title_ru": "Считает до 10",
+      "explain_ru": "5 верных ответов на счёт подряд, в заданиях из 2 разных мест.",
+      "rule": {
+        "type": "streak",
+        "items": [
+          "w.one",
+          "w.two",
+          "w.three",
+          "w.four",
+          "w.five",
+          "w.six",
+          "w.seven",
+          "w.eight",
+          "w.nine",
+          "w.ten"
+        ],
+        "kinds": [
+          "comprehension",
+          "production",
+          "spoken"
+        ],
+        "consecutive_correct": 5,
+        "min_distinct_contexts": 2
+      }
+    },
+    {
+      "id": "cd.instructions",
+      "order": 5,
+      "level": "preA1",
+      "title_ru": "Понимает простые инструкции",
+      "explain_ru": "Правильно выполнил 5 из 6 разных инструкций (найди, дай, открой, закрой, смотри, слушай) спустя 2 дня после знакомства.",
+      "rule": {
+        "type": "accuracy_after_delay",
+        "items": [
+          "w.find",
+          "w.give",
+          "w.open",
+          "w.close",
+          "w.look",
+          "w.listen"
+        ],
+        "kinds": [
+          "comprehension"
+        ],
+        "min_correct_items": 5,
+        "min_days_since_first_seen": 2
+      }
+    },
+    {
+      "id": "cd.polite",
+      "order": 6,
+      "level": "preA1",
+      "title_ru": "Говорит «спасибо» и «вот, держи»",
+      "explain_ru": "Использовал «Thank you» или «Here you are» в 3 разных ситуациях, в 2 разных дня.",
+      "rule": {
+        "type": "uses_in_contexts",
+        "items": [
+          "p.thank_you",
+          "p.here_you_are"
+        ],
+        "kinds": [
+          "production",
+          "spoken"
+        ],
+        "min_successes": 3,
+        "min_distinct_contexts": 3,
+        "min_distinct_days": 2
+      }
+    }
+  ]
+}

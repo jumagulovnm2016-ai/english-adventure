@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "phrases": [
+    {
+      "id": "p.hello",
+      "en": "Hello!",
+      "ru": "Привет!",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.hello"
+      ],
+      "accept": [
+        "hello",
+        "hi",
+        "hello mum",
+        "hi mum"
+      ]
+    },
+    {
+      "id": "p.goodbye",
+      "en": "Goodbye!",
+      "ru": "До свидания!",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.goodbye"
+      ],
+      "accept": [
+        "goodbye",
+        "bye",
+        "bye bye",
+        "goodbye mum"
+      ]
+    },
+    {
+      "id": "p.thank_you",
+      "en": "Thank you!",
+      "ru": "Спасибо!",
+      "level": "preA1",
+      "role": "productive",
+      "words": [],
+      "accept": [
+        "thank you",
+        "thanks",
+        "thank you mum"
+      ]
+    },
+    {
+      "id": "p.here_you_are",
+      "en": "Here you are.",
+      "ru": "Вот, держи.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [],
+      "pieces": [
+        "Here",
+        "you",
+        "are"
+      ],
+      "accept": [
+        "here you are",
+        "here you go",
+        "here"
+      ],
+      "why_ru": "Так говорят, когда что-то протягивают. Дословно «вот ты есть», но смысл — «держи»."
+    },
+    {
+      "id": "p.hello_mum",
+      "en": "Hello, sweetie!",
+      "ru": "Привет, солнышко!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.hello"
+      ]
+    },
+    {
+      "id": "p.find_the_blue_cup",
+      "en": "Find the blue cup, please.",
+      "ru": "Найди синюю чашку, пожалуйста.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.find",
+        "w.blue",
+        "w.cup",
+        "w.please"
+      ],
+      "why_ru": "В английском цвет стоит перед предметом: blue cup — «синяя чашка». Не cup blue."
+    },
+    {
+      "id": "p.what_colour_is_it",
+      "en": "What colour is it?",
+      "ru": "Какого она цвета?",
+      "level": "preA1",
+      "role": "receptive",
+      "words": []
+    },
+    {
+      "id": "p.its_blue",
+      "en": "It's blue.",
+      "ru": "Она синяя.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.blue"
+      ],
+      "pieces": [
+        "It's",
+        "blue"
+      ],
+      "accept": [
+        "it's blue",
+        "it is blue",
+        "blue"
+      ],
+      "why_ru": "It's = It is. В английском нельзя сказать просто «она синяя» без глагола is."
+    },
+    {
+      "id": "p.yes_well_done",
+      "en": "Yes! Well done!",
+      "ru": "Да! Молодец!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.yes"
+      ]
+    },
+    {
+      "id": "p.a_cake_for_you",
+      "en": "A cake for you. Here you are.",
+      "ru": "Пирожное для тебя. Держи.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.cake"
+      ]
+    },
+    {
+      "id": "p.bye_sweetie",
+      "en": "Bye-bye!",
+      "ru": "Пока-пока!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.goodbye"
+      ]
+    },
+    {
+      "id": "p.whats_your_name",
+      "en": "What's your name?",
+      "ru": "Как тебя зовут?",
+      "level": "preA1",
+      "role": "receptive",
+      "words": []
+    },
+    {
+      "id": "p.my_name_is",
+      "en": "My name is …",
+      "ru": "Меня зовут …",
+      "level": "preA1",
+      "role": "productive",
+      "words": [],
+      "pieces": [
+        "My",
+        "name",
+        "is"
+      ],
+      "accept": [
+        "my name is",
+        "i'm",
+        "i am"
+      ],
+      "why_ru": "Дословно «моё имя есть …». Имя ребёнок подставляет своё — распознаётся только начало фразы."
+    }
+  ]
+}

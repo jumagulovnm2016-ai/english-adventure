@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://english-adventure.local/schemas/vocabulary.schema.json",
+  "title": "Словарь",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "words": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/wordId"
+          },
+          "en": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ru": {
+            "type": "string",
+            "minLength": 1
+          },
+          "topic": {
+            "$ref": "common.schema.json#/$defs/topic"
+          },
+          "pos": {
+            "enum": [
+              "noun",
+              "verb",
+              "adjective",
+              "number",
+              "interjection",
+              "pronoun",
+              "adverb",
+              "other"
+            ]
+          },
+          "level": {
+            "$ref": "common.schema.json#/$defs/level"
+          },
+          "image": {
+            "type": "string",
+            "description": "Путь от assets/images/words/, напр. cup.png"
+          },
+          "accept": {
+            "$ref": "common.schema.json#/$defs/accept"
+          },
+          "confusable": {
+            "description": "С чем часто путают — источник отвлекающих вариантов",
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/wordId"
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "id",
+          "en",
+          "ru",
+          "topic",
+          "pos",
+          "level",
+          "image"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "words"
+  ],
+  "additionalProperties": false
+}

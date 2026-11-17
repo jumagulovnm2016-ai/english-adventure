@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://english-adventure.local/schemas/npcs.schema.json",
+  "title": "Персонажи",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "npcs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/npcId"
+          },
+          "name_en": {
+            "type": "string"
+          },
+          "role_ru": {
+            "type": "string"
+          },
+          "location": {
+            "$ref": "common.schema.json#/$defs/location"
+          },
+          "sprite": {
+            "type": "string"
+          },
+          "gender": {
+            "$ref": "common.schema.json#/$defs/gender",
+            "description": "Пол голоса NPC; акцент берётся из настроек игрока"
+          }
+        },
+        "required": [
+          "id",
+          "name_en",
+          "role_ru",
+          "location",
+          "gender",
+          "sprite"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "npcs"
+  ],
+  "additionalProperties": false
+}

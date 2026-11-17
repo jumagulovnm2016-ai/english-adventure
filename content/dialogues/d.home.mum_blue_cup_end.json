@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "id": "d.home.mum_blue_cup_end",
+  "npc": "npc.mum",
+  "start": "praise",
+  "nodes": {
+    "praise": {
+      "speaker": "npc.mum",
+      "say": "p.yes_well_done",
+      "action": { "type": "take_player_item", "item": "it.cup_blue" },
+      "next": "ask_colour"
+    },
+    "ask_colour": {
+      "speaker": "npc.mum",
+      "say": "p.what_colour_is_it",
+      "ru_hint": { "junior": "Мама спрашивает, какого цвета чашка.", "senior": "Вопрос про цвет." },
+      "task": {
+        "type": "auto",
+        "target": "w.blue",
+        "prompt": { "say": "p.what_colour_is_it" },
+        "options": ["w.blue", "w.green", "w.red"],
+        "allowed_types": ["listen_choose", "say_aloud", "type_word"]
+      },
+      "on_correct": "cake",
+      "on_wrong": "model_answer"
+    },
+    "model_answer": {
+      "speaker": "npc.mum",
+      "say": "p.its_blue",
+      "ru_hint": { "junior": "Она синяя — blue!", "senior": "Синий — blue." },
+      "next": "cake"
+    },
+    "cake": {
+      "speaker": "npc.mum",
+      "say": "p.a_cake_for_you",
+      "action": { "type": "give_player_item", "item": "it.cake" },
+      "next": "thanks"
+    },
+    "thanks": {
+      "speaker": "player",
+      "ru_hint": { "junior": "Скажи маме спасибо!", "senior": "Поблагодари." },
+      "task": { "type": "auto", "target": "p.thank_you" },
+      "on_correct": "bye",
+      "on_wrong": "bye"
+    },
+    "bye": {
+      "speaker": "npc.mum",
+      "say": "p.bye_sweetie",
+      "action": { "type": "emote", "emote": "happy" },
+      "next": "bye_back"
+    },
+    "bye_back": {
+      "speaker": "player",
+      "ru_hint": { "junior": "Попрощайся!", "senior": "Попрощайся." },
+      "task": { "type": "auto", "target": "p.goodbye" },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

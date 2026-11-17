@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "d.home.mum_blue_cup_start",
+  "npc": "npc.mum",
+  "start": "greet",
+  "nodes": {
+    "greet": {
+      "speaker": "npc.mum",
+      "say": "p.hello_mum",
+      "ru_hint": { "junior": "Мама здоровается с тобой.", "senior": "Мама здоровается." },
+      "action": { "type": "emote", "emote": "wave" },
+      "next": "greet_back"
+    },
+    "greet_back": {
+      "speaker": "player",
+      "ru_hint": { "junior": "Поздоровайся с мамой!", "senior": "Ответь на приветствие." },
+      "task": { "type": "auto", "target": "p.hello" },
+      "on_correct": "ask",
+      "on_wrong": "ask"
+    },
+    "ask": {
+      "speaker": "npc.mum",
+      "say": "p.find_the_blue_cup",
+      "ru_hint": { "junior": "Мама просит что-то найти. Послушай ещё раз, если нужно!", "senior": "Мама о чём-то просит. Можно переслушать." },
+      "next": "end"
+    }
+  }
+}

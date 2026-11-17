@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "npcs": [
+    {
+      "id": "npc.mum",
+      "name_en": "Mum",
+      "role_ru": "Мама героя",
+      "location": "home",
+      "sprite": "mum",
+      "gender": "f"
+    },
+    {
+      "id": "npc.dad",
+      "name_en": "Dad",
+      "role_ru": "Папа героя",
+      "location": "home",
+      "sprite": "dad",
+      "gender": "m"
+    }
+  ]
+}

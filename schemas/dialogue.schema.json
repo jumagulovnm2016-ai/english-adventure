@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://english-adventure.local/schemas/dialogue.schema.json",
+  "title": "Диалог",
+  "description": "Граф реплик. Реплика может содержать задание; ветка выбирается по результату.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id":    { "$ref": "common.schema.json#/$defs/dialogueId" },
+    "npc":   { "$ref": "common.schema.json#/$defs/npcId" },
+    "start": { "$ref": "common.schema.json#/$defs/localId" },
+    "nodes": {
+      "type": "object",
+      "propertyNames": { "$ref": "common.schema.json#/$defs/localId" },
+      "additionalProperties": { "$ref": "#/$defs/node" },
+      "minProperties": 1
+    }
+  },
+  "required": ["schemaVersion", "id", "npc", "start", "nodes"],
+  "additionalProperties": false,
+  "$defs": {
+    "next": {
+      "description": "id следующей реплики или end",
+      "anyOf": [ { "$ref": "common.schema.json#/$defs/localId" }, { "const": "end" } ]
+    },
+    "node": {
+      "type": "object",
+      "properties": {
+        "speaker": { "anyOf": [ { "$ref": "common.schema.json#/$defs/npcId" }, { "enum": ["player", "companion"] } ] },
+        "say":     { "$ref": "common.schema.json#/$defs/learnId", "description": "Английская реплика — id фразы/слова" },
+        "ru_hint": { "$ref": "common.schema.json#/$defs/ageText" },
+        "task":    { "$ref": "common.schema.json#/$defs/task" },
+        "action": {
+          "description": "Игровое действие при показе реплики",
+          "type": "object",
+          "properties": {
+            "type": { "enum": ["give_player_item", "take_player_item", "emote"] },
+            "item": { "$ref": "common.schema.json#/$defs/itemId" },
+            "emote": { "enum": ["happy", "surprised", "thinking", "wave"] }
+          },
+          "required": ["type"],
+          "additionalProperties": false
+        },
+        "next":       { "$ref": "#/$defs/next" },
+        "on_correct": { "$ref": "#/$defs/next" },
+        "on_wrong":   { "$ref": "#/$defs/next" }
+      },
+      "required": ["speaker"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if":   { "required": ["task"] },
+          "then": { "required": ["on_correct", "on_wrong"], "not": { "required": ["next"] } },
+          "else": { "required": ["next"] }
+        },
+        {
+          "description": "Реплики персонажей (не игрока с заданием) должны что-то говорить",
+          "if":   { "properties": { "speaker": { "not": { "const": "player" } } } },
+          "then": { "required": ["say"] }
+        }
+      ]
+    }
+  }
+}

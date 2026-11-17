@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://english-adventure.local/schemas/can_do.schema.json",
+  "title": "Навыки «Что ребёнок умеет» и правила их подтверждения",
+  "type": "object",
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id":        { "$ref": "common.schema.json#/$defs/canDoId" },
+          "order":     { "type": "integer", "minimum": 1 },
+          "level":     { "$ref": "common.schema.json#/$defs/level" },
+          "title_ru":  { "type": "string", "description": "Как увидит родитель: «Может поздороваться и попрощаться»" },
+          "explain_ru": { "type": "string", "description": "Как именно подтверждается — показывается родителю по нажатию" },
+          "rule":      { "$ref": "#/$defs/rule" }
+        },
+        "required": ["id", "order", "level", "title_ru", "explain_ru", "rule"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["schemaVersion", "skills"],
+  "additionalProperties": false,
+  "$defs": {
+    "kind": {
+      "description": "comprehension — понял (выбор, выполнение инструкции); production — составил/написал; spoken — сказал голосом",
+      "enum": ["comprehension", "production", "spoken"]
+    },
+    "items": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/learnId" }, "minItems": 1, "uniqueItems": true },
+    "rule": {
+      "description": "Засчитываются только успехи без подсказки.",
+      "oneOf": [
+        {
+          "title": "Использовал в разных ситуациях",
+          "type": "object",
+          "properties": {
+            "type":  { "const": "uses_in_contexts" },
+            "items": { "$ref": "#/$defs/items" },
+            "kinds": { "type": "array", "items": { "$ref": "#/$defs/kind" }, "minItems": 1 },
+            "min_successes":         { "type": "integer", "minimum": 1 },
+            "min_distinct_contexts": { "type": "integer", "minimum": 1, "description": "Разные квесты/диалоги" },
+            "min_distinct_days":     { "type": "integer", "minimum": 1 },
+            "min_spoken": { "type": "integer", "minimum": 0, "description": "Сколько из успехов голосом. Игнорируется, если микрофон выключен — тогда в отчёте пометка «подтверждено без голоса»." }
+          },
+          "required": ["type", "items", "kinds", "min_successes", "min_distinct_contexts", "min_distinct_days"],
+          "additionalProperties": false
+        },
+        {
+          "title": "Помнит спустя время",
+          "type": "object",
+          "properties": {
+            "type":  { "const": "accuracy_after_delay" },
+            "items": { "$ref": "#/$defs/items" },
+            "kinds": { "type": "array", "items": { "$ref": "#/$defs/kind" }, "minItems": 1 },
+            "min_correct_items": { "type": "integer", "minimum": 1, "description": "Сколько разных элементов из items должно быть верно в последней попытке" },
+            "min_days_since_first_seen": { "type": "integer", "minimum": 1 }
+          },
+          "required": ["type", "items", "kinds", "min_correct_items", "min_days_since_first_seen"],
+          "additionalProperties": false
+        },
+        {
+          "title": "Серия верных ответов",
+          "type": "object",
+          "properties": {
+            "type":  { "const": "streak" },
+            "items": { "$ref": "#/$defs/items" },
+            "kinds": { "type": "array", "items": { "$ref": "#/$defs/kind" }, "minItems": 1 },
+            "consecutive_correct":   { "type": "integer", "minimum": 2 },
+            "min_distinct_contexts": { "type": "integer", "minimum": 1 }
+          },
+          "required": ["type", "items", "kinds", "consecutive_correct", "min_distinct_contexts"],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

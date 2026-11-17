@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "it.cup_blue",
+      "words": [
+        "w.blue",
+        "w.cup"
+      ],
+      "sprite": "cup_blue",
+      "pickable": true
+    },
+    {
+      "id": "it.cup_red",
+      "words": [
+        "w.red",
+        "w.cup"
+      ],
+      "sprite": "cup_red",
+      "pickable": true
+    },
+    {
+      "id": "it.cup_green",
+      "words": [
+        "w.green",
+        "w.cup"
+      ],
+      "sprite": "cup_green",
+      "pickable": true
+    },
+    {
+      "id": "it.plate_blue",
+      "words": [
+        "w.blue",
+        "w.plate"
+      ],
+      "sprite": "plate_blue",
+      "pickable": true
+    },
+    {
+      "id": "it.cake",
+      "words": [
+        "w.cake"
+      ],
+      "sprite": "cake",
+      "pickable": true
+    },
+    {
+      "id": "it.decor_blue_lamp",
+      "words": [
+        "w.blue"
+      ],
+      "sprite": "lamp_blue",
+      "pickable": false
+    }
+  ]
+}

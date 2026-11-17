@@ -1,0 +1,29 @@
+{
+  "format": "english-adventure-save",
+  "schemaVersion": 1,
+  "exportedAt": "2026-11-20T15:00:00+06:00",
+  "profile": {
+    "name": "Айдана",
+    "avatar": "girl_2",
+    "ageMode": "junior",
+    "settings": { "accent": "uk", "narrator": "f", "volume": 0.8, "uiScale": 1.25, "microphone": false,
+                  "companionChatter": "normal", "ruHints": true, "dailyLimitMin": 30 }
+  },
+  "items": {
+    "w.blue": { "status": "learning", "box": 1, "due": "2026-11-21T00:00:00+06:00", "firstSeen": "2026-11-20T14:40:00+06:00",
+                "lastSeen": "2026-11-20T14:52:00+06:00", "correct": 2, "wrong": 1 },
+    "p.hello": { "status": "familiar_pending", "box": 2, "due": "2026-11-22T00:00:00+06:00", "firstSeen": "2026-11-20T14:31:00+06:00",
+                 "lastSeen": "2026-11-20T14:41:00+06:00", "correct": 2, "wrong": 0 }
+  },
+  "events": [
+    { "t": "2026-11-20T14:31:00+06:00", "item": "p.hello", "kind": "comprehension", "mode": "placement", "result": "correct", "hinted": false, "context": "placement" },
+    { "t": "2026-11-20T14:41:00+06:00", "item": "p.hello", "kind": "production", "mode": "build_phrase", "result": "correct", "hinted": false, "context": "d.home.mum_blue_cup_start" },
+    { "t": "2026-11-20T14:45:00+06:00", "item": "w.blue", "kind": "comprehension", "mode": "find_item", "result": "wrong", "hinted": false, "chosen": "w.green", "context": "q.home.blue_cup" },
+    { "t": "2026-11-20T14:46:00+06:00", "item": "w.blue", "kind": "comprehension", "mode": "find_item", "result": "correct", "hinted": true, "context": "q.home.blue_cup" }
+  ],
+  "quests": { "q.home.blue_cup": { "status": "done", "step": null, "stars": 3, "completedAt": "2026-11-20T14:55:00+06:00" } },
+  "world": { "location": "home", "x": 212, "y": 148, "inventory": ["it.cake"], "roomDecor": ["it.decor_blue_lamp"] },
+  "canDo": { "cd.greetings": { "status": "in_progress", "confirmedAt": null, "withoutVoice": false } },
+  "playtime": { "2026-11-20": 1680 },
+  "meta": { "installedAt": "2026-11-20T14:30:00+06:00", "placement": { "doneAt": "2026-11-20T14:34:00+06:00", "known": 4, "total": 30, "skipped": false } }
+}

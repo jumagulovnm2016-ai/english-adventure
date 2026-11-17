@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "id": "q.home.blue_cup",
+  "location": "home",
+  "order": 1,
+  "title": { "junior": "Синяя чашка для мамы", "senior": "Дело о синей чашке" },
+  "intro": {
+    "junior": "Мама на кухне. Кажется, ей нужна помощь!",
+    "senior": "На кухне четыре похожие посудины, и только одна — та, что нужна маме. Разберёшься?"
+  },
+  "giver": "npc.mum",
+  "requires": [],
+  "introduces": ["p.hello", "w.find", "w.blue", "w.cup", "p.thank_you", "p.goodbye"],
+  "practices": [],
+  "steps": [
+    {
+      "id": "talk_start",
+      "type": "dialogue",
+      "dialogue": "d.home.mum_blue_cup_start"
+    },
+    {
+      "id": "find_cup",
+      "type": "find_item",
+      "instruction": "p.find_the_blue_cup",
+      "target": "it.cup_blue",
+      "distractors": ["it.cup_red", "it.cup_green", "it.plate_blue"],
+      "hint": {
+        "ru": {
+          "junior": "Blue — это синий. А cup — чашка. Нужна синяя чашка!",
+          "senior": "Два признака: цвет blue и предмет cup. Синяя тарелка — не то."
+        },
+        "say": "p.find_the_blue_cup"
+      }
+    },
+    {
+      "id": "review_on_way",
+      "type": "review_slot",
+      "count": 1,
+      "prefer_topics": ["colours", "home"]
+    },
+    {
+      "id": "give_cup",
+      "type": "give_item",
+      "npc": "npc.mum",
+      "item": "it.cup_blue",
+      "hint": {
+        "ru": { "junior": "Отнеси чашку маме!", "senior": "Верни чашку маме." }
+      }
+    },
+    {
+      "id": "talk_end",
+      "type": "dialogue",
+      "dialogue": "d.home.mum_blue_cup_end"
+    }
+  ],
+  "rewards": { "stars": 3, "decor": ["it.decor_blue_lamp"] }
+}

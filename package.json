@@ -1,0 +1,16 @@
+{
+  "name": "english-adventure",
+  "version": "0.0.1",
+  "private": true,
+  "description": "English Adventure: Little Town — браузерная обучающая игра, английский Pre-A1 для детей 6–15 лет",
+  "type": "module",
+  "scripts": {
+    "validate-content": "node tools/validate-content.mjs",
+    "validate-content:assets": "node tools/validate-content.mjs --assets",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  }
+}

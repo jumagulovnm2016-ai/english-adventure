@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://english-adventure.local/schemas/items.schema.json",
+  "title": "Предметы мира",
+  "type": "object",
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id":       { "$ref": "common.schema.json#/$defs/itemId" },
+          "words":    { "description": "Какие слова описывают предмет (blue + cup)", "type": "array", "items": { "$ref": "common.schema.json#/$defs/wordId" }, "minItems": 1 },
+          "sprite":   { "type": "string" },
+          "pickable": { "type": "boolean" }
+        },
+        "required": ["id", "words", "sprite", "pickable"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["schemaVersion", "items"],
+  "additionalProperties": false
+}
