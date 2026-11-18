@@ -6,7 +6,7 @@
   --muted: #6c6276;
   --accent: #f2a93b;
   --accent-ink: #3a2405;
-  --blue: #3f80d4;
+  --blue: #2c66b5; /* контраст ≥ 4.5 на белом (WCAG AA) */
   --radius: calc(16px * var(--ui-scale));
   font-size: calc(16px * var(--ui-scale));
   font-family: "Nunito", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
@@ -111,7 +111,7 @@ body { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color
 }
 .quest-title { font-size: .8rem; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
 .quest-row { display: flex; align-items: center; gap: .5rem; justify-content: space-between; }
-.btn-mini { min-height: 2.4rem; min-width: 2.4rem; padding: .2rem .5rem; font-size: 1rem; box-shadow: 0 3px 0 var(--ink); }
+.btn-mini { min-height: 3rem; min-width: 3rem; padding: .2rem .5rem; font-size: 1rem; box-shadow: 0 3px 0 var(--ink); }
 @media (max-width: 640px) {
   #hud { flex-wrap: wrap; }
   .quest-goal { order: 3; flex: 1 1 100%; }
@@ -237,3 +237,5 @@ body { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color
 .day b { font-size: .75rem; }
 /* проверка взрослого — поверх всего: экрана лимита, родительского экрана, стартового */
 #gate { z-index: 100; }
+
+.update { position: fixed; left: 50%; bottom: max(1rem, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 60; background: #fff8ec; border: 3px solid var(--ink); border-radius: 999px; padding: .4rem .5rem .4rem 1rem; font-weight: 700; display: flex; gap: .6rem; align-items: center; }

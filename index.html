@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
   <meta name="theme-color" content="#1b1626" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Crect width=%2716%27 height=%2716%27 rx=%273%27 fill=%27%23f2a93b%27/%3E%3Ctext x=%278%27 y=%2712%27 font-size=%2710%27 text-anchor=%27middle%27 font-family=%27sans-serif%27 font-weight=%27bold%27 fill=%27%232b2232%27%3EE%3C/text%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="English Town" />
   <title>English Adventure — Little Town</title>
   <link rel="stylesheet" href="/src/ui/style.css" />
 </head>
@@ -17,6 +21,9 @@
       <p class="sub">Little Town</p>
       <button id="btn-play" class="btn btn-primary btn-big" type="button">▶ Играть</button>
       <p id="start-notes" class="notes"></p>
+      <p><button id="btn-install" class="btn" type="button" hidden>📲 Установить на экран</button></p>
+      <p id="install-ios" class="notes" hidden>На iPhone и iPad: «Поделиться» → «На экран „Домой“». Так игра работает без интернета, а прогресс надёжнее сохраняется.</p>
+      <p id="offline-note" class="notes" hidden>✓ Игра сохранена на устройстве — можно играть без интернета.</p>
       <p><button id="btn-parent-start" class="btn btn-link" type="button">👨‍👩‍👧 Для родителей</button></p>
     </div>
   </section>
@@ -79,6 +86,7 @@
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <div id="update" class="update" role="status" hidden>Доступна новая версия игры. <button id="update-go" class="btn btn-mini" type="button">Обновить</button></div>
 
   <section id="dialogue" class="dialogue" aria-live="polite" hidden>
     <div class="dlg-box">

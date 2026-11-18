@@ -28,6 +28,7 @@ import { ParentScreen } from './ui/parentScreen';
 import { buildReport } from './parent/report';
 import { buildSave, parseSave } from './parent/saveFile';
 import { PlaytimeTracker, dayKey } from './app/playtime';
+import { setupPwa, isIos, isStandalone } from './app/pwa';
 
 /** Имя файла — латиницей: не все браузеры и системы надёжно сохраняют файлы с кириллицей в имени. */
 function translit(s: string): string {
@@ -125,6 +126,22 @@ async function boot() {
     parent.open(onClose);
   };
   $('btn-parent-start').addEventListener('click', () => void openParent());
+
+  // ---------- установка и офлайн ----------
+  const pwa = setupPwa({
+    onInstallable: (install) => {
+      const b = $('btn-install');
+      b.hidden = false;
+      b.onclick = async () => { if (await install()) b.hidden = true; };
+    },
+    onUpdateReady: () => {
+      // не перезагружаем посреди игры — предлагаем
+      $('update').hidden = false;
+      $('update-go').onclick = () => location.reload();
+    },
+  });
+  if (isIos() && !isStandalone()) $('install-ios').hidden = false;
+  void pwa.offlineReady.then((ok) => { if (ok) $('offline-note').hidden = false; });
 
   // ---------- стартовый экран ----------
   const notes: string[] = [];
