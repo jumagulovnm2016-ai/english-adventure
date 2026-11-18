@@ -23,6 +23,17 @@ import { TaskController } from './app/taskController';
 import { QuestController } from './app/questController';
 import { CompanionController } from './app/companionController';
 import { $, isTouch } from './ui/dom';
+import { askAdult, hashPin } from './ui/parentGate';
+import { ParentScreen } from './ui/parentScreen';
+import { buildReport } from './parent/report';
+import { buildSave, parseSave } from './parent/saveFile';
+import { PlaytimeTracker, dayKey } from './app/playtime';
+
+/** Имя файла — латиницей: не все браузеры и системы надёжно сохраняют файлы с кириллицей в имени. */
+function translit(s: string): string {
+  const m: Record<string, string> = { а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z', и: 'i', й: 'y', к: 'k', л: 'l', м: 'm', н: 'n', ң: 'n', о: 'o', ө: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u', ү: 'u', ф: 'f', х: 'h', ц: 'ts', ч: 'ch', ш: 'sh', щ: 'sch', ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya' };
+  return [...s].map((ch) => { const low = ch.toLowerCase(); const t = m[low]; if (t === undefined) return ch; return ch === low ? t : t.charAt(0).toUpperCase() + t.slice(1); }).join('');
+}
 
 /** Распознавание речи пока не включается (D7). */
 const canListen = () => false;
@@ -55,6 +66,65 @@ async function boot() {
   applySettings(profile.settings);
   const settings = new SettingsPanel(() => profile.settings, updateSettings, audio, store.persistent,
     () => profile.ageMode, (m) => { profile = { ...profile, ageMode: m }; saveProfile(); });
+
+  // ---------- время игры и лимит ----------
+  const playtime = await store.getPlaytime();
+  let limitExtra = (await store.getMeta<{ day: string; minutes: number }>('limitExtra')) ?? { day: '', minutes: 0 };
+  const tracker = new PlaytimeTracker({
+    clock,
+    initialToday: playtime.get(dayKey(clock.now())) ?? 0,
+    add: async (day, sec) => { const v = await store.addPlaytime(day, sec); playtime.set(day, v); return v; },
+    limitMin: () => profile.settings.dailyLimitMin,
+    extraMin: (day) => (limitExtra.day === day ? limitExtra.minutes : 0),
+    onLimit: () => showLimit(),
+  });
+  let worldStarted = false;
+  let blockGame: (b: boolean) => void = () => {};
+  function showLimit() {
+    const min = Math.round(tracker.todaySeconds() / 60);
+    $('limit-text').textContent = `${profile.name ? profile.name + ', ты' : 'Ты'} играл(а) сегодня ${min} мин. Отдохни — Пип будет ждать тебя завтра!`;
+    $('limit').hidden = false;
+    blockGame(true);
+  }
+  $('limit-more').addEventListener('click', async () => {
+    if (!(await askAdult(() => store.getMeta<string>('parentPin')))) return;
+    const day = tracker.todayKey();
+    limitExtra = { day, minutes: (limitExtra.day === day ? limitExtra.minutes : 0) + 15 };
+    await store.setMeta('limitExtra', limitExtra);
+    tracker.check();
+    if (!tracker.isLimited()) { $('limit').hidden = true; blockGame(false); }
+  });
+  setInterval(() => {
+    if (worldStarted && !document.hidden && $('parent').hidden && !tracker.isLimited()) void tracker.tick(5);
+  }, 5000);
+
+  // ---------- родительский экран ----------
+  const parent = new ParentScreen({
+    report: () => buildReport({ content, learning, quests: questStates, playtime, now: clock.now(), micEnabled: false }),
+    getLimit: () => profile.settings.dailyLimitMin,
+    setLimit: (m) => { updateSettings({ dailyLimitMin: m }); tracker.check(); if (!tracker.isLimited()) { $('limit').hidden = true; } },
+    todaySeconds: () => tracker.todaySeconds(),
+    hasPin: async () => !!(await store.getMeta<string>('parentPin')),
+    setPin: async (pin) => store.setMeta('parentPin', pin ? await hashPin(pin) : null),
+    exportFile: async () => {
+      const save = buildSave(await store.dumpAll(), learning.canDo(content.skills, false), clock.now());
+      const who = translit(profile.name || 'progress').replace(/[^A-Za-z0-9_-]+/g, '_') || 'progress';
+      return { name: `english-adventure-${who}-${dayKey(clock.now())}.json`, text: JSON.stringify(save, null, 1) };
+    },
+    importFile: async (text) => {
+      const r = parseSave(text);
+      if (!r.ok) return { ok: false, error: r.error };
+      await store.loadAll(r.dump);
+      setTimeout(() => location.reload(), 600);
+      return { ok: true };
+    },
+    reset: async () => { await store.clearAll(); location.reload(); },
+  });
+  const openParent = async (onClose?: () => void) => {
+    if (!(await askAdult(() => store.getMeta<string>('parentPin')))) { onClose?.(); return; }
+    parent.open(onClose);
+  };
+  $('btn-parent-start').addEventListener('click', () => void openParent());
 
   // ---------- стартовый экран ----------
   const notes: string[] = [];
@@ -115,6 +185,15 @@ async function boot() {
       card.open(id, () => block(false));
     });
     $('btn-settings').addEventListener('click', () => { block(true); settings.open(() => block(false)); });
+    $('btn-parent').addEventListener('click', () => {
+      // настройки закрываются, родительский экран — поверх игры
+      ($('settings').querySelector('[data-close]') as HTMLButtonElement).click();
+      block(true);
+      void openParent(() => block(tracker.isLimited()));
+    });
+    blockGame = (b) => block(b);
+    worldStarted = true;
+    tracker.check();
     $('btn-pip').addEventListener('click', () => bus.emit('interact', { kind: 'companion', id: 'pip' }));
 
     const tasks = new TaskController(content, learning, new TaskPanel(audio));
@@ -178,7 +257,7 @@ async function boot() {
     const start0 = savedWorld && savedWorld.x >= 0 ? { x: savedWorld.x, y: savedWorld.y } : null;
     game.scene.add('world', WorldScene, true, depsFor(loc0, start0));
     // для автотестов
-    Object.assign(window as object, { __game: game, __quests: quests, __learning: learning, __tasks: tasks, __companion: companion, __travel: travel, __maps: MAPS, __content: content });
+    Object.assign(window as object, { __game: game, __quests: quests, __learning: learning, __tasks: tasks, __companion: companion, __travel: travel, __maps: MAPS, __content: content, __tracker: tracker, __store: store });
   }
 }
 

@@ -342,10 +342,6 @@ export class WorldScene extends Phaser.Scene {
   // ---------- управление ----------
 
   private onTap(world: Point) {
-    if (this.pip) {
-      const b = this.pip.getBounds(); Phaser.Geom.Rectangle.Inflate(b, 4, 4);
-      if (b.contains(world.x, world.y)) { this.deps.bus.emit('interact', { kind: 'companion', id: 'pip' }); return; }
-    }
     // сначала — персонажи и предметы под пальцем (берём верхний)
     const hit = [...this.targets].sort((a, b) => b.obj.depth - a.obj.depth).find((t) => {
       const b = t.obj.getBounds();
@@ -353,6 +349,11 @@ export class WorldScene extends Phaser.Scene {
       return b.contains(world.x, world.y);
     });
     if (hit) { this.walkToTarget(hit); return; }
+    // Пип — в последнюю очередь: он часто стоит рядом с персонажами и не должен перехватывать касание
+    if (this.pip) {
+      const b = this.pip.getBounds(); Phaser.Geom.Rectangle.Inflate(b, 2, 2);
+      if (b.contains(world.x, world.y)) { this.deps.bus.emit('interact', { kind: 'companion', id: 'pip' }); return; }
+    }
     const cell = this.grid.nearestWalkable(this.grid.cellOf(world), world);
     if (!cell) return;
     this.pendingTarget = null;

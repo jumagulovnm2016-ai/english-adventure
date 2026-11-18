@@ -17,6 +17,7 @@
       <p class="sub">Little Town</p>
       <button id="btn-play" class="btn btn-primary btn-big" type="button">▶ Играть</button>
       <p id="start-notes" class="notes"></p>
+      <p><button id="btn-parent-start" class="btn btn-link" type="button">👨‍👩‍👧 Для родителей</button></p>
     </div>
   </section>
 
@@ -188,10 +189,89 @@
       <div class="row">
         <button id="set-test" class="btn" type="button">🔊 Проверить звук</button>
       </div>
+      <div class="row"><button id="btn-parent" class="btn" type="button">👨‍👩‍👧 Для родителей</button></div>
       <p id="set-voice" class="notes"></p>
       <p id="set-storage" class="notes"></p>
     </div>
   </div>
+
+  <div id="gate" class="modal" role="dialog" aria-modal="true" aria-labelledby="gate-title" hidden>
+    <div class="modal-box card-box">
+      <button class="btn btn-round btn-close" data-close type="button" aria-label="Закрыть">✕</button>
+      <h2 id="gate-title">Для взрослых</h2>
+      <p id="gate-question" class="qi-text"></p>
+      <form id="gate-form" class="type-row"><input id="gate-input" inputmode="numeric" autocomplete="off" aria-label="Ответ" /><button class="btn btn-primary" type="submit">OK</button></form>
+      <p id="gate-error" class="notes"></p>
+    </div>
+  </div>
+
+  <div id="limit" class="screen limit" role="alertdialog" aria-labelledby="limit-title" hidden>
+    <div class="start-box">
+      <div class="qi-icon">⏰🦊</div>
+      <h1 id="limit-title">На сегодня всё!</h1>
+      <p id="limit-text" class="qi-text"></p>
+      <p><button id="limit-more" class="btn" type="button">Для взрослых: ещё 15 минут</button></p>
+    </div>
+  </div>
+
+  <section id="parent" class="parent" aria-labelledby="parent-title" hidden>
+    <header class="parent-head">
+      <h1 id="parent-title">Для родителей</h1>
+      <button id="parent-close" class="btn btn-round" type="button" aria-label="Закрыть">✕</button>
+    </header>
+    <nav class="parent-tabs" role="tablist">
+      <button type="button" role="tab" data-tab="skills" aria-selected="true">Что умеет</button>
+      <button type="button" role="tab" data-tab="words">Слова</button>
+      <button type="button" role="tab" data-tab="time">Время</button>
+      <button type="button" role="tab" data-tab="settings">Настройки</button>
+    </nav>
+    <div id="parent-summary" class="parent-summary"></div>
+    <div class="parent-body">
+      <section data-panel="skills">
+        <p class="notes">Навык отмечается как освоенный, только когда ребёнок сам, без подсказок, правильно отвечал в разных ситуациях и в разные дни. Нажмите на навык — увидите, как именно он проверяется.</p>
+        <ul id="parent-skills" class="skill-list"></ul>
+      </section>
+      <section data-panel="words" hidden>
+        <div id="parent-hard"></div>
+        <div id="parent-confusions"></div>
+        <div id="parent-words"></div>
+      </section>
+      <section data-panel="time" hidden>
+        <div id="parent-days" class="days"></div>
+        <p id="parent-today" class="notes"></p>
+      </section>
+      <section data-panel="settings" hidden>
+        <fieldset class="field"><legend>Лимит игры в день</legend>
+          <div class="seg" id="parent-limit">
+            <button type="button" data-value="">Без лимита</button>
+            <button type="button" data-value="15">15 мин</button>
+            <button type="button" data-value="30">30 мин</button>
+            <button type="button" data-value="45">45 мин</button>
+            <button type="button" data-value="60">60 мин</button>
+          </div>
+        </fieldset>
+        <fieldset class="field"><legend>PIN для входа сюда</legend>
+          <p class="notes">Без PIN вход защищён примером на умножение — подросток с ним справится. PIN из 4 цифр надёжнее.</p>
+          <form id="parent-pin-form" class="type-row"><input id="parent-pin" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="Новый PIN из 4 цифр" placeholder="4 цифры" /><button class="btn" type="submit">Сохранить PIN</button></form>
+          <p><button id="parent-pin-clear" class="btn btn-link" type="button">Убрать PIN</button> <span id="parent-pin-state" class="notes"></span></p>
+        </fieldset>
+        <fieldset class="field"><legend>Резервная копия прогресса</legend>
+          <p class="notes">Файл можно сохранить и потом загрузить на этом или другом устройстве. PIN в файл не попадает. При загрузке текущий прогресс на этом устройстве заменяется прогрессом из файла.</p>
+          <div class="row">
+            <button id="parent-export" class="btn btn-primary" type="button">⬇ Сохранить в файл</button>
+            <label class="btn" for="parent-import">⬆ Загрузить из файла</label>
+            <input id="parent-import" type="file" accept=".json,application/json" hidden />
+          </div>
+          <p id="parent-file-msg" class="notes" role="status"></p>
+        </fieldset>
+        <fieldset class="field"><legend>Начать заново</legend>
+          <p class="notes">Удалит весь прогресс на этом устройстве. Чтобы подтвердить, напишите слово СБРОС.</p>
+          <form id="parent-reset-form" class="type-row"><input id="parent-reset" autocomplete="off" aria-label="Подтверждение сброса" /><button class="btn" type="submit">Удалить прогресс</button></form>
+        </fieldset>
+        <p class="notes">🔒 Все данные хранятся только на этом устройстве. Игра ничего не отправляет в интернет, не записывает голос и не собирает фамилию, возраст или город.</p>
+      </section>
+    </div>
+  </section>
 
   <script type="module" src="/src/main.ts"></script>
 </body>

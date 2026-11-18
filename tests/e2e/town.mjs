@@ -61,14 +61,16 @@ async function tapTarget(kind, id) {
     return { x: r.left + sc.x, y: r.top + sc.y, w: innerWidth, h: innerHeight };
   }, kind, id);
   if (!p) throw new Error(`нет цели ${kind}:${id} в ${(await world()).location}`);
-  // цель за краем экрана — сначала подойти к ней
+  // цель за краем экрана: камера всё равно вернётся к герою — ставим героя поближе (само касание проверено отдельно)
   if (p.x < 10 || p.y < 10 || p.x > p.w - 10 || p.y > p.h - 10) {
     await page.evaluate((kind, id) => {
       const s = window.__game.scene.getScene('world');
       const t = s.targetPosition(kind, id);
-      s.cameras.main.centerOn(t.x, t.y);
+      const g = s.grid;
+      const c = g.nearestWalkable(g.cellOf({ x: t.x, y: t.y + 40 }), { x: t.x, y: t.y + 40 });
+      s.pos = g.feetOf(c);
     }, kind, id);
-    await sleep(100);
+    await sleep(400);
     return tapTarget(kind, id);
   }
   await page.mouse.click(p.x, p.y);
@@ -290,12 +292,16 @@ await check('Пип: вопрос на повторение → «?» → наж
   await page.evaluate(() => window.__companion.debugForceReviewOffer());
   await waitFor(() => window.__game.scene.getScene('world').debugState().companionMarker);
   const before = await page.evaluate(() => window.__learning.allEvents().length);
+  const asked = await page.evaluate(() => window.__companion.debugState().question);
   await page.click('#btn-pip');
   await answer();
   const after = await page.evaluate(() => window.__learning.allEvents().slice(-1)[0]);
   assert(after.context.startsWith('review.'), JSON.stringify(after));
   assert((await page.evaluate(() => window.__learning.allEvents().length)) === before + 1, 'событие не записано');
-  assert(!(await world()).companionMarker, '«?» не исчез');
+  // отвеченный вопрос снят (Пип может позже задать другой — это нормально)
+  const now = await page.evaluate(() => window.__companion.debugState().question);
+  assert(now !== asked, `вопрос ${asked} остался висеть`);
+  assert(after.item === asked, `ответ записан по ${after.item}, а спрашивали ${asked}`);
 });
 
 await check('старший режим: другие названия квестов, подсказка по-взрослому', async () => {

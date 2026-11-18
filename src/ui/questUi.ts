@@ -59,4 +59,4 @@ export function showReward(args: { stars: number; quest: string; words: { en: st
   return new Promise((r) => reward!.open(r));
 }
 
-export const isAnyModalOpen = () => ['card', 'settings', 'quest-intro', 'reward', 'task'].some((id) => !$(id).hidden);
+export const isAnyModalOpen = () => ['card', 'settings', 'quest-intro', 'reward', 'task', 'gate', 'parent', 'limit'].some((id) => !$(id).hidden);

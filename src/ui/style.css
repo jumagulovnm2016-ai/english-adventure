@@ -197,3 +197,43 @@ body { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color
 .ob-progress { height: .8rem; border: 3px solid var(--ink); border-radius: 999px; overflow: hidden; margin-bottom: .8rem; background: #fff; }
 #ob-bar { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
 .hud-right { display: flex; gap: .5rem; }
+
+/* ---------- для родителей ---------- */
+.btn-link { background: transparent; box-shadow: none; border: 0; text-decoration: underline; color: inherit; font-weight: 700; min-height: 2.5rem; }
+.start-box .btn-link { color: #cbbfdc; }
+.limit { z-index: 80; }
+.parent { position: fixed; inset: 0; background: #f6f1e7; z-index: 70; overflow: auto; -webkit-user-select: text; user-select: text; touch-action: auto; padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+.parent-head { display: flex; justify-content: space-between; align-items: center; padding: max(.8rem, env(safe-area-inset-top)) 1rem .4rem; max-width: 52rem; margin: 0 auto; }
+.parent-head h1 { margin: 0; font-size: 1.5rem; }
+.parent-tabs { display: flex; gap: .4rem; padding: 0 1rem; max-width: 52rem; margin: 0 auto; flex-wrap: wrap; }
+.parent-tabs button { min-height: 2.8rem; border: 3px solid var(--ink); border-radius: 999px; background: #fff; font: inherit; font-weight: 800; padding: .3rem 1rem; cursor: pointer; }
+.parent-tabs button[aria-selected="true"] { background: var(--accent); }
+.parent-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: .6rem; padding: .9rem 1rem; max-width: 52rem; margin: 0 auto; }
+.stat { background: #fff; border: 3px solid var(--ink); border-radius: var(--radius); padding: .5rem .7rem; }
+.stat b { display: block; font-size: 1.5rem; }
+.stat span { color: var(--muted); font-size: .85rem; font-weight: 700; }
+.parent-body { max-width: 52rem; margin: 0 auto; padding: 0 1rem 1rem; }
+.skill-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .6rem; }
+.skill { background: #fff; border: 3px solid var(--ink); border-radius: var(--radius); padding: .6rem .8rem; }
+.skill summary { cursor: pointer; display: flex; align-items: center; gap: .6rem; font-weight: 800; list-style: none; }
+.skill summary::-webkit-details-marker { display: none; }
+.skill .icon { font-size: 1.3rem; }
+.skill .meta { margin-left: auto; color: var(--muted); font-size: .85rem; font-weight: 700; white-space: nowrap; }
+.bar { height: .6rem; background: #eee6d8; border-radius: 999px; overflow: hidden; margin-top: .4rem; }
+.bar i { display: block; height: 100%; background: var(--accent); }
+.skill.confirmed .bar i { background: #4cae55; }
+.word-group { margin: 1rem 0; }
+.word-group h3 { margin: .2rem 0 .5rem; }
+.word-table { width: 100%; border-collapse: collapse; background: #fff; border: 3px solid var(--ink); border-radius: var(--radius); overflow: hidden; }
+.word-table td, .word-table th { padding: .35rem .6rem; border-bottom: 1px solid #eee6d8; text-align: left; }
+.word-table th { background: #fff8ec; font-size: .85rem; color: var(--muted); }
+.word-table .en { font-weight: 800; color: var(--blue); }
+.callout { background: #fff1c6; border: 3px dashed var(--accent); border-radius: var(--radius); padding: .6rem .8rem; margin: .8rem 0; }
+.days { display: grid; grid-template-columns: repeat(14, 1fr); gap: .3rem; align-items: end; height: 12rem; background: #fff; border: 3px solid var(--ink); border-radius: var(--radius); padding: .6rem .6rem 0; }
+.day { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: .2rem; }
+.day i { width: 100%; background: var(--accent); border-radius: .3rem .3rem 0 0; min-height: 2px; }
+.day.zero i { background: #e6dfd2; }
+.day span { font-size: .7rem; color: var(--muted); padding-bottom: .3rem; }
+.day b { font-size: .75rem; }
+/* проверка взрослого — поверх всего: экрана лимита, родительского экрана, стартового */
+#gate { z-index: 100; }
