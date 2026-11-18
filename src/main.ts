@@ -1,5 +1,14 @@
 // Точка входа: загрузка контента и прогресса, первый запуск, мир из нескольких локаций, интерфейс, квесты, спутник.
 import Phaser from 'phaser';
+// шрифт Nunito — округлый, дружелюбный, с кириллицей; лежит в сборке и работает офлайн
+import '@fontsource/nunito/cyrillic-600.css';
+import '@fontsource/nunito/latin-600.css';
+import '@fontsource/nunito/cyrillic-700.css';
+import '@fontsource/nunito/latin-700.css';
+import '@fontsource/nunito/cyrillic-800.css';
+import '@fontsource/nunito/latin-800.css';
+import '@fontsource/nunito/cyrillic-900.css';
+import '@fontsource/nunito/latin-900.css';
 import { systemClock } from './core/clock';
 import { EventBus, type GameEvents } from './core/events';
 import { loadContent } from './content/load';
@@ -13,6 +22,7 @@ import { LearningService } from './learning/learningService';
 import { WorldScene, type WorldSceneDeps } from './game/scenes/WorldScene';
 import { MAPS } from './game/maps';
 import type { Exit } from './game/maps/types';
+import { prepareArt, prepareFloor, personImageUrl, pipImageUrl } from './game/art/textures';
 import { ItemCard } from './ui/itemCard';
 import { SettingsPanel } from './ui/settingsPanel';
 import { DialogueBox } from './ui/dialogueBox';
@@ -48,6 +58,8 @@ async function boot() {
   const questStates = await store.getQuests();
   const onboarded = (await store.getMeta<boolean>('onboarded')) ?? !!savedWorld; // у игравших до этапа 3 — уже да
   const learning = await LearningService.create(store.learning, clock);
+  // графика растеризуется в фоне, пока ребёнок на стартовом экране
+  const artReady = prepareArt();
   const bus = new EventBus<GameEvents>();
   const audio = new BrowserAudioPlayer(import.meta.env.VITE_AUDIO_FILES === '1');
 
@@ -144,6 +156,8 @@ async function boot() {
   void pwa.offlineReady.then((ok) => { if (ok) $('offline-note').hidden = false; });
 
   // ---------- стартовый экран ----------
+  ($('start-hero') as HTMLImageElement).src = personImageUrl(profile.avatar || 'kid_1');
+  ($('start-pip') as HTMLImageElement).src = pipImageUrl();
   const notes: string[] = [];
   if (!store.persistent) notes.push('⚠ В этом окне прогресс не сохранится.');
   if (savedWorld) notes.push(profile.name ? `С возвращением, ${profile.name}!` : 'Продолжим с того места, где остановились.');
@@ -162,10 +176,10 @@ async function boot() {
       await store.setMeta('onboarded', true);
       await store.setMeta('placement', r.placement);
     }
-    startWorld();
+    await startWorld();
   }, { once: true });
 
-  function startWorld() {
+  async function startWorld() {
     let world: WorldState = savedWorld ?? { location: 'home', x: -1, y: -1, inventory: [], roomDecor: [] };
     const saver = new AutoSaver<WorldState>((w) => store.saveWorld(w), 5000);
     const flush = () => void saver.flush();
@@ -234,13 +248,22 @@ async function boot() {
       uiBusy: () => isAnyModalOpen() || !$('dialogue').hidden,
     });
 
+    const loc0: Location = savedWorld?.location && MAPS[savedWorld.location] ? savedWorld.location : 'home';
+    await artReady;
+    await document.fonts?.load('800 12px Nunito').catch(() => undefined);
+    await prepareFloor(MAPS[loc0]);
+    // Холст рисуем в физических пикселях экрана (не больше ×2 — дальше разница не видна, а нагрузка растёт),
+    // а на странице показываем в CSS-размере: на телефонах картинка чёткая. Если телефон не тянет
+    // (меньше 40 кадров в секунду), переходим на обычное разрешение. См. DECISIONS D46.
+    let dpr = Math.min(2, Math.max(1, devicePixelRatio || 1));
     const game = new Phaser.Game({
       type: Phaser.AUTO,
       parent: 'game',
-      backgroundColor: '#1b1626',
-      pixelArt: true,
-      roundPixels: true,
-      scale: { mode: Phaser.Scale.RESIZE, width: innerWidth, height: innerHeight },
+      backgroundColor: '#3d2b24',
+      antialias: true,
+      // сглаживание краёв уже есть в самих рисунках; MSAA холста только тратит видеокарту
+      antialiasGL: false,
+      scale: { mode: Phaser.Scale.NONE, width: innerWidth * dpr, height: innerHeight * dpr, zoom: 1 / dpr },
       input: { activePointers: 2 },
       banner: false,
     });
@@ -256,12 +279,21 @@ async function boot() {
         onReady: (scene) => { quests.attach(scene); companion.attach(scene); },
         canExit: (e: Exit) => (quests.canEnter(e.requires) ? null : e.lockedText ?? 'Пока закрыто'),
         onLocked: (text) => toast(`🔒 ${text}`, 3000),
-        onExit: (e: Exit) => travel(e),
+        onExit: (e: Exit) => void travel(e),
       };
     };
 
-    const travel = (e: Exit) => {
+    const applyDpr = () => { game.scale.setZoom(1 / dpr); game.scale.resize(innerWidth * dpr, innerHeight * dpr); };
+    addEventListener('resize', applyDpr);
+    if (dpr > 1) {
+      const checkFps = () => { if (dpr > 1 && game.loop.actualFps < 40) { dpr = 1; applyDpr(); } };
+      setTimeout(checkFps, 3000);
+      setTimeout(checkFps, 8000);
+    }
+
+    const travel = async (e: Exit) => {
       const T = 16;
+      await prepareFloor(MAPS[e.to]);
       const start = { x: e.spawn.tx * T + T / 2, y: e.spawn.ty * T + T / 2 + 2 };
       world = { ...world, location: e.to, x: start.x, y: start.y };
       saver.update(world);
@@ -270,7 +302,6 @@ async function boot() {
       scene.scene.restart(depsFor(e.to, start));
     };
 
-    const loc0: Location = savedWorld?.location && MAPS[savedWorld.location] ? savedWorld.location : 'home';
     const start0 = savedWorld && savedWorld.x >= 0 ? { x: savedWorld.x, y: savedWorld.y } : null;
     game.scene.add('world', WorldScene, true, depsFor(loc0, start0));
     // для автотестов

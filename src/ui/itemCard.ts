@@ -1,8 +1,7 @@
 // Карточка предмета: картинка, английское название, перевод, слова по отдельности, озвучка.
 import type { ContentRegistry } from '../content/registry';
 import type { AudioPlayer } from '../speech/audioPlayer';
-import { ITEM_ART, type ItemArtKey } from '../game/art/items';
-import { pxToDataUrl } from '../game/art/textures';
+import { itemImageUrl } from '../game/art/textures';
 import { $, Modal } from './dom';
 
 export class ItemCard {
@@ -21,9 +20,8 @@ export class ItemCard {
   open(itemId: string, onClose: () => void) {
     this.current = itemId;
     const item = this.content.item(itemId);
-    const art = ITEM_ART[item.sprite as ItemArtKey];
     const img = $('card-img') as HTMLImageElement;
-    img.src = art ? pxToDataUrl(art(), 9) : '';
+    img.src = itemImageUrl(item.sprite);
     img.alt = this.content.itemNameRu(itemId);
     $('card-en').textContent = this.content.itemNameEn(itemId);
     const ru = $('card-ru');

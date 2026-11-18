@@ -51,18 +51,23 @@ const qs = () => page.evaluate(() => window.__quests.debugState());
 const world = () => page.evaluate(() => window.__game.scene.getScene('world').debugState());
 const waitFor = (fn, arg, timeout = 15000) => page.waitForFunction(fn, { timeout }, arg);
 
-async function tapTarget(kind, id) {
+async function tapTarget(kind, id, attempt = 0) {
   const p = await page.evaluate((kind, id) => {
     const s = window.__game.scene.getScene('world');
     const t = s.targetPosition(kind, id);
     if (!t) return null;
     const r = window.__game.canvas.getBoundingClientRect();
     const sc = s.worldToScreen(t.x, t.y);
-    return { x: r.left + sc.x, y: r.top + sc.y, w: innerWidth, h: innerHeight };
+    const x = r.left + sc.x, y = r.top + sc.y;
+    // цель закрыта плашкой интерфейса (задание, кнопки) — как и ребёнок, подойдём ближе
+    const el = document.elementFromPoint(x, y);
+    const covered = el !== window.__game.canvas;
+    return { x, y, w: innerWidth, h: innerHeight, covered, by: el?.id || el?.className };
   }, kind, id);
   if (!p) throw new Error(`нет цели ${kind}:${id} в ${(await world()).location}`);
   // цель за краем экрана: камера всё равно вернётся к герою — ставим героя поближе (само касание проверено отдельно)
-  if (p.x < 10 || p.y < 10 || p.x > p.w - 10 || p.y > p.h - 10) {
+  if (attempt < 3 && (p.covered || p.x < 10 || p.y < 10 || p.x > p.w - 10 || p.y > p.h - 10)) {
+    if (attempt === 2) console.log(`  (цель ${id} закрыта: ${p.by})`);
     await page.evaluate((kind, id) => {
       const s = window.__game.scene.getScene('world');
       const t = s.targetPosition(kind, id);
@@ -71,7 +76,7 @@ async function tapTarget(kind, id) {
       s.pos = g.feetOf(c);
     }, kind, id);
     await sleep(400);
-    return tapTarget(kind, id);
+    return tapTarget(kind, id, attempt + 1);
   }
   await page.mouse.click(p.x, p.y);
 }

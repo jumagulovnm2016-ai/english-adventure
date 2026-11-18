@@ -9,10 +9,9 @@ import { fixedClock } from '../src/core/clock';
 import { EventBus } from '../src/core/events';
 import { pickVoice, voiceGender } from '../src/speech/audioPlayer';
 import { ITEM_ART } from '../src/game/art/items';
-import { FURNITURE_ART } from '../src/game/art/furniture';
-import { TILE_ART } from '../src/game/art/tiles';
-import { drawKid, LOOKS } from '../src/game/art/character';
-import { PALETTE } from '../src/game/art/pixels';
+import { drawPerson, LOOKS } from '../src/game/art/character';
+import { allArt } from '../src/game/art/catalog';
+import { MAPS } from '../src/game/maps';
 
 describe('Контент', () => {
   const c = loadContent();
@@ -45,25 +44,27 @@ describe('Контент', () => {
 });
 
 describe('Графика', () => {
-  const all = [
-    ...Object.entries(ITEM_ART).map(([k, f]) => [`item ${k}`, f()] as const),
-    ...Object.entries(FURNITURE_ART).map(([k, f]) => [`furniture ${k}`, f()] as const),
-    ...Object.entries(TILE_ART).map(([k, f]) => [`tile ${k}`, f()] as const),
-    ...(['down', 'up', 'left', 'right'] as const).flatMap((d) => [0, 1, 2].map((fr) => [`kid ${d} ${fr}`, drawKid(LOOKS.kid_1, d, fr as 0 | 1 | 2)] as const)),
-  ];
-  it('все пиксели — цвета из палитры', () => {
-    for (const [name, px] of all) for (const row of px.data()) for (const ch of row) {
-      if (ch !== '.') expect(PALETTE[ch], `${name}: неизвестный цвет «${ch}»`).toBeDefined();
+  const all = Object.entries(allArt());
+  it('каждая ссылка url(#id) ведёт на градиент своего же рисунка', () => {
+    for (const [name, a] of all) {
+      const ids = new Set([...a.svg.matchAll(/id="([^"]+)"/g)].map((m) => m[1]));
+      for (const m of a.svg.matchAll(/url\(#([^)]+)\)/g)) expect(ids.has(m[1]), `${name}: нет #${m[1]}`).toBe(true);
+      expect(a.svg.startsWith('<svg') && a.svg.endsWith('</svg>'), name).toBe(true);
+      expect(a.svg, name).not.toMatch(/NaN|undefined/);
     }
   });
-  it('тайлы ровно 16×16', () => {
-    for (const [k, f] of Object.entries(TILE_ART)) { const p = f(); expect([p.w, p.h], k).toEqual([16, 16]); }
+  it('предметы 16×16, у всех жителей и героев есть рисунок', () => {
+    for (const k of Object.keys(ITEM_ART)) { const a = allArt()[`item_${k}`]; expect([a.w, a.h], k).toEqual([16, 16]); }
+    for (const look of Object.keys(LOOKS)) expect(allArt()[`${look}_down_0`], look).toBeDefined();
+  });
+  it('пол карты совпадает с её размером', () => {
+    for (const m of Object.values(MAPS)) { const a = allArt()[`floor_${m.id}`]; expect([a.w, a.h], m.id).toEqual([m.tiles[0].length * 16, m.tiles.length * 16]); }
   });
   it('кадры ходьбы отличаются от стоячего', () => {
-    for (const d of ['down', 'up', 'right'] as const) {
-      const stand = drawKid(LOOKS.kid_1, d, 0).data().join('');
-      expect(drawKid(LOOKS.kid_1, d, 1).data().join('')).not.toBe(stand);
-      expect(drawKid(LOOKS.kid_1, d, 2).data().join('')).not.toBe(stand);
+    for (const d of ['down', 'up', 'right', 'left'] as const) {
+      const stand = drawPerson('kid_1', d, 0).svg;
+      expect(drawPerson('kid_1', d, 1).svg).not.toBe(stand);
+      expect(drawPerson('kid_1', d, 2).svg).not.toBe(stand);
     }
   });
 });

@@ -1,204 +1,276 @@
-// Предметы 16×16 (названия спрайтов совпадают с полем sprite в content/items.json).
-import { Px } from './pixels';
+// Предметы 16×16 единиц мира (холст рисования 64×64). Названия совпадают с полем sprite в content/items.json.
+// Главное требование — узнаваемость без подписи: ребёнок отвечает по картинке.
+import { art, groundShadow, rgrad, shine, vgrad, tint, ST, ST2, INK, type Art } from './svg';
 
-function cup(main: string, dark: string, light: string) {
-  const p = new Px(16, 16);
-  p.rect(3, 5, 8, 9, main);
-  p.rect(3, 13, 8, 1, dark);
-  p.vline(10, 5, 9, dark);
-  p.rect(4, 5, 2, 6, light);
-  p.hline(3, 4, 8, dark);        // край
-  p.rect(4, 4, 6, 1, 'v');       // чай внутри
-  // ручка
-  p.vline(12, 7, 4, main); p.px(11, 7, main); p.px(11, 10, main);
-  // пар
-  p.px(5, 1, 'N'); p.px(6, 2, 'N'); p.px(8, 0, 'N'); p.px(8, 2, 'N');
-  return p.outline();
-}
+const item = (body: string, defs = ''): Art => art(16, 16, body, defs);
 
-function plate(main: string, dark: string, light: string) {
-  const p = new Px(16, 16);
-  p.rect(1, 8, 14, 5, main);
-  p.rect(2, 7, 12, 1, main); p.rect(2, 13, 12, 1, dark);
-  p.rect(4, 9, 8, 3, light);
-  p.rect(5, 10, 6, 1, 'n');
-  return p.outline();
+/** Глаза-бусинки с бликом. */
+function eyes(x1: number, x2: number, y: number, r = 3.2): string {
+  return [x1, x2].map((x) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${INK}"/><circle cx="${x + r * 0.35}" cy="${y - r * 0.4}" r="${r * 0.38}" fill="#fff"/>`).join('');
 }
-
-function ball(main: string, dark: string) {
-  const p = new Px(16, 16);
-  const cx = 7.5, cy = 8.5, r = 6;
-  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
-    const d = Math.hypot(x - cx, y - cy);
-    if (d <= r) p.px(x, y, d > r - 1.2 && x + y > 16 ? dark : main);
-  }
-  // полоска и блик
-  for (let x = 2; x < 14; x++) p.px(x, 8 + Math.round(Math.sin((x - 2) / 3) * 1.2), 'n');
-  p.rect(4, 4, 2, 2, 'n');
-  return p.outline();
-}
-
-function book(main: string, dark: string) {
-  const p = new Px(16, 16);
-  p.rect(2, 3, 12, 10, main);
-  p.vline(2, 3, 10, dark); p.vline(3, 3, 10, dark);
-  p.rect(4, 12, 10, 2, 'n'); p.hline(4, 13, 10, 'N'); // страницы
-  p.rect(6, 5, 6, 2, 'y');                             // наклейка
-  return p.outline();
-}
-
-function cake() {
-  const p = new Px(16, 16);
-  p.rect(2, 8, 12, 6, 'o');
-  p.rect(2, 7, 12, 2, 'z');
-  p.px(3, 9, 'z'); p.px(6, 10, 'z'); p.px(10, 9, 'z'); p.px(13, 9, 'z');
-  p.rect(1, 14, 14, 1, 'N');
-  p.rect(7, 4, 2, 3, 'e'); p.px(8, 3, 'G');           // вишенка
-  return p.outline();
-}
-
-function lamp(main: string, dark: string) {
-  const p = new Px(16, 16);
-  p.rect(4, 2, 8, 6, main); p.hline(3, 7, 10, dark); p.hline(5, 1, 6, main);
-  p.vline(7, 8, 5, 'M'); p.vline(8, 8, 5, 'M');
-  p.rect(4, 13, 8, 2, 'M');
-  return p.outline();
-}
+const blush = (x1: number, x2: number, y: number) => `<ellipse cx="${x1}" cy="${y}" rx="3.2" ry="2" fill="#ff8f8f" opacity="0.55"/><ellipse cx="${x2}" cy="${y}" rx="3.2" ry="2" fill="#ff8f8f" opacity="0.55"/>`;
 
 // ---------- животные ----------
+function cat(base: string, eyeCol: string) {
+  return item(`${groundShadow(32, 60, 20)}
+    <path d="M44 54 Q60 50 56 32" fill="none" stroke="${INK}" stroke-width="9" stroke-linecap="round"/>
+    <path d="M44 54 Q60 50 56 32" fill="none" stroke="url(#c)" stroke-width="4.5" stroke-linecap="round"/>
+    <ellipse cx="32" cy="47" rx="15" ry="12" fill="url(#c)" ${ST}/>
+    <path d="M17 22 L16 5 L28 14Z M47 22 L48 5 L36 14Z" fill="url(#c)" ${ST}/>
+    <path d="M19 17 L19 10 L25 14Z M45 17 L45 10 L39 14Z" fill="#ff9fb4"/>
+    <ellipse cx="32" cy="26" rx="17" ry="14" fill="url(#c)" ${ST}/>
+    <ellipse cx="25" cy="25" rx="3.6" ry="4.6" fill="${eyeCol}"/><ellipse cx="39" cy="25" rx="3.6" ry="4.6" fill="${eyeCol}"/>
+    <ellipse cx="25" cy="25" rx="1.3" ry="3.6" fill="#1b1b22"/><ellipse cx="39" cy="25" rx="1.3" ry="3.6" fill="#1b1b22"/>
+    <path d="M29.5 31 L34.5 31 L32 34Z" fill="#ff8fa8"/>
+    <path d="M32 34 Q29 37 26.5 35 M32 34 Q35 37 37.5 35" fill="none" ${ST2}/>
+    <path d="M12 29 L20 30 M12 33 L20 32 M52 29 L44 30 M52 33 L44 32" stroke="${tint(base, -0.5)}" stroke-width="1.2" opacity="0.6"/>`,
+  vgrad('c', base, 0.22, -0.15));
+}
+
+function dog(base: string, ear: string) {
+  return item(`${groundShadow(32, 60, 20)}
+    <path d="M45 52 Q58 46 54 36" fill="none" stroke="${INK}" stroke-width="8" stroke-linecap="round"/>
+    <path d="M45 52 Q58 46 54 36" fill="none" stroke="${base}" stroke-width="3.5" stroke-linecap="round"/>
+    <ellipse cx="32" cy="47" rx="15" ry="12" fill="url(#c)" ${ST}/>
+    <ellipse cx="32" cy="51" rx="8" ry="6" fill="${tint(base, 0.45)}"/>
+    <ellipse cx="32" cy="25" rx="16" ry="15" fill="url(#c)" ${ST}/>
+    <path d="M17 14 Q8 18 11 34 Q17 34 20 24Z M47 14 Q56 18 53 34 Q47 34 44 24Z" fill="${ear}" ${ST}/>
+    ${eyes(25, 39, 23)}
+    <ellipse cx="32" cy="32" rx="9" ry="6.5" fill="${tint(base, 0.5)}" ${ST2}/>
+    <ellipse cx="32" cy="29.5" rx="3.6" ry="2.6" fill="${INK}"/>
+    <path d="M32 32 Q32 36 28.5 36 M32 32 Q32 36 35.5 36" fill="none" ${ST2}/>`,
+  vgrad('c', base, 0.22, -0.15));
+}
+
 function duck() {
-  const p = new Px(16, 16);
-  p.rect(3, 8, 10, 5, 'y'); p.rect(4, 7, 7, 1, 'y'); p.rect(2, 9, 1, 3, 'y');
-  p.rect(9, 3, 5, 5, 'y'); p.px(12, 4, 'i'); p.rect(14, 5, 2, 2, 'o');
-  p.hline(5, 10, 4, '7'); p.hline(3, 13, 10, 'O');
-  return p.outline();
+  return item(`${groundShadow(32, 60, 21)}
+    <path d="M10 44 Q8 30 20 34 Q24 22 36 24 Q40 14 34 10 Q46 8 48 20 Q48 28 42 32 Q56 30 54 46 Q50 58 30 58 Q12 58 10 44Z" fill="url(#c)" ${ST}/>
+    <path d="M22 44 Q30 50 40 42" fill="none" ${ST2}/>
+    <path d="M47 18 Q58 18 58 22 Q56 26 47 25Z" fill="#ff9a2e" ${ST}/>
+    <circle cx="41" cy="16" r="2.8" fill="${INK}"/><circle cx="42" cy="15" r="1" fill="#fff"/>
+    <ellipse cx="37" cy="22" rx="2.6" ry="1.6" fill="#ff8f8f" opacity="0.6"/>`,
+  vgrad('c', '#ffd23f', 0.35, -0.1));
 }
-function cat(main: string, dark: string) {
-  const p = new Px(16, 16);
-  p.rect(3, 8, 9, 5, main); p.rect(2, 12, 2, 2, main); p.rect(10, 12, 2, 2, main); p.rect(5, 12, 2, 2, main);
-  p.rect(9, 3, 6, 6, main); p.px(9, 2, main); p.px(14, 2, main); p.px(10, 1, main); p.px(13, 1, main);
-  p.px(11, 5, main === 'k' ? 'y' : 'i'); p.px(13, 5, main === 'k' ? 'y' : 'i'); p.px(12, 7, 'e');
-  p.vline(1, 5, 4, main); p.px(2, 9, main); p.px(2, 4, dark);
-  return p.outline(main === 'k' ? 'M' : 'k');
-}
-function dog(main: string, dark: string) {
-  const p = new Px(16, 16);
-  p.rect(2, 7, 10, 5, main); p.rect(3, 12, 2, 3, main); p.rect(9, 12, 2, 3, main);
-  p.rect(9, 2, 6, 6, main); p.rect(8, 2, 2, 5, dark); p.rect(14, 6, 2, 2, main);
-  p.px(12, 4, main === 'k' ? 'y' : 'i'); p.px(15, 6, 'k'); p.px(13, 8, 'e');
-  p.vline(1, 4, 4, main);
-  return p.outline(main === 'k' ? 'M' : 'k');
-}
+
 function bird() {
-  const p = new Px(16, 16);
-  p.rect(4, 6, 8, 6, 'b'); p.rect(9, 3, 5, 5, 'b'); p.px(12, 4, 'i'); p.rect(14, 5, 2, 1, 'o');
-  p.rect(5, 8, 5, 3, 'l'); p.rect(1, 7, 3, 2, 'B'); p.vline(7, 12, 2, 'o'); p.vline(9, 12, 2, 'o');
-  return p.outline();
+  return item(`${groundShadow(32, 60, 16)}
+    <path d="M26 56 L24 60 M36 56 L38 60" ${ST}/>
+    <path d="M10 30 Q2 40 14 42 Z" fill="${tint('#3d8bf2', -0.15)}" ${ST}/>
+    <circle cx="32" cy="34" r="20" fill="url(#c)" ${ST}/>
+    <ellipse cx="32" cy="44" rx="11" ry="8" fill="#d9ecff"/>
+    <path d="M15 34 Q24 30 30 40 Q22 46 15 34Z" fill="${tint('#3d8bf2', -0.2)}" ${ST2}/>
+    ${eyes(27, 39, 28, 2.8)}
+    <path d="M30 33 L34 33 L32 38Z" fill="#ffa53a" ${ST2}/>
+    <path d="M28 14 Q32 6 36 14" fill="url(#c)" ${ST2}/>`,
+  rgrad('c', '#3d8bf2', 0.35, -0.2));
 }
+
 function rabbit() {
-  const p = new Px(16, 16);
-  p.rect(3, 9, 9, 5, 'n'); p.rect(9, 5, 5, 5, 'n'); p.rect(10, 0, 2, 5, 'n'); p.rect(12, 1, 2, 4, 'n');
-  p.px(10, 1, 'r'); p.px(12, 2, 'r'); p.px(12, 7, 'i'); p.px(14, 8, 'r'); p.rect(2, 10, 2, 2, '0');
-  return p.outline();
+  return item(`${groundShadow(32, 60, 19)}
+    <ellipse cx="24" cy="12" rx="5.5" ry="13" fill="url(#c)" ${ST}/><ellipse cx="40" cy="12" rx="5.5" ry="13" fill="url(#c)" ${ST}/>
+    <ellipse cx="24" cy="13" rx="2.4" ry="9" fill="#ffb3c4"/><ellipse cx="40" cy="13" rx="2.4" ry="9" fill="#ffb3c4"/>
+    <ellipse cx="32" cy="48" rx="15" ry="11" fill="url(#c)" ${ST}/>
+    <circle cx="32" cy="31" r="14" fill="url(#c)" ${ST}/>
+    ${eyes(26.5, 37.5, 29, 2.8)}${blush(22, 42, 35)}
+    <path d="M30 34 L34 34 L32 36.5Z" fill="#ff8fa8"/>
+    <path d="M32 36.5 Q30 39 28 38 M32 36.5 Q34 39 36 38" fill="none" ${ST2}/>
+    <ellipse cx="25" cy="57" rx="5" ry="3" fill="#fff" ${ST2}/><ellipse cx="39" cy="57" rx="5" ry="3" fill="#fff" ${ST2}/>`,
+  vgrad('c', '#f4f4fb', 0.6, -0.08));
 }
+
 function frog() {
-  const p = new Px(16, 16);
-  p.rect(3, 7, 10, 6, 'g'); p.rect(4, 5, 3, 3, 'g'); p.rect(9, 5, 3, 3, 'g');
-  p.px(5, 6, 'i'); p.px(10, 6, 'i'); p.hline(5, 10, 6, 'G'); p.rect(2, 12, 3, 2, 'G'); p.rect(11, 12, 3, 2, 'G');
-  return p.outline();
+  return item(`${groundShadow(32, 60, 22)}
+    <path d="M8 58 Q8 30 32 30 Q56 30 56 58Z" fill="url(#c)" ${ST}/>
+    <circle cx="21" cy="26" r="9" fill="url(#c)" ${ST}/><circle cx="43" cy="26" r="9" fill="url(#c)" ${ST}/>
+    <circle cx="21" cy="26" r="5" fill="#fff"/><circle cx="43" cy="26" r="5" fill="#fff"/>
+    ${eyes(21, 43, 26, 3)}
+    <path d="M20 42 Q32 50 44 42" fill="none" ${ST}/>
+    ${blush(16, 48, 42)}
+    <ellipse cx="32" cy="52" rx="12" ry="5" fill="#c6f08a" opacity="0.8"/>`,
+  vgrad('c', '#53c24a', 0.3, -0.15));
 }
 
 // ---------- еда ----------
-function apple() {
-  const p = new Px(16, 16);
-  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) if (Math.hypot((x - 7.5) * 1.05, y - 9) <= 5.5) p.px(x, y, 'e');
-  p.rect(5, 6, 2, 2, 'n'); p.vline(8, 2, 3, '9'); p.rect(9, 2, 3, 2, 'g');
-  return p.outline();
+function apple(cx = 32, cy = 36, s = 1, id = 'a') {
+  return `<g transform="translate(${cx} ${cy}) scale(${s})">
+    <path d="M0 -14 Q-6 -20 -13 -17 Q-23 -12 -21 3 Q-18 20 -8 21 Q-3 22 0 19 Q3 22 8 21 Q18 20 21 3 Q23 -12 13 -17 Q6 -20 0 -14Z" fill="url(#${id})" ${ST}/>
+    <path d="M0 -14 Q0 -20 3 -25" fill="none" stroke="#6b4426" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M3 -22 Q12 -28 17 -21 Q10 -16 3 -22Z" fill="#5fbf45" ${ST2}/>
+    ${shine(-11, -6, 3.6, 6, 20)}</g>`;
 }
-function apples3() {
-  const p = new Px(16, 16);
-  const a = (cx: number, cy: number) => {
-    for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
-      const d = Math.hypot(x - cx, y - cy);
-      if (d <= 3) p.px(x, y, d > 2.2 && x + y > cx + cy ? 'E' : 'e');
-      else if (d <= 3.7 && p.get(x, y) === '.') p.px(x, y, 'k'); // свой контур у каждого яблока
-    }
-    p.px(Math.round(cx) - 1, Math.round(cy) - 1, 'n'); p.px(Math.round(cx), Math.round(cy) - 4, '9');
-  };
-  a(4, 11.5); a(11.5, 11.5); a(7.5, 5.5);
-  return p;
-}
+const appleDefs = rgrad('a', '#e53935', 0.38, -0.25);
+
 function banana() {
-  const p = new Px(16, 16);
-  for (let x = 2; x < 14; x++) { const y = 10 - Math.round(Math.sin(((x - 2) / 11) * Math.PI) * 5); p.rect(x, y, 1, 3, 'y'); p.px(x, y + 3, 'O'); }
-  p.px(13, 9, '9'); p.px(2, 10, '9');
-  return p.outline();
+  return item(`${groundShadow(32, 58, 22)}
+    <path d="M10 26 Q14 52 40 52 Q54 50 58 40 Q50 46 40 44 Q22 42 18 22 Z" fill="url(#c)" ${ST}/>
+    <path d="M18 22 L14 17 L10 20 L10 26" fill="#8a6a2a" ${ST}/>
+    <path d="M22 36 Q30 44 46 46" fill="none" stroke="#e0a800" stroke-width="2" stroke-linecap="round"/>
+    <path d="M58 40 L60 37" ${ST}/>`,
+  vgrad('c', '#ffe14d', 0.3, -0.1));
 }
+
 function orangeFruit() {
-  const p = new Px(16, 16);
-  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) if (Math.hypot(x - 7.5, y - 9) <= 5.5) p.px(x, y, 'o');
-  for (const [x, y] of [[6, 7], [9, 10], [7, 12], [10, 7]]) p.px(x, y, 'O');
-  p.rect(5, 6, 2, 1, '7'); p.rect(7, 3, 3, 1, 'g');
-  return p.outline();
+  return item(`${groundShadow(32, 59, 18)}
+    <circle cx="32" cy="38" r="19" fill="url(#c)" ${ST}/>
+    ${[[24, 34], [38, 30], [34, 46], [43, 40], [26, 45]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="0.9" fill="#d96a00" opacity="0.6"/>`).join('')}
+    <path d="M32 19 Q34 13 40 12 Q40 19 32 21Z" fill="#5fbf45" ${ST2}/>
+    <circle cx="32" cy="20" r="1.8" fill="#6b4426"/>${shine(24, 30, 3.4, 5.5, 30)}`,
+  rgrad('c', '#ff9a1f', 0.38, -0.2));
 }
+
 function milk() {
-  const p = new Px(16, 16);
-  p.rect(4, 4, 8, 11, 'n'); p.rect(5, 1, 6, 3, 'n'); p.hline(5, 1, 6, 'b');
-  p.rect(4, 8, 8, 4, 'l'); p.rect(6, 9, 4, 2, 'b');
-  return p.outline();
+  return item(`${groundShadow(32, 60, 16)}
+    <path d="M18 22 L32 12 L46 22 L46 58 L18 58Z" fill="url(#c)" ${ST}/>
+    <path d="M18 22 L32 12 L46 22" fill="none" ${ST}/>
+    <path d="M24 17.5 L28 6 L36 6 L40 17.5" fill="#f4f6ff" ${ST}/>
+    <rect x="18" y="32" width="28" height="16" fill="#3d8bf2"/>
+    <path d="M18 32 H46 M18 48 H46" ${ST2}/>
+    <path d="M32 35 Q27 41 29 44 Q32 47 35 44 Q37 41 32 35Z" fill="#fff"/>
+    <rect x="20" y="24" width="4" height="6" rx="2" fill="#fff" opacity="0.7"/>`,
+  vgrad('c', '#ffffff', 0, -0.1));
 }
+
 function bread() {
-  const p = new Px(16, 16);
-  p.rect(2, 7, 12, 7, 'O'); p.rect(3, 5, 10, 2, 'O'); p.rect(4, 4, 8, 1, 'O');
-  for (const x of [5, 8, 11]) { p.px(x, 6, '7'); p.px(x - 1, 7, '7'); }
-  p.hline(2, 13, 12, '9');
-  return p.outline();
+  return item(`${groundShadow(32, 59, 23)}
+    <path d="M8 54 L8 34 Q8 18 32 18 Q56 18 56 34 L56 54 Q56 57 52 57 L12 57 Q8 57 8 54Z" fill="url(#c)" ${ST}/>
+    <path d="M18 30 L24 24 M29 30 L35 24 M40 30 L46 24" stroke="#ffe0a6" stroke-width="3.5" stroke-linecap="round"/>
+    ${shine(16, 30, 3, 6, 10)}`,
+  vgrad('c', '#d98a3a', 0.3, -0.2));
 }
+
 function egg() {
-  const p = new Px(16, 16);
-  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) if (Math.hypot((x - 7.5) * 1.25, y - 9) <= 5.5) p.px(x, y, 'n');
-  p.px(6, 6, 'N'); p.rect(9, 11, 2, 2, '0');
-  return p.outline();
+  return item(`${groundShadow(32, 60, 15)}
+    <path d="M32 12 Q48 14 49 38 Q49 58 32 58 Q15 58 15 38 Q16 14 32 12Z" fill="url(#c)" ${ST}/>
+    ${shine(25, 28, 3.4, 7, 15)}`,
+  rgrad('c', '#fffaf0', 0.2, -0.12));
+}
+
+function cake() {
+  return item(`${groundShadow(32, 60, 24)}
+    <ellipse cx="32" cy="55" rx="27" ry="5" fill="#f4f6ff" ${ST}/>
+    <path d="M10 36 L10 52 Q32 60 54 52 L54 36Z" fill="url(#c)" ${ST}/>
+    <path d="M10 44 Q32 50 54 44" fill="none" stroke="#fff3c4" stroke-width="3"/>
+    <ellipse cx="32" cy="36" rx="22" ry="7" fill="#fff8fb" ${ST}/>
+    <path d="M12 37 Q14 44 17 39 Q20 46 23 41 Q27 46 31 42 Q35 47 38 41 Q42 46 45 40 Q49 45 52 37" fill="#fff8fb" stroke="none"/>
+    <circle cx="32" cy="27" r="5.5" fill="url(#ch)" ${ST2}/>
+    <path d="M32 22 Q34 15 39 14" fill="none" stroke="#3f8f2f" stroke-width="2.2" stroke-linecap="round"/>
+    ${[[20, 34], [44, 34], [28, 38], [38, 38]].map(([x, y], i) => `<rect x="${x}" y="${y}" width="3.4" height="1.6" rx="0.8" fill="${['#ff6f91', '#3d8bf2', '#ffd23f', '#5fbf45'][i]}" transform="rotate(${i * 40} ${x} ${y})"/>`).join('')}`,
+  vgrad('c', '#ffb5cf', 0.25, -0.12) + rgrad('ch', '#e53935', 0.4, -0.2));
+}
+
+// ---------- посуда ----------
+function cup(base: string) {
+  return item(`${groundShadow(30, 60, 18)}
+    <path d="M24 14 Q20 10 24 6 M32 14 Q28 10 32 6" fill="none" stroke="#b9c3d6" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M42 28 Q56 28 54 40 Q52 50 40 48" fill="none" stroke="${INK}" stroke-width="9" stroke-linecap="round"/>
+    <path d="M42 28 Q56 28 54 40 Q52 50 40 48" fill="none" stroke="${base}" stroke-width="4" stroke-linecap="round"/>
+    <path d="M12 20 L44 20 L42 54 Q41 58 37 58 L19 58 Q15 58 14 54Z" fill="url(#c)" ${ST}/>
+    <ellipse cx="28" cy="20" rx="16" ry="4" fill="${tint(base, -0.25)}" ${ST}/>
+    <ellipse cx="28" cy="21" rx="12" ry="2.4" fill="#8a5a33"/>
+    <rect x="17" y="26" width="5" height="22" rx="2.5" fill="#fff" opacity="0.4"/>`,
+  `<linearGradient id="c" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${tint(base, 0.25)}"/><stop offset="1" stop-color="${tint(base, -0.18)}"/></linearGradient>`);
+}
+
+function plate(base: string) {
+  return item(`${groundShadow(32, 52, 28, 6)}
+    <ellipse cx="32" cy="42" rx="28" ry="12" fill="url(#c)" ${ST}/>
+    <ellipse cx="32" cy="41" rx="18" ry="7" fill="#f4f8ff" ${ST2}/>
+    <ellipse cx="26" cy="38" rx="6" ry="1.8" fill="#fff" opacity="0.8"/>`,
+  vgrad('c', base, 0.3, -0.15));
+}
+
+// ---------- игрушки ----------
+function ball(base: string) {
+  return item(`${groundShadow(32, 60, 18)}
+    <circle cx="32" cy="38" r="20" fill="url(#c)" ${ST}/>
+    <path d="M13 34 Q32 46 51 34" fill="none" stroke="#fff" stroke-width="5"/>
+    <path d="M13 34 Q32 46 51 34" fill="none" ${ST2} opacity="0.5"/>
+    <path d="M32 18 Q24 38 32 58" fill="none" stroke="${tint(base, -0.25)}" stroke-width="2.2"/>
+    ${shine(24, 27, 4, 6, 35)}`,
+  rgrad('c', base, 0.35, -0.22));
 }
 
 // ---------- школьные вещи ----------
-function pencil(main: string, dark: string) {
-  const p = new Px(16, 16);
-  for (let i = 0; i < 10; i++) { p.px(3 + i, 12 - i, main); p.px(4 + i, 12 - i, main); p.px(3 + i, 13 - i, dark); }
-  p.px(13, 2, 'z'); p.px(14, 1, 'z'); p.px(14, 2, 'z'); p.px(15, 0, 'k');
-  p.px(2, 13, 'r'); p.px(3, 13, 'r'); p.px(2, 14, 'r');
-  return p.outline();
-}
-function pen(main: string) {
-  const p = new Px(16, 16);
-  for (let i = 0; i < 10; i++) { p.px(3 + i, 12 - i, 'M'); p.px(4 + i, 12 - i, main); p.px(3 + i, 13 - i, 'M'); }
-  p.px(14, 1, 'k'); p.px(13, 2, 'M'); p.rect(3, 11, 2, 2, main);
-  return p.outline();
-}
-function ruler(main: string, dark: string) {
-  const p = new Px(16, 16);
-  p.rect(1, 6, 14, 5, main);
-  for (let x = 2; x < 15; x += 2) p.vline(x, 6, x % 4 === 0 ? 3 : 2, dark);
-  return p.outline();
+function book(base: string) {
+  return item(`${groundShadow(32, 60, 24)}
+    <path d="M12 14 L50 10 L54 50 L16 54Z" fill="#fffdf4" ${ST}/>
+    <path d="M16 54 L54 50 L54 56 L16 59Z" fill="#f1ead6" ${ST2}/>
+    <path d="M10 12 L48 8 L52 48 L14 52Z" fill="url(#c)" ${ST}/>
+    <path d="M14 11.6 L18 51.6" stroke="${tint(base, -0.3)}" stroke-width="3"/>
+    <path d="M24 19 L42 17 L43 27 L25 29Z" fill="#fff6c9" ${ST2}/>
+    <path d="M28 22 L39 21 M28 25 L36 24.5" stroke="${INK}" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>`,
+  vgrad('c', base, 0.25, -0.15));
 }
 
+function pencil(base: string) {
+  return item(`${groundShadow(32, 58, 22, 4)}
+    <g transform="rotate(-38 32 32)">
+      <rect x="10" y="27" width="34" height="10" fill="url(#c)" ${ST}/>
+      <path d="M12 30 H42" stroke="#fff" stroke-width="1.6" opacity="0.5"/>
+      <path d="M44 27 L56 32 L44 37Z" fill="#f2c58f" ${ST}/>
+      <path d="M52.5 30.5 L56 32 L52.5 33.5Z" fill="${INK}"/>
+      <rect x="4" y="27" width="6" height="10" rx="2.5" fill="#ff9fb4" ${ST}/>
+      <rect x="9" y="26.5" width="3.5" height="11" fill="#c9ced8" ${ST2}/>
+    </g>`,
+  vgrad('c', base, 0.3, -0.18));
+}
+
+function pen(base: string) {
+  return item(`${groundShadow(32, 58, 22, 4)}
+    <g transform="rotate(-38 32 32)">
+      <rect x="20" y="28" width="26" height="8" rx="2" fill="#e8ecf4" ${ST}/>
+      <path d="M46 28 L56 32 L46 36Z" fill="#c9ced8" ${ST}/>
+      <path d="M53 31 L56 32 L53 33Z" fill="${INK}"/>
+      <rect x="6" y="27" width="18" height="10" rx="3.5" fill="url(#c)" ${ST}/>
+      <path d="M12 26 L12 22 L26 22 L26 26" fill="none" stroke="${tint(base, -0.2)}" stroke-width="2.5"/>
+    </g>`,
+  vgrad('c', base, 0.3, -0.18));
+}
+
+function ruler(base: string) {
+  const ticks = Array.from({ length: 11 }, (_, i) => `<path d="M${10 + i * 4.4} 22 v${i % 2 ? 4 : 7}" stroke="${INK}" stroke-width="1.6" stroke-linecap="round"/>`).join('');
+  return item(`${groundShadow(32, 50, 28, 5)}
+    <g transform="rotate(-12 32 32)">
+      <rect x="6" y="22" width="52" height="16" rx="2.5" fill="url(#c)" ${ST}/>${ticks}
+      <rect x="9" y="33" width="46" height="2" rx="1" fill="#fff" opacity="0.4"/>
+    </g>`,
+  vgrad('c', base, 0.3, -0.12));
+}
+
+// ---------- украшение ----------
+function lamp(base: string) {
+  return item(`${groundShadow(32, 60, 16)}
+    <ellipse cx="32" cy="56" rx="13" ry="4" fill="#c9a06a" ${ST}/>
+    <rect x="29.5" y="30" width="5" height="25" fill="#c9a06a" ${ST2}/>
+    <path d="M16 32 L22 8 L42 8 L48 32Z" fill="url(#c)" ${ST}/>
+    <path d="M18 27 H46" stroke="#fff" stroke-width="2" opacity="0.45"/>
+    <ellipse cx="32" cy="34" rx="9" ry="2.5" fill="#fff4b0" opacity="0.9"/>`,
+  vgrad('c', base, 0.3, -0.15));
+}
+
+function apples3() {
+  return item(`${groundShadow(32, 60, 26)}${apple(20, 44, 0.62)}${apple(44, 44, 0.62)}${apple(32, 25, 0.62)}`, appleDefs);
+}
+
+const BLUE = '#2f7de1', RED = '#e53935', GREEN = '#3dae4a', YELLOW = '#ffcc1f';
+
 export const ITEM_ART = {
-  duck, cat_black: () => cat('k', 'M'), cat_white: () => cat('n', '0'),
-  dog_black: () => dog('k', 'M'), dog_brown: () => dog('8', '9'),
+  duck, cat_black: () => cat('#4a4a5c', '#c6f26b'), cat_white: () => cat('#fbfbff', '#7cc7ff'),
+  dog_black: () => dog('#45455a', '#2d2d3b'), dog_brown: () => dog('#b9773f', '#7e4b23'),
   bird_blue: bird, rabbit_white: rabbit, frog_green: frog,
-  apple_red: apple, apples_three: apples3, banana, orange_fruit: orangeFruit, milk, bread, egg,
-  pencil_red: () => pencil('e', 'E'), pencil_blue: () => pencil('b', 'B'), pen_red: () => pen('e'),
-  ruler_green: () => ruler('g', 'G'),
-  book_blue: () => book('b', 'B'), book_yellow: () => book('y', 'O'),
-  cup_blue: () => cup('b', 'B', 'l'),
-  cup_red: () => cup('e', 'E', 'o'),
-  cup_green: () => cup('g', 'G', 'a'),
-  plate_blue: () => plate('b', 'B', 'l'),
-  ball_red: () => ball('e', 'E'),
-  ball_blue: () => ball('b', 'B'),
-  book_green: () => book('g', 'G'),
-  book_red: () => book('e', 'E'),
+  apple_red: () => item(`${groundShadow(32, 60, 18)}${apple()}`, appleDefs), apples_three: apples3, banana, orange_fruit: orangeFruit, milk, bread, egg,
+  pencil_red: () => pencil(RED), pencil_blue: () => pencil(BLUE), pen_red: () => pen(RED),
+  ruler_green: () => ruler(GREEN),
+  book_blue: () => book(BLUE), book_yellow: () => book(YELLOW),
+  cup_blue: () => cup(BLUE),
+  cup_red: () => cup(RED),
+  cup_green: () => cup(GREEN),
+  plate_blue: () => plate(BLUE),
+  ball_red: () => ball(RED),
+  ball_blue: () => ball(BLUE),
+  book_green: () => book(GREEN),
+  book_red: () => book(RED),
   cake,
-  lamp_blue: () => lamp('b', 'B'),
+  lamp_blue: () => lamp(BLUE),
 };
 export type ItemArtKey = keyof typeof ITEM_ART;

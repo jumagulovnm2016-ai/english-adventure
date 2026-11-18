@@ -4,3 +4,5 @@ dist/
 *.local
 dist-single/
 tests/e2e/screenshots/
+art-preview.png
+art-preview.svg

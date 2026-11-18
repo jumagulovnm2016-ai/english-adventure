@@ -55,16 +55,28 @@ const events = () => page.evaluate(() => window.__learning.allEvents());
 const view = () => page.evaluate(() => window.__tasks.lastView);
 const waitFor = (fn, arg, timeout = 10000) => page.waitForFunction(fn, { timeout }, arg);
 
-async function tapTarget(kind, id) {
+async function tapTarget(kind, id, attempt = 0) {
   const p = await page.evaluate((kind, id) => {
     const s = window.__game.scene.getScene('world');
     const t = s.targetPosition(kind, id);
     if (!t) return null;
     const r = window.__game.canvas.getBoundingClientRect();
     const sc = s.worldToScreen(t.x, t.y);
-    return { x: r.left + sc.x, y: r.top + sc.y };
+    const x = r.left + sc.x, y = r.top + sc.y;
+    return { x, y, covered: document.elementFromPoint(x, y) !== window.__game.canvas };
   }, kind, id);
   if (!p) throw new Error(`нет цели ${kind}:${id}`);
+  // цель под плашкой задания или кнопкой — ждём, пока камера сдвинется (герой идёт), и пробуем ещё раз
+  if (p.covered && attempt < 6) { await sleep(500); return tapTarget(kind, id, attempt + 1); }
+  if (p.covered && attempt === 6) {
+    // всё ещё закрыта — ставим героя ниже цели, камера едет за ним
+    await page.evaluate((kind, id) => {
+      const s = window.__game.scene.getScene('world'); const t = s.targetPosition(kind, id); const g = s.grid;
+      const c = g.nearestWalkable(g.cellOf({ x: t.x, y: t.y + 40 }), { x: t.x, y: t.y + 40 }); s.pos = g.feetOf(c);
+    }, kind, id);
+    await sleep(500);
+    return tapTarget(kind, id, 7);
+  }
   await page.mouse.click(p.x, p.y);
 }
 

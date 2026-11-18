@@ -53,9 +53,9 @@ const state = (page) => page.evaluate(() => window.__game.scene.getScene('world'
 const waitWorld = (page) => page.waitForFunction(() => window.__game?.scene.getScene('world')?.debugState, { timeout: 8000 });
 /** Экранные координаты точки мира. */
 const toScreen = (page, x, y) => page.evaluate((x, y) => {
-  const cam = window.__game.scene.getScene('world').cameras.main;
+  const sc = window.__game.scene.getScene('world').worldToScreen(x, y);
   const r = window.__game.canvas.getBoundingClientRect();
-  return { x: r.left + (x - cam.worldView.x) * cam.zoom, y: r.top + (y - cam.worldView.y) * cam.zoom };
+  return { x: r.left + sc.x, y: r.top + sc.y };
 }, x, y);
 async function hold(page, key, ms) { await page.keyboard.down(key); await sleep(ms); await page.keyboard.up(key); await sleep(80); }
 const visible = (page, sel) => page.$eval(sel, (el) => !el.hidden);

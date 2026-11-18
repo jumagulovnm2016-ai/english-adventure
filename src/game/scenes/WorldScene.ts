@@ -4,10 +4,10 @@
 import Phaser from 'phaser';
 import type { EventBus, GameEvents, TargetKind } from '../../core/events';
 import type { ContentRegistry } from '../../content/registry';
-import { registerTextures, kidFrameKey } from '../art/textures';
+import { registerTextures, kidFrameKey, ART_SCALE, artScale } from '../art/textures';
 import { CHAR_H } from '../art/character';
-import { hash } from '../art/pixels';
-import { TILE_LEGEND, type Exit, type MapDef, type TileChar } from '../maps/types';
+import { hash } from '../art/svg';
+import type { Exit, MapDef } from '../maps/types';
 import { Grid, TILE, type Point } from '../world/grid';
 import { findPath, smoothPath } from '../world/pathfinding';
 import { distToRect, facingFor, moveWithCollision, type Facing } from '../world/movement';
@@ -84,7 +84,7 @@ export class WorldScene extends Phaser.Scene {
 
   create() {
     const { map, bus } = this.deps;
-    registerTextures(this);
+    registerTextures(this, map.id);
     this.grid = new Grid(map);
 
     this.drawFloor();
@@ -96,11 +96,11 @@ export class WorldScene extends Phaser.Scene {
       : this.grid.feetOf({ tx: map.spawn.tx, ty: map.spawn.ty });
     if (!this.deps.start) this.facing = map.spawn.dir;
     this.pos = { ...start };
-    this.heroShadow = this.add.image(0, 0, 'shadow').setAlpha(0.35);
-    this.hero = this.add.sprite(0, 0, kidFrameKey(this.deps.look, this.facing, 0)).setOrigin(0.5, 1);
+    this.heroShadow = this.add.image(0, 0, 'shadow').setAlpha(0.22).setScale(ART_SCALE);
+    this.hero = this.add.sprite(0, 0, kidFrameKey(this.deps.look, this.facing, 0)).setOrigin(0.5, 1).setScale(ART_SCALE);
     this.syncHero();
 
-    this.tapMark = this.add.image(0, 0, 'shadow').setTint(0xffe27a).setAlpha(0).setDepth(1);
+    this.tapMark = this.add.image(0, 0, 'shadow').setTint(0xffe27a).setAlpha(0).setDepth(1).setScale(ART_SCALE);
     this.marker = this.makeBubble('!', '#ffffff').setVisible(false);
 
     const cam = this.cameras.main;
@@ -117,7 +117,7 @@ export class WorldScene extends Phaser.Scene {
     for (const k of ['act', 'act2', 'act3'] as const) this.keys[k].on('down', () => this.interactNearby());
 
     this.input.on('pointerup', (p: Phaser.Input.Pointer) => {
-      if (this.blocked || p.getDistance() > 12) return;
+      if (this.blocked || p.getDistance() > 12 * this.dpr) return;
       this.onTap({ x: p.worldX, y: p.worldY });
     });
 
@@ -129,8 +129,8 @@ export class WorldScene extends Phaser.Scene {
     this.events.once('shutdown', () => { off(); this.scale.off('resize'); });
 
     for (const sgn of map.signs) {
-      this.add.text(sgn.x, sgn.y, sgn.text, { fontFamily: 'system-ui, sans-serif', fontSize: '9px', color: '#ffffff', backgroundColor: '#2b2232', padding: { x: 3, y: 1 }, fontStyle: 'bold' })
-        .setOrigin(0.5, 0.5).setResolution(6).setDepth(5000);
+      this.add.text(sgn.x, sgn.y, sgn.text, { fontFamily: 'Nunito, system-ui, sans-serif', fontSize: '7px', color: '#ffffff', backgroundColor: '#3d2b24', padding: { x: 4, y: 1 }, fontStyle: '900' })
+        .setOrigin(0.5, 0.5).setResolution(10).setDepth(5000);
     }
     this.lastCellKey = this.grid.key(this.grid.cellOf(this.pos));
     if (this.deps.companion) this.createPip();
@@ -147,9 +147,9 @@ export class WorldScene extends Phaser.Scene {
       if (!pl) throw new Error(`На карте нет ${npcId}`);
       const look = this.deps.content.npc(npcId).sprite;
       const feet = this.grid.feetOf({ tx: pl.tx, ty: pl.ty });
-      const spr = this.add.sprite(feet.x, feet.y + 1, kidFrameKey(look, pl.dir, 0)).setOrigin(0.5, 1).setDepth(feet.y);
+      const spr = this.add.sprite(feet.x, feet.y + 1, kidFrameKey(look, pl.dir, 0)).setOrigin(0.5, 1).setDepth(feet.y).setScale(ART_SCALE);
       spr.setData('look', look);
-      this.add.image(feet.x, feet.y, 'shadow').setAlpha(0.35).setDepth(feet.y - 0.5).setName(`shadow_${npcId}`);
+      this.add.image(feet.x, feet.y, 'shadow').setAlpha(0.22).setDepth(feet.y - 0.5).setName(`shadow_${npcId}`).setScale(ART_SCALE);
       spr.setInteractive({ useHandCursor: true });
       this.grid.setDynamic(pl.tx, pl.ty, true);
       this.targets.push({ kind: 'npc', id: npcId, tx: pl.tx, ty: pl.ty, tw: 1, th: 1, obj: spr, dynamicCell: { tx: pl.tx, ty: pl.ty } });
@@ -204,7 +204,7 @@ export class WorldScene extends Phaser.Scene {
   highlightPickable(itemId: string) {
     this.highlighted = itemId;
     const t = this.targets.find((x) => x.kind === 'pick' && x.id === itemId);
-    if (t) this.tweens.add({ targets: t.obj, scale: 1.3, yoyo: true, repeat: 3, duration: 250 });
+    if (t) this.tweens.add({ targets: t.obj, scale: ART_SCALE * 1.3, yoyo: true, repeat: 3, duration: 250 });
   }
 
   /** Показать неинтерактивные предметы (утки на пруду, книги на партах) на время шага квеста. */
@@ -214,7 +214,7 @@ export class WorldScene extends Phaser.Scene {
     if (!spots || spots.length < itemIds.length) throw new Error(`Мест «${spotSet}» не хватает для показа`);
     itemIds.forEach((id, i) => {
       const s = spots[i];
-      const img = this.add.image(s.px, s.py, `item_${this.deps.content.item(id).sprite}`).setOrigin(0.5, 1).setDepth((s.ty + 1) * TILE + 1).setName('prop');
+      const img = this.add.image(s.px, s.py, `item_${this.deps.content.item(id).sprite}`).setOrigin(0.5, 1).setDepth((s.ty + 1) * TILE + 1).setName('prop').setScale(ART_SCALE);
       this.tweens.add({ targets: img, y: s.py - 1, yoyo: true, repeat: -1, duration: 700 + i * 90, ease: 'Sine.inOut' });
       this.props.push(img);
     });
@@ -246,7 +246,7 @@ export class WorldScene extends Phaser.Scene {
     this.carried = null;
     if (itemId) {
       const sprite = this.deps.content.item(itemId).sprite;
-      this.carried = this.add.image(0, 0, `item_${sprite}`).setOrigin(0.5, 1).setDepth(9000);
+      this.carried = this.add.image(0, 0, `item_${sprite}`).setOrigin(0.5, 1).setDepth(9000).setScale(ART_SCALE);
       this.syncHero();
     }
   }
@@ -256,7 +256,7 @@ export class WorldScene extends Phaser.Scene {
     const d = this.deps.map.decor[itemId];
     if (!d || this.children.getByName(`decor_${itemId}`)) return;
     const sprite = this.deps.content.item(itemId).sprite;
-    this.add.image(d.px, d.py, `item_${sprite}`).setOrigin(0.5, 1).setDepth(d.py).setName(`decor_${itemId}`);
+    this.add.image(d.px, d.py, `item_${sprite}`).setOrigin(0.5, 1).setDepth(d.py).setName(`decor_${itemId}`).setScale(ART_SCALE);
     this.grid.setDynamic(d.tx, d.ty, true);
     this.pushHeroOut();
   }
@@ -264,7 +264,7 @@ export class WorldScene extends Phaser.Scene {
   /** Экранные координаты точки мира (для автотестов и всплывающих подсказок). */
   worldToScreen(x: number, y: number) {
     const cam = this.cameras.main;
-    return { x: (x - cam.worldView.x) * cam.zoom, y: (y - cam.worldView.y) * cam.zoom };
+    return { x: ((x - cam.worldView.x) * cam.zoom) / this.dpr, y: ((y - cam.worldView.y) * cam.zoom) / this.dpr };
   }
 
   /** Где сейчас цель (для автотестов). */
@@ -277,16 +277,19 @@ export class WorldScene extends Phaser.Scene {
 
   // ---------- построение сцены ----------
 
+  /** Пикселей экрана на CSS-пиксель (холст рисуется в повышенном разрешении, см. main.ts). */
+  private get dpr() { return 1 / (this.scale.zoom || 1); }
+
   private makeBubble(text: string, color: string) {
-    return this.add.text(0, 0, text, { fontFamily: 'system-ui, sans-serif', fontSize: '12px', color, stroke: '#2b2232', strokeThickness: 3, fontStyle: 'bold' })
-      .setOrigin(0.5, 1).setResolution(4).setDepth(10000);
+    return this.add.text(0, 0, text, { fontFamily: 'Nunito, system-ui, sans-serif', fontSize: '13px', color, stroke: '#3d2b24', strokeThickness: 3.5, fontStyle: '900' })
+      .setOrigin(0.5, 1).setResolution(10).setDepth(10000);
   }
 
   private addItemTarget(kind: TargetKind, itemId: string, px: number, py: number, cells: { tx: number; ty: number; tw: number; th: number }, blocksFloor: boolean) {
     const item = this.deps.content.item(itemId);
-    const img = this.add.image(px, py, `item_${item.sprite}`).setOrigin(0.5, 1).setDepth((cells.ty + cells.th) * TILE + 1);
+    const img = this.add.image(px, py, `item_${item.sprite}`).setOrigin(0.5, 1).setDepth((cells.ty + cells.th) * TILE + 1).setScale(ART_SCALE);
     img.setInteractive({ useHandCursor: true });
-    this.tweens.add({ targets: img, scaleY: 1.06, yoyo: true, repeat: -1, duration: 900 + hash(cells.tx, cells.ty) * 400, ease: 'Sine.inOut' });
+    this.tweens.add({ targets: img, scaleY: ART_SCALE * 1.06, yoyo: true, repeat: -1, duration: 900 + hash(cells.tx, cells.ty) * 400, ease: 'Sine.inOut' });
     const t: Target = { kind, id: itemId, ...cells, obj: img };
     if (blocksFloor) { this.grid.setDynamic(cells.tx, cells.ty, true); t.dynamicCell = { tx: cells.tx, ty: cells.ty }; }
     this.targets.push(t);
@@ -312,7 +315,8 @@ export class WorldScene extends Phaser.Scene {
   private fitCamera() {
     const w = this.scale.width, h = this.scale.height;
     const vis = w >= h ? VISIBLE_LANDSCAPE : VISIBLE_PORTRAIT;
-    const z = Math.max(2, Math.min(6, Math.floor(Math.min(w / (vis.w * TILE), h / (vis.h * TILE)))));
+    const d = this.dpr;
+    const z = Math.max(2 * d, Math.min(6 * d, Math.min(w / (vis.w * TILE), h / (vis.h * TILE))));
     const cam = this.cameras.main;
     cam.setZoom(z);
     const W = this.grid.cols * TILE, H = this.grid.rows * TILE;
@@ -321,19 +325,13 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private drawFloor() {
-    const { map } = this.deps;
-    const rt = this.add.renderTexture(0, 0, this.grid.cols * TILE, this.grid.rows * TILE).setOrigin(0, 0).setDepth(-1000);
-    for (let ty = 0; ty < this.grid.rows; ty++) for (let tx = 0; tx < this.grid.cols; tx++) {
-      let art: string = TILE_LEGEND[map.tiles[ty][tx] as TileChar].art;
-      if (art === 'floor_wood') art = hash(tx, ty, 5) > 0.7 ? 'floor_wood_1' : 'floor_wood_0';
-      if (art === 'grass') { const h = hash(tx, ty, 9); art = h > 0.93 ? 'grass_2' : h > 0.7 ? 'grass_1' : 'grass_0'; }
-      rt.draw(`tile_${art}`, tx * TILE, ty * TILE);
-    }
+    const key = `floor_${this.deps.map.id}`;
+    this.add.image(0, 0, key).setOrigin(0, 0).setScale(artScale(key)).setDepth(-1000);
   }
 
   private drawFurniture() {
     for (const f of this.deps.map.furniture) {
-      const img = this.add.image((f.tx + f.tw / 2) * TILE, (f.ty + f.th) * TILE, `furn_${f.key}`).setOrigin(0.5, 1);
+      const img = this.add.image((f.tx + f.tw / 2) * TILE, (f.ty + f.th) * TILE, `furn_${f.key}`).setOrigin(0.5, 1).setScale(ART_SCALE);
       if (f.walkable) img.setOrigin(0, 0).setPosition(f.tx * TILE, f.ty * TILE).setDepth(-500);
       else img.setDepth((f.ty + f.th) * TILE);
     }
@@ -388,9 +386,9 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private showTapMark(p: Point) {
-    this.tapMark.setPosition(p.x, p.y).setAlpha(0.9).setScale(1);
+    this.tapMark.setPosition(p.x, p.y).setAlpha(0.9).setScale(ART_SCALE);
     this.tweens.killTweensOf(this.tapMark);
-    this.tweens.add({ targets: this.tapMark, alpha: 0, scale: 1.6, duration: 600 });
+    this.tweens.add({ targets: this.tapMark, alpha: 0, scale: ART_SCALE * 1.6, duration: 600 });
   }
 
   private stopWalking() { this.path = []; this.pendingTarget = null; }
@@ -480,7 +478,7 @@ export class WorldScene extends Phaser.Scene {
 
   private createPip() {
     this.pipPos = { x: this.pos.x - 14, y: this.pos.y };
-    this.pip = this.add.image(this.pipPos.x, this.pipPos.y, 'pip_0').setOrigin(0.5, 1).setInteractive({ useHandCursor: true });
+    this.pip = this.add.image(this.pipPos.x, this.pipPos.y, 'pip_0').setOrigin(0.5, 1).setScale(ART_SCALE).setInteractive({ useHandCursor: true });
     this.trail = [];
   }
 
@@ -546,7 +544,7 @@ export class WorldScene extends Phaser.Scene {
     }
     const bob = Math.round(Math.sin(this.time.now / 180) * 1.5);
     if (best && best.kind !== 'npc') {
-      this.marker.setVisible(true).setPosition(best.obj.x, best.obj.y - best.obj.height - 2 + bob);
+      this.marker.setVisible(true).setPosition(best.obj.x, best.obj.y - best.obj.displayHeight - 2 + bob);
     } else this.marker.setVisible(false);
   }
 
@@ -554,7 +552,7 @@ export class WorldScene extends Phaser.Scene {
     const bob = Math.round(Math.sin(this.time.now / 180) * 1.5);
     for (const [npcId, m] of this.npcMarkers) {
       const t = this.targets.find((x) => x.kind === 'npc' && x.id === npcId);
-      if (t) m.setPosition(t.obj.x, t.obj.y - t.obj.height - 1 + bob);
+      if (t) m.setPosition(t.obj.x, t.obj.y - t.obj.displayHeight - 1 + bob);
     }
   }
 

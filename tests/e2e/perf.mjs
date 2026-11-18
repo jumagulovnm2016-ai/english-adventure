@@ -41,7 +41,7 @@ async function measure({ name, throttle, viewport }) {
   // на улицу — самая большая карта
   await page.evaluate(() => { const m = window.__maps.street; window.__travel({ tx: 0, ty: 0, to: 'street', spawn: { tx: 13, ty: 9, dir: 'down' } }); void m; });
   await page.waitForFunction(() => window.__game.scene.getScene('world').debugState?.().location === 'street', { timeout: 30000 });
-  await sleep(1500);
+  await sleep(4000); // через 3 с игра сама снижает разрешение холста, если кадров мало (D46) — меряем установившийся режим
   // FPS за 6 секунд ходьбы туда-обратно
   const fpsP = page.evaluate(() => new Promise((res) => {
     let n = 0; const t = performance.now(); const times = [];

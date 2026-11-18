@@ -1,9 +1,9 @@
 :root {
   --ui-scale: 1;
-  --bg: #1b1626;
+  --bg: #3d2b24;
   --panel: #fff8ec;
-  --ink: #2b2232;
-  --muted: #6c6276;
+  --ink: #3d2b24;
+  --muted: #6e5d55;
   --accent: #f2a93b;
   --accent-ink: #3a2405;
   --blue: #2c66b5; /* контраст ≥ 4.5 на белом (WCAG AA) */
@@ -17,7 +17,7 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); o
 body { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: none; }
 [hidden] { display: none !important; }
 #game { position: fixed; inset: 0; }
-#game canvas { image-rendering: pixelated; display: block; }
+#game canvas { display: block; }
 
 /* ---------- кнопки ---------- */
 .btn {
@@ -36,13 +36,28 @@ body { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color
 /* ---------- стартовый экран ---------- */
 .screen {
   position: fixed; inset: 0; display: grid; place-items: center; padding: 1rem;
-  background: radial-gradient(circle at 50% 35%, #3b2f58, var(--bg) 70%);
+  /* небо, облака и луг — как в самой игре */
+  background:
+    radial-gradient(ellipse 9rem 2.6rem at 18% 16%, #fff 98%, transparent 100%),
+    radial-gradient(ellipse 6rem 2.2rem at 24% 13%, #fff 98%, transparent 100%),
+    radial-gradient(ellipse 10rem 2.4rem at 80% 10%, #ffffffd9 98%, transparent 100%),
+    radial-gradient(ellipse 140% 40% at 50% 100%, #5fb944 60%, transparent 61%),
+    radial-gradient(ellipse 120% 45% at 30% 100%, #8ed85b 70%, transparent 71%),
+    linear-gradient(#8fd3ff, #d9f1ff 70%);
 }
-.start-box { text-align: center; color: #fff; max-width: 32rem; }
-.start-box h1 { font-size: clamp(2rem, 8vw, 3.4rem); margin: 0; letter-spacing: .02em; text-shadow: 0 4px 0 #000a; }
-.start-box .sub { margin: .2rem 0 2rem; font-size: 1.3rem; color: var(--accent); font-weight: 800; }
+.start-box { text-align: center; color: var(--ink); max-width: 32rem; }
+.start-box h1 {
+  font-size: clamp(2.2rem, 9vw, 3.6rem); margin: 0; letter-spacing: .01em; font-weight: 900; color: #fff;
+  -webkit-text-stroke: 7px var(--ink); paint-order: stroke fill; text-shadow: 0 5px 0 var(--ink);
+}
+.start-box .sub { margin: .1rem 0 1.6rem; font-size: 1.4rem; color: #fff; font-weight: 900; -webkit-text-stroke: 5px #c4561a; paint-order: stroke fill; }
+.start-cast { display: flex; justify-content: center; align-items: flex-end; gap: .2rem; margin-bottom: .4rem; }
+#start-hero { width: 6rem; height: auto; animation: hop 1.6s ease-in-out infinite; }
+#start-pip { width: 5rem; height: auto; animation: hop 1.6s .3s ease-in-out infinite; }
+@keyframes hop { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-.5rem); } }
 .notes { color: var(--muted); font-size: .9rem; margin: .8rem 0 0; }
-.start-box .notes { color: #cbbfdc; }
+.start-box .notes { color: var(--ink); font-weight: 700; background: #ffffffc0; border-radius: .8rem; padding: .3rem .6rem; }
+.start-box .notes:empty { display: none; }
 
 /* ---------- HUD ---------- */
 #hud {
@@ -50,6 +65,9 @@ body { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color
   display: flex; justify-content: space-between; align-items: center; pointer-events: none;
 }
 #hud > * { pointer-events: auto; }
+/* колонки HUD прозрачны для касаний — нажимаются только сами плашки и кнопки, а не пустое место между ними */
+#hud > .hud-left, #hud > .hud-right { pointer-events: none; }
+#hud > .hud-left > *, #hud > .hud-right > * { pointer-events: auto; }
 .hud-place {
   background: #fff8ecee; border: 3px solid var(--ink); border-radius: 999px; padding: .35rem .9rem;
   font-weight: 800;
@@ -76,7 +94,7 @@ body { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color
 }
 .btn-close { position: absolute; top: .6rem; right: .6rem; }
 .card-box { text-align: center; }
-#card-img { width: calc(9rem); height: calc(9rem); image-rendering: pixelated; display: block; margin: .2rem auto .6rem; }
+#card-img { width: calc(9rem); height: calc(9rem); display: block; margin: .2rem auto .6rem; }
 .card-en { font-size: 2.2rem; font-weight: 900; color: var(--blue); line-height: 1.1; }
 .card-ru { font-size: 1.1rem; color: var(--muted); margin-top: .2rem; }
 .chips { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; margin: 1rem 0; }
@@ -159,7 +177,7 @@ body { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color
 .opt:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
 .opt:focus-visible { outline: 4px solid var(--blue); outline-offset: 2px; }
 .opt .swatch { width: 3.4rem; height: 3.4rem; border-radius: 50%; border: 3px solid var(--ink); }
-.opt img { width: 3.6rem; height: 3.6rem; image-rendering: pixelated; }
+.opt img { width: 4.2rem; height: 4.2rem; }
 .opt .digit { font-size: 2.6rem; line-height: 1; }
 .opt .listen { position: absolute; top: .3rem; right: .3rem; font-size: .9rem; min-height: 2rem; min-width: 2rem; border-radius: 999px; border: 2px solid var(--ink); background: #fff8ec; cursor: pointer; }
 .opt.wrong { animation: shake .35s; background: #ffe1df; }
@@ -183,7 +201,7 @@ body { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color
 .rw-stars { font-size: 2.6rem; letter-spacing: .2rem; }
 .type-row input { -webkit-user-select: text; user-select: text; touch-action: manipulation; }
 
-.task-picture { width: 4.5rem; height: 4.5rem; image-rendering: pixelated; flex: none; background: #fff; border: 3px solid var(--ink); border-radius: var(--radius); }
+.task-picture { width: 4.5rem; height: 4.5rem; flex: none; background: #fff; border: 3px solid var(--ink); border-radius: var(--radius); }
 .task-head .task-title { flex: 1; }
 
 /* ---------- первый запуск ---------- */
@@ -192,7 +210,7 @@ body { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color
 .onboard-box h2 { margin: 0 0 .8rem; }
 .ob-heroes { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
 .ob-hero { border: 4px solid var(--ink); border-radius: var(--radius); background: #fff; padding: .4rem; cursor: pointer; box-shadow: 0 4px 0 var(--ink); min-height: 6rem; }
-.ob-hero img { width: 4.5rem; height: auto; image-rendering: pixelated; }
+.ob-hero img { width: 6.5rem; height: auto; }
 .ob-hero:focus-visible { outline: 4px solid var(--blue); }
 .ob-progress { height: .8rem; border: 3px solid var(--ink); border-radius: 999px; overflow: hidden; margin-bottom: .8rem; background: #fff; }
 #ob-bar { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
@@ -200,7 +218,7 @@ body { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color
 
 /* ---------- для родителей ---------- */
 .btn-link { background: transparent; box-shadow: none; border: 0; text-decoration: underline; color: inherit; font-weight: 700; min-height: 2.5rem; }
-.start-box .btn-link { color: #cbbfdc; }
+.start-box .btn-link { color: var(--ink); }
 .limit { z-index: 80; }
 .parent { position: fixed; inset: 0; background: #f6f1e7; z-index: 70; overflow: auto; -webkit-user-select: text; user-select: text; touch-action: auto; padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
 .parent-head { display: flex; justify-content: space-between; align-items: center; padding: max(.8rem, env(safe-area-inset-top)) 1rem .4rem; max-width: 52rem; margin: 0 auto; }

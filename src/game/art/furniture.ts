@@ -1,209 +1,220 @@
-// Мебель и крупные объекты комнаты.
-import { Px, hash } from './pixels';
+// Мебель, здания, деревья. Мировые размеры прежние (ширина = клетки × 16), холст рисования ×4.
+// Вид «сверху-спереди»: видна верхняя плоскость (светлее) и передняя грань (темнее).
+import { art, groundShadow, rgrad, shine, tint, vgrad, ST, ST2, INK, D, type Art } from './svg';
 
-function rug() {
-  const p = new Px(64, 48);
-  p.rect(0, 0, 64, 48, 'R');
-  p.rect(2, 2, 60, 44, 'r');
-  p.rect(5, 5, 54, 38, 'R');
-  p.rect(6, 6, 52, 36, 'r');
-  // ромбы
-  for (const [cx, cy] of [[20, 24], [32, 24], [44, 24]]) {
-    for (let d = 0; d <= 5; d++) { p.px(cx - d, cy - 5 + d, 'y'); p.px(cx + d, cy - 5 + d, 'y'); p.px(cx - d, cy + 5 - d, 'y'); p.px(cx + d, cy + 5 - d, 'y'); }
-  }
-  for (let x = 1; x < 64; x += 3) { p.px(x, 0, 'y'); p.px(x, 47, 'y'); }
-  return p;
+const WOOD = '#c98a52', WOOD_D = '#9a6034', WOOD_L = '#e8b47c';
+
+/** Плоский «ящик»: верх (top) и перед (front). Координаты в единицах рисования. */
+function box(x: number, y: number, w: number, topH: number, frontH: number, top: string, front: string, r = 6) {
+  return `<rect x="${x}" y="${y}" width="${w}" height="${topH + frontH}" rx="${r}" fill="${front}" ${ST}/>
+    <rect x="${x}" y="${y}" width="${w}" height="${topH}" rx="${r}" fill="${top}" ${ST}/>`;
 }
 
-function table() {
-  const p = new Px(32, 26);
-  p.rect(1, 2, 30, 12, 'w');       // столешница
-  p.hline(1, 2, 30, 'n');           // скатерть-полоска
-  p.rect(1, 3, 30, 1, 'N');
-  p.rect(1, 13, 30, 3, 'W');        // кромка
-  p.rect(3, 16, 3, 9, 'v'); p.rect(26, 16, 3, 9, 'v'); // ножки
-  return p.outline();
+function rug(): Art {
+  const W = 64 * D, H = 48 * D;
+  const dia = (cx: number) => `<path d="M${cx} ${H / 2 - 26} L${cx + 26} ${H / 2} L${cx} ${H / 2 + 26} L${cx - 26} ${H / 2}Z" fill="#ffd166" ${ST2}/>`;
+  return art(64, 48, `<rect x="8" y="8" width="${W - 16}" height="${H - 16}" rx="26" fill="url(#c)" ${ST}/>
+    <rect x="26" y="26" width="${W - 52}" height="${H - 52}" rx="14" fill="none" stroke="#fff3e0" stroke-width="5" stroke-dasharray="2 10" stroke-linecap="round"/>
+    ${dia(W / 2 - 64)}${dia(W / 2)}${dia(W / 2 + 64)}`, vgrad('c', '#e2574c', 0.15, -0.1));
 }
 
-function counter() {
-  const p = new Px(48, 28);
-  p.rect(0, 4, 48, 6, 'N');         // столешница
-  p.hline(0, 4, 48, 'n');
-  p.rect(0, 10, 48, 17, 'W');       // шкафчики
-  for (const x of [0, 16, 32]) { p.rect(x + 1, 11, 14, 15, 'w'); p.px(x + 12, 18, 'y'); }
-  // мойка
-  p.rect(4, 5, 10, 4, 'm'); p.rect(5, 6, 8, 2, 'l'); p.rect(8, 1, 2, 4, 'M');
-  // плита
-  p.rect(33, 5, 13, 4, 'M'); p.rect(35, 6, 3, 2, 'k'); p.rect(41, 6, 3, 2, 'k');
-  return p.outline();
+function table(): Art {
+  return art(32, 26, `${groundShadow(64, 98, 54, 7)}
+    <rect x="14" y="44" width="11" height="54" rx="4" fill="${WOOD_D}" ${ST}/><rect x="103" y="44" width="11" height="54" rx="4" fill="${WOOD_D}" ${ST}/>
+    ${box(4, 6, 120, 44, 12, 'url(#t)', WOOD_D, 8)}
+    <path d="M16 16 H70" stroke="#fff" stroke-width="3" opacity="0.35" stroke-linecap="round"/>`, vgrad('t', WOOD_L, 0.15, -0.08));
 }
 
-function fridge() {
-  const p = new Px(16, 30);
-  p.rect(1, 0, 14, 30, 'N');
-  p.rect(2, 1, 12, 9, 'n'); p.rect(2, 11, 12, 18, 'n');
-  p.hline(1, 10, 14, 'm');
-  p.vline(12, 3, 4, 'M'); p.vline(12, 14, 6, 'M');
-  return p.outline();
+function counter(): Art {
+  const W = 48 * D;
+  const doors = [0, 1, 2].map((i) => `<rect x="${10 + i * 60}" y="58" width="52" height="46" rx="5" fill="#a9d6f5" ${ST2}/><circle cx="${i % 2 ? 18 + i * 60 : 54 + i * 60}" cy="80" r="3" fill="${INK}"/>`).join('');
+  return art(48, 28, `<rect x="2" y="40" width="${W - 4}" height="70" rx="6" fill="url(#f)" ${ST}/>${doors}
+    <rect x="2" y="4" width="${W - 4}" height="44" rx="6" fill="#eef1f6" ${ST}/>
+    <rect x="18" y="12" width="44" height="24" rx="8" fill="#c5d3e3" ${ST2}/>
+    <path d="M40 12 V4 Q40 -2 48 0" fill="none" stroke="#9aa6b8" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="140" cy="24" r="10" fill="#4a4f5c" ${ST2}/><circle cx="170" cy="24" r="10" fill="#4a4f5c" ${ST2}/>`, vgrad('f', '#7fc0ef', 0.2, -0.1));
 }
 
-function sofa() {
-  const p = new Px(48, 28);
-  p.rect(2, 0, 44, 12, 'X');          // спинка
-  p.rect(3, 1, 42, 10, 'x');
-  p.rect(0, 8, 6, 18, 'X'); p.rect(42, 8, 6, 18, 'X'); // подлокотники
-  p.rect(6, 12, 36, 12, 'x');         // сиденье
-  p.vline(24, 12, 12, 'X');
-  p.hline(6, 12, 36, 'X');
-  p.rect(2, 26, 3, 2, 'v'); p.rect(43, 26, 3, 2, 'v');
-  return p.outline();
+function fridge(): Art {
+  return art(16, 30, `${groundShadow(32, 116, 28, 5)}
+    <rect x="4" y="4" width="56" height="112" rx="10" fill="url(#c)" ${ST}/>
+    <path d="M4 42 H60" ${ST}/>
+    <rect x="48" y="14" width="5" height="20" rx="2.5" fill="#9aa6b8"/><rect x="48" y="52" width="5" height="28" rx="2.5" fill="#9aa6b8"/>
+    <circle cx="20" cy="60" r="5" fill="#ff6f91" ${ST2}/><rect x="14" y="20" width="12" height="9" rx="2" fill="#ffd23f" ${ST2}/>
+    <rect x="10" y="10" width="6" height="26" rx="3" fill="#fff" opacity="0.7"/>`, vgrad('c', '#f4f7fb', 0.3, -0.1));
 }
 
-function bookshelf() {
-  const p = new Px(32, 34);
-  p.rect(0, 0, 32, 34, 'v');
-  p.rect(2, 2, 28, 30, 'W');
-  for (const y of [11, 21]) p.rect(2, y, 28, 2, 'v');
-  const colors = ['b', 'e', 'g', 'y', 'x', 'o', 'c', 'B'];
-  for (const [row, y0] of [[0, 3], [1, 13], [2, 23]] as const) {
-    let x = 3;
-    let k = row * 3;
-    while (x < 28) {
-      const w = 2 + (k % 2);
-      const h = 7 - (k % 3 === 0 ? 1 : 0);
-      p.rect(x, y0 + (8 - h), w, h, colors[k % colors.length]);
-      x += w + (k % 4 === 0 ? 2 : 0);
-      k++;
+function sofa(): Art {
+  const W = 48 * D;
+  return art(48, 28, `${groundShadow(W / 2, 106, 90, 7)}
+    <rect x="22" y="6" width="${W - 44}" height="56" rx="18" fill="url(#c)" ${ST}/>
+    <rect x="24" y="48" width="${W - 48}" height="44" rx="12" fill="${tint('#7d5cd6', 0.1)}" ${ST}/>
+    <path d="M${W / 2} 52 V88" ${ST2}/>
+    <rect x="4" y="34" width="34" height="68" rx="14" fill="url(#c)" ${ST}/><rect x="${W - 38}" y="34" width="34" height="68" rx="14" fill="url(#c)" ${ST}/>
+    <rect x="14" y="98" width="10" height="10" fill="${WOOD_D}" ${ST2}/><rect x="${W - 24}" y="98" width="10" height="10" fill="${WOOD_D}" ${ST2}/>
+    <rect x="44" y="16" width="40" height="5" rx="2.5" fill="#fff" opacity="0.3"/>`, vgrad('c', '#7d5cd6', 0.22, -0.12));
+}
+
+function bookshelf(): Art {
+  const colors = ['#e53935', '#2f7de1', '#ffcc1f', '#3dae4a', '#ff8a3d', '#8e5cd6', '#2fb5b0'];
+  const shelfRow = (y: number, seed: number) => {
+    let x = 18, s = '';
+    for (let i = 0; i < 7 && x < 104; i++) {
+      const w = 9 + ((i * 7 + seed) % 4) * 2, h = 26 + ((i * 5 + seed) % 3) * 4;
+      const tilt = i === 4 ? 'transform="rotate(-10 ' + (x + w / 2) + ' ' + (y + 34) + ')"' : '';
+      s += `<rect x="${x}" y="${y + 34 - h}" width="${w}" height="${h}" rx="2" fill="${colors[(i + seed) % colors.length]}" ${ST2} ${tilt}/>`;
+      x += w + 2;
     }
-  }
-  return p.outline();
+    return s;
+  };
+  return art(32, 34, `${groundShadow(64, 132, 56, 6)}
+    <rect x="6" y="4" width="116" height="128" rx="8" fill="url(#c)" ${ST}/>
+    <rect x="16" y="14" width="96" height="108" rx="4" fill="${WOOD_D}"/>
+    ${shelfRow(14, 0)}<rect x="12" y="48" width="104" height="8" fill="${WOOD}" ${ST2}/>
+    ${shelfRow(56, 3)}<rect x="12" y="90" width="104" height="8" fill="${WOOD}" ${ST2}/>
+    ${shelfRow(90, 5)}`, vgrad('c', WOOD, 0.15, -0.1));
 }
 
-function plant() {
-  const p = new Px(16, 26);
-  const leaves: [number, number, number, number][] = [[6, 0, 4, 8], [2, 4, 5, 6], [9, 3, 5, 6], [4, 8, 8, 6], [1, 10, 5, 4], [10, 9, 5, 4]];
-  for (const [x, y, w, h] of leaves) p.rect(x, y, w, h, 'g');
-  for (const [x, y] of [[7, 2], [3, 6], [11, 5], [6, 11], [9, 10], [2, 11], [12, 10]]) p.px(x, y, 'G');
-  p.px(8, 1, 'a'); p.px(4, 5, 'a'); p.px(12, 4, 'a');
-  p.rect(4, 15, 8, 10, 'O'); p.rect(3, 15, 10, 2, 'o'); // горшок
-  return p.outline();
+function plant(): Art {
+  return art(16, 26, `${groundShadow(32, 100, 20, 5)}
+    <path d="M32 66 Q14 44 8 52 Q12 30 30 56 Q22 22 32 14 Q42 22 34 56 Q52 30 56 52 Q50 44 32 66Z" fill="url(#l)" ${ST}/>
+    <path d="M32 60 Q30 40 32 22" fill="none" stroke="#2f7a32" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M14 66 L50 66 L44 100 L20 100Z" fill="url(#p)" ${ST}/>
+    <rect x="12" y="62" width="40" height="10" rx="4" fill="${tint('#e07a3f', 0.1)}" ${ST}/>`,
+  vgrad('l', '#5fc04a', 0.25, -0.2) + vgrad('p', '#e07a3f', 0.15, -0.15));
 }
 
-function tv() {
-  const p = new Px(32, 26);
-  p.rect(0, 14, 32, 12, 'W'); p.rect(1, 15, 30, 10, 'w'); p.vline(16, 15, 10, 'W');
-  p.rect(4, 0, 24, 14, 'k'); p.rect(6, 2, 20, 10, 'B'); p.rect(7, 3, 6, 3, 'l');
-  return p.outline();
+function tv(): Art {
+  return art(32, 26, `${groundShadow(64, 100, 56, 6)}
+    ${box(6, 60, 116, 12, 28, WOOD_L, WOOD_D, 6)}
+    <rect x="18" y="4" width="92" height="58" rx="8" fill="#2b2f3a" ${ST}/>
+    <rect x="25" y="10" width="78" height="44" rx="5" fill="url(#s)"/>
+    <path d="M32 18 L48 14 M32 26 L60 18" stroke="#fff" stroke-width="3" opacity="0.4" stroke-linecap="round"/>
+    <circle cx="44" cy="82" r="3" fill="${INK}"/><circle cx="84" cy="82" r="3" fill="${INK}"/>`,
+  vgrad('s', '#3d8bf2', 0.35, -0.3));
 }
 
-// ---------- улица ----------
-
-/** Фасад здания: ширина в клетках, цвет стен, крыши; дверь по центру внизу. */
-function building(tw: number, wall: string, wallDark: string, roof: string, roofDark: string, windows: number) {
-  const W = tw * 16, H = 80;
-  const p = new Px(W, H);
-  // крыша
-  for (let y = 0; y < 22; y++) { const inset = Math.max(0, 10 - y); p.hline(inset, y, W - inset * 2, y % 4 === 3 ? roofDark : roof); }
-  p.hline(0, 22, W, roofDark);
-  // стена
-  p.rect(2, 23, W - 4, H - 23, wall);
-  for (let y = 27; y < H; y += 5) for (let x = (y % 2) * 4 + 2; x < W - 4; x += 9) p.hline(x, y, 6, wallDark);
-  // окна
-  const doorX = Math.floor(W / 2) - 6;
-  const slots = windows;
+/** Фасад здания: ширина в клетках, цвет стен и крыши; дверь по центру внизу (12 × 22 ед. мира). */
+function building(tw: number, wall: string, roof: string, style: 'house' | 'shop' | 'school'): Art {
+  const W = tw * 16 * D, H = 80 * D;
+  const roofBottom = 92, doorW = 12 * D, doorH = 22 * D, doorX = W / 2 - doorW / 2;
+  const win = (x: number) => `<rect x="${x}" y="${roofBottom + 40}" width="60" height="56" rx="10" fill="url(#g)" ${ST}/>
+    <path d="M${x + 30} ${roofBottom + 40} V${roofBottom + 96} M${x} ${roofBottom + 68} H${x + 60}" ${ST2}/>
+    <path d="M${x + 8} ${roofBottom + 50} l12 0 M${x + 8} ${roofBottom + 58} l6 0" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity="0.8"/>
+    <rect x="${x - 6}" y="${roofBottom + 94}" width="72" height="8" rx="3" fill="${tint(wall, -0.25)}" ${ST2}/>`;
+  const slots = tw >= 7 ? 4 : 3;
+  let wins = '';
   for (let i = 0; i < slots; i++) {
-    const wx = Math.round(((i + 0.5) / slots) * (W - 4)) - 6 + 2;
-    if (wx + 12 > doorX - 2 && wx < doorX + 14) continue;
-    p.rect(wx, 34, 12, 12, 'v'); p.rect(wx + 1, 35, 10, 10, 'u'); p.rect(wx + 1, 35, 4, 4, 'U'); p.vline(wx + 6, 35, 10, 'v'); p.hline(wx + 1, 40, 10, 'v');
+    const cx = ((i + 0.5) / slots) * W;
+    if (Math.abs(cx - W / 2) < doorW) continue;
+    wins += win(cx - 30);
   }
-  // дверь
-  p.rect(doorX, H - 22, 12, 22, 'D'); p.rect(doorX + 1, H - 21, 10, 21, 'd'); p.px(doorX + 9, H - 10, 'y');
-  return p.outline();
-}
-
-function tree() {
-  const p = new Px(32, 44);
-  p.rect(13, 28, 6, 15, '9'); p.vline(14, 28, 15, '8');
-  const blobs: [number, number, number][] = [[16, 12, 11], [8, 20, 8], [24, 20, 8], [16, 22, 9]];
-  for (const [cx, cy, r] of blobs) for (let y = 0; y < 44; y++) for (let x = 0; x < 32; x++) if (Math.hypot(x - cx, y - cy) <= r) p.px(x, y, 'g');
-  for (let y = 0; y < 44; y++) for (let x = 0; x < 32; x++) if (p.get(x, y) === 'g' && hash(x, y, 7) > 0.8) p.px(x, y, 'G');
-  for (const [x, y] of [[12, 6], [10, 15], [20, 9]]) p.px(x, y, 'a');
-  return p.outline();
-}
-
-function bench() {
-  const p = new Px(32, 22);
-  p.rect(1, 2, 30, 4, 'w'); p.hline(1, 2, 30, 'W');
-  p.rect(1, 9, 30, 4, 'w'); p.hline(1, 12, 30, 'W');
-  p.rect(3, 6, 2, 15, 'M'); p.rect(27, 6, 2, 15, 'M');
-  return p.outline();
-}
-
-function flowers() {
-  const p = new Px(16, 16);
-  for (const [x, y, c] of [[3, 5, 'e'], [9, 3, 'y'], [12, 9, 'x'], [5, 11, 'n'], [10, 13, 'o']] as const) {
-    p.px(x, y - 1, c); p.px(x - 1, y, c); p.px(x + 1, y, c); p.px(x, y + 1, c); p.px(x, y, 'y');
-    p.vline(x, y + 2, 2, 'G');
+  // крыша: дом — треугольная черепица, магазин — плоская с полосатым навесом, школа — с башенкой и часами
+  let roofSvg = '';
+  if (style === 'shop') {
+    const stripes = Array.from({ length: Math.ceil(W / 32) }, (_, i) => `<path d="M${i * 32 + 6} ${roofBottom - 8} h16 v26 q-8 10 -16 0z" fill="${i % 2 ? '#fff' : '#e53935'}"/>`).join('');
+    roofSvg = `<rect x="6" y="24" width="${W - 12}" height="${roofBottom - 28}" rx="8" fill="url(#r)" ${ST}/>
+      <rect x="0" y="${roofBottom - 10}" width="${W}" height="12" rx="4" fill="${tint(roof, -0.25)}" ${ST}/>
+      <g>${stripes}</g><path d="M6 ${roofBottom + 8} H${W - 6}" ${ST2}/>`;
+  } else {
+    roofSvg = `<path d="M-2 ${roofBottom} L${W * 0.16} 6 L${W * 0.84} 6 L${W + 2} ${roofBottom}Z" fill="url(#r)" ${ST}/>
+      ${[30, 54, 78].map((y) => `<path d="M${W * 0.16 * (1 - y / roofBottom) + 6} ${y} H${W - W * 0.16 * (1 - y / roofBottom) - 6}" stroke="${tint(roof, -0.25)}" stroke-width="3" stroke-linecap="round"/>`).join('')}`;
+    if (style === 'school') roofSvg += `<rect x="${W / 2 - 34}" y="-2" width="68" height="40" rx="8" fill="${tint(wall, 0.2)}" ${ST}/>
+      <circle cx="${W / 2}" cy="18" r="13" fill="#fffdf4" ${ST2}/><path d="M${W / 2} 18 V10 M${W / 2} 18 H${W / 2 + 7}" ${ST2}/>`;
+    else roofSvg += `<rect x="${W * 0.7}" y="2" width="30" height="40" rx="4" fill="#b55a3c" ${ST}/>`;
   }
-  return p;
+  const bricks = style === 'school'
+    ? Array.from({ length: 6 }, (_, r) => Array.from({ length: Math.ceil(W / 48) + 1 }, (_, c) => c * 48 + (r % 2) * 24 + 10).filter((bx) => bx >= 16 && bx + 30 <= W - 16).map((bx) => `<rect x="${bx}" y="${roofBottom + 14 + r * 36}" width="30" height="8" rx="4" fill="${tint(wall, -0.12)}"/>`).join('')).join('')
+    : '';
+  return art(tw * 16, 80, `${groundShadow(W / 2, H - 2, W / 2 - 4, 10)}
+    <rect x="10" y="${roofBottom - 8}" width="${W - 20}" height="${H - roofBottom + 4}" rx="6" fill="url(#w)" ${ST}/>
+    ${bricks}${wins}
+    <rect x="${doorX - 8}" y="${H - doorH - 8}" width="${doorW + 16}" height="${doorH + 8}" rx="10" fill="${tint(wall, -0.2)}" ${ST}/>
+    <rect x="${doorX}" y="${H - doorH}" width="${doorW}" height="${doorH}" rx="8" fill="url(#d)" ${ST}/>
+    <circle cx="${doorX + doorW - 10}" cy="${H - doorH / 2}" r="4" fill="#ffd23f" ${ST2}/>
+    <rect x="${doorX + 8}" y="${H - doorH + 10}" width="${doorW - 16}" height="22" rx="6" fill="#a9d6f5" ${ST2}/>
+    ${roofSvg}`,
+  vgrad('w', wall, 0.12, -0.08) + vgrad('r', roof, 0.2, -0.12) + vgrad('d', '#9a5e36', 0.15, -0.15) + vgrad('g', '#9fdcff', 0.3, -0.05));
 }
 
-// ---------- магазин и школа ----------
-
-function shelf() {
-  const p = new Px(48, 30);
-  p.rect(0, 0, 48, 30, 'v');
-  p.rect(2, 2, 44, 26, 'W');
-  for (const y of [11, 20]) p.rect(2, y, 44, 2, 'v');
-  p.rect(0, 28, 48, 2, 'v');
-  // товары на нижних полках (декор)
-  for (let x = 4; x < 44; x += 6) { p.rect(x, 22, 4, 6, ['e', 'y', 'n', 'o', 'g', 'b', 'x'][(x / 6) % 7 | 0]); }
-  for (let x = 5; x < 44; x += 5) { p.rect(x, 14, 3, 6, ['N', 'y', 'o', 'c'][(x / 5) % 4 | 0]); }
-  return p.outline();
+function tree(): Art {
+  return art(32, 44, `${groundShadow(64, 168, 46, 9)}
+    <path d="M54 170 Q56 130 50 108 L78 108 Q72 130 74 170Z" fill="url(#t)" ${ST}/>
+    <g fill="url(#l)" ${ST}>
+      <circle cx="40" cy="84" r="32"/><circle cx="88" cy="84" r="32"/><circle cx="64" cy="48" r="40"/><circle cx="64" cy="96" r="30"/>
+    </g>
+    <g fill="url(#l)"><circle cx="40" cy="84" r="29.5"/><circle cx="88" cy="84" r="29.5"/><circle cx="64" cy="48" r="37.5"/><circle cx="64" cy="96" r="27.5"/></g>
+    ${shine(46, 30, 9, 14, 40)}
+    <circle cx="86" cy="60" r="3" fill="#2f7a32" opacity="0.4"/><circle cx="40" cy="100" r="3" fill="#2f7a32" opacity="0.4"/>`,
+  rgrad('l', '#5fc04a', 0.3, -0.25) + vgrad('t', '#9a6034', 0.15, -0.15));
 }
 
-function shopCounter() {
-  const p = new Px(48, 26);
-  p.rect(0, 2, 48, 6, 'y'); p.hline(0, 2, 48, '7');
-  p.rect(0, 8, 48, 17, 'O'); for (let x = 4; x < 48; x += 8) p.vline(x, 9, 15, 'y');
-  // касса
-  p.rect(32, 0, 12, 5, 'M'); p.rect(34, 1, 6, 2, 'g');
-  return p.outline();
+function bench(): Art {
+  return art(32, 22, `${groundShadow(64, 84, 58, 6)}
+    <rect x="16" y="50" width="9" height="34" fill="#6c6c7c" ${ST2}/><rect x="103" y="50" width="9" height="34" fill="#6c6c7c" ${ST2}/>
+    <rect x="6" y="8" width="116" height="16" rx="5" fill="url(#c)" ${ST}/>
+    <rect x="6" y="28" width="116" height="16" rx="5" fill="url(#c)" ${ST}/>
+    <rect x="4" y="46" width="120" height="14" rx="5" fill="${WOOD_D}" ${ST}/>`, vgrad('c', WOOD, 0.2, -0.1));
 }
 
-function blackboard() {
-  const p = new Px(64, 16);
-  p.rect(0, 0, 64, 15, 'v');
-  p.rect(2, 1, 60, 12, '5');
-  // мел: «ABC» и «1 2 3» штрихами
-  for (const [x, y] of [[6, 4], [7, 3], [8, 4], [6, 5], [8, 5], [11, 3], [11, 4], [11, 5], [12, 3], [12, 4], [13, 5], [12, 5], [16, 3], [16, 4], [16, 5], [17, 3], [17, 5]]) p.px(x, y, '6');
-  for (const x of [30, 36, 42]) { p.vline(x, 3, 4, '6'); }
-  p.hline(52, 8, 6, '6');
-  p.rect(2, 13, 60, 2, 'W');
-  return p;
+function flowers(): Art {
+  const f = (x: number, y: number, c: string) => `<path d="M${x} ${y + 6} v14" stroke="#3f8f2f" stroke-width="2.5"/>
+    <g fill="${c}" ${ST2}>${[0, 72, 144, 216, 288].map((a) => `<circle cx="${x + Math.cos((a * Math.PI) / 180) * 5}" cy="${y + Math.sin((a * Math.PI) / 180) * 5}" r="4.2"/>`).join('')}</g>
+    <circle cx="${x}" cy="${y}" r="3.4" fill="#ffd23f" ${ST2}/>`;
+  return art(16, 16, `<ellipse cx="32" cy="46" rx="26" ry="12" fill="#4fae3e" opacity="0.6"/>
+    ${f(18, 28, '#ff6f91')}${f(44, 22, '#fff')}${f(34, 44, '#7cc7ff')}${f(12, 48, '#ffd23f')}`);
 }
 
-function teacherDesk() {
-  const p = new Px(32, 24);
-  p.rect(0, 2, 32, 8, 'w'); p.hline(0, 2, 32, 'n');
-  p.rect(1, 10, 30, 13, 'W'); p.rect(3, 12, 10, 9, 'w'); p.px(11, 16, 'y');
-  p.rect(22, 0, 6, 3, 'g'); // яблоко-кружка
-  return p.outline();
+function shelf(): Art {
+  const goods = (y: number, kind: number) => Array.from({ length: 6 }, (_, i) => {
+    const x = 18 + i * 28;
+    if (kind === 0) return `<circle cx="${x + 9}" cy="${y + 22}" r="9" fill="${['#e53935', '#ff9a1f', '#5fbf45'][i % 3]}" ${ST2}/>`;
+    return `<rect x="${x}" y="${y + 6}" width="20" height="26" rx="3" fill="${['#2f7de1', '#ffcc1f', '#fff', '#e53935'][i % 4]}" ${ST2}/>`;
+  }).join('');
+  return art(48, 30, `${groundShadow(96, 116, 88, 6)}
+    <rect x="6" y="4" width="180" height="112" rx="8" fill="url(#c)" ${ST}/>
+    <rect x="14" y="12" width="164" height="96" rx="4" fill="${WOOD_D}"/>
+    ${goods(12, 0)}<rect x="10" y="44" width="172" height="8" fill="${WOOD}" ${ST2}/>
+    ${goods(52, 1)}<rect x="10" y="86" width="172" height="8" fill="${WOOD}" ${ST2}/>`, vgrad('c', WOOD, 0.15, -0.1));
 }
 
-function desk() {
-  const p = new Px(32, 22);
-  p.rect(0, 2, 32, 8, 'N'); p.hline(0, 2, 32, 'n');
-  p.rect(0, 10, 32, 2, 'M');
-  p.rect(2, 12, 2, 9, 'M'); p.rect(28, 12, 2, 9, 'M');
-  return p.outline();
+function shopCounter(): Art {
+  return art(48, 26, `${groundShadow(96, 100, 90, 6)}
+    ${box(4, 6, 184, 34, 58, '#f4f7fb', 'url(#f)', 8)}
+    <rect x="14" y="50" width="164" height="8" rx="4" fill="#fff" opacity="0.5"/>
+    <rect x="120" y="0" width="44" height="26" rx="5" fill="#4a4f5c" ${ST2}/><rect x="126" y="4" width="32" height="10" rx="2" fill="#9fe27a"/>`,
+  vgrad('f', '#ffb347', 0.15, -0.15));
+}
+
+function blackboard(): Art {
+  return art(64, 16, `<rect x="4" y="2" width="248" height="58" rx="6" fill="#8a5a33" ${ST}/>
+    <rect x="12" y="8" width="232" height="44" rx="3" fill="url(#c)"/>
+    <text x="30" y="40" font-family="'Comic Sans MS', 'Segoe Print', cursive" font-size="24" fill="#f4f6ef">ABC</text>
+    <path d="M120 30 h20 M150 22 v18 M162 22 v18 M174 22 v18" stroke="#f4f6ef" stroke-width="3" stroke-linecap="round"/>
+    <path d="M196 34 l14 -8 l14 8" fill="none" stroke="#ffd23f" stroke-width="3" stroke-linecap="round"/>
+    <rect x="200" y="54" width="20" height="5" rx="2" fill="#fff" ${ST2}/>`, vgrad('c', '#2f6b52', 0.1, -0.1));
+}
+
+function teacherDesk(): Art {
+  return art(32, 24, `${groundShadow(64, 92, 58, 6)}
+    ${box(4, 6, 120, 34, 50, 'url(#t)', WOOD_D, 8)}
+    <rect x="20" y="52" width="88" height="30" rx="5" fill="${WOOD}" ${ST2}/><circle cx="64" cy="66" r="3" fill="${INK}"/>
+    <rect x="80" y="10" width="30" height="20" rx="3" fill="#2f7de1" ${ST2}/><rect x="84" y="6" width="24" height="18" rx="3" fill="#e53935" ${ST2}/>
+    <circle cx="26" cy="22" r="9" fill="#e53935" ${ST2}/><path d="M26 13 q2 -5 6 -6" fill="none" stroke="#6b4426" stroke-width="2.4"/>`, vgrad('t', WOOD_L, 0.15, -0.08));
+}
+
+function desk(): Art {
+  return art(32, 22, `${groundShadow(64, 86, 56, 6)}
+    <rect x="12" y="40" width="9" height="46" rx="3" fill="#6c6c7c" ${ST2}/><rect x="107" y="40" width="9" height="46" rx="3" fill="#6c6c7c" ${ST2}/>
+    ${box(4, 4, 120, 32, 14, 'url(#t)', WOOD_D, 7)}
+    <path d="M18 12 H60" stroke="#fff" stroke-width="3" opacity="0.35" stroke-linecap="round"/>`, vgrad('t', WOOD_L, 0.15, -0.08));
 }
 
 export const FURNITURE_ART = {
   rug, table, counter, fridge, sofa, bookshelf, plant, tv,
-  house: () => building(6, 'p', 'q', '1', '2', 3),
-  shop_building: () => building(6, 'l', 'b', 'y', 'O', 3),
-  school_building: () => building(7, 'Y', 'Z', '4', '3', 4),
+  house: () => building(6, '#fff1d6', '#ef6a4a', 'house'),
+  shop_building: () => building(6, '#cfe9ff', '#5aa9e6', 'shop'),
+  school_building: () => building(7, '#f2a77f', '#8a8fa3', 'school'),
   tree, bench, flowers, shelf, shop_counter: shopCounter, blackboard, teacher_desk: teacherDesk, desk,
 };
 export type FurnitureKey = keyof typeof FURNITURE_ART;
