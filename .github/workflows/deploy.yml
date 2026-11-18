@@ -1,4 +1,5 @@
-# Проверка и публикация на GitHub Pages при каждом push в main.
+# Публикация на GitHub Pages при каждом push в main: быстрые тесты → сборка → публикация.
+# Сквозные тесты в Chrome (~25 минут) — отдельно, вручную: Actions → «Сквозные тесты» → Run workflow.
 # В настройках репозитория: Settings → Pages → Source: GitHub Actions.
 name: Проверка и публикация
 
@@ -26,14 +27,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Проверка контента и автотесты
+      - name: Проверка контента и модульные тесты
         run: npm test
       - name: Сборка
         run: npm run build
-      - name: Сквозной тест в Chrome
-        run: npm run test:e2e
-        env:
-          CHROME: /usr/bin/google-chrome
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
