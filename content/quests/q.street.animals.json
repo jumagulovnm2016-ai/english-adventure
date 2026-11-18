@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "q.street.animals",
+  "location": "street",
+  "order": 3,
+  "title": {
+    "junior": "Кто живёт в парке?",
+    "senior": "Зоолог Бен"
+  },
+  "intro": {
+    "junior": "Бен нашёл в парке разных зверей. Посмотри вместе с ним!",
+    "senior": "Бен устроил тебе экзамен по животным. Справишься?"
+  },
+  "giver": "npc.ben",
+  "requires": [
+    "q.street.lost_cat"
+  ],
+  "introduces": [
+    "w.bird",
+    "w.rabbit",
+    "w.frog"
+  ],
+  "practices": [
+    "w.duck",
+    "w.cat"
+  ],
+  "steps": [
+    {
+      "id": "talk",
+      "type": "dialogue",
+      "dialogue": "d.street.ben_animals",
+      "show": {
+        "items": [
+          "it.bird_blue",
+          "it.rabbit_white",
+          "it.frog_green"
+        ],
+        "zone": "meadow"
+      }
+    },
+    {
+      "id": "review",
+      "type": "review_slot",
+      "count": 2,
+      "prefer_topics": [
+        "animals",
+        "colours"
+      ]
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

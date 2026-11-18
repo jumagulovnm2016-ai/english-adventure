@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "id": "d.street.brown_cat_end",
+  "npc": "npc.mrs_brown",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Протяни вещь. Что говорят, когда что-то дают?",
+        "senior": "Что говорят, протягивая вещь?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.here_you_are"
+      },
+      "on_correct": "n2",
+      "on_wrong": "n2"
+    },
+    "n2": {
+      "speaker": "npc.mrs_brown",
+      "say": "p.thank_you",
+      "action": {
+        "type": "take_player_item",
+        "item": "it.cat_black"
+      },
+      "next": "n3"
+    },
+    "n3": {
+      "speaker": "npc.mrs_brown",
+      "say": "p.what_colour_is_it",
+      "ru_hint": {
+        "junior": "Какого цвета её кошка?",
+        "senior": "Вопрос про цвет."
+      },
+      "next": "n4"
+    },
+    "n4": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Какого цвета кошка?",
+        "senior": "Цвет кошки?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.black",
+        "prompt": {
+          "picture": "it.cat_black"
+        },
+        "options": [
+          "w.black",
+          "w.white",
+          "w.brown"
+        ]
+      },
+      "on_correct": "n5",
+      "on_wrong": "n5"
+    },
+    "n5": {
+      "speaker": "npc.mrs_brown",
+      "say": "p.bye_dear",
+      "action": {
+        "type": "emote",
+        "emote": "happy"
+      },
+      "next": "n6"
+    },
+    "n6": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попрощайся с миссис Браун!",
+        "senior": "Попрощайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.goodbye"
+      },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "d.home.mum_apples_start",
+  "npc": "npc.mum",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.mum",
+      "say": "p.hello_mum",
+      "action": {
+        "type": "emote",
+        "emote": "wave"
+      },
+      "next": "n2"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Поздоровайся с мамой!",
+        "senior": "Поздоровайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.hello"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n3"
+    },
+    "n3": {
+      "speaker": "npc.mum",
+      "say": "p.buy_three_apples",
+      "ru_hint": {
+        "junior": "Мама просит сходить в магазин.",
+        "senior": "Поручение от мамы."
+      },
+      "next": "end"
+    }
+  }
+}

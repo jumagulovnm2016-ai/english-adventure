@@ -70,6 +70,23 @@ export class LearningService {
     }
   }
 
+  /** Записать событие без изменения состояния (входная проверка — не обучение). */
+  async logOnly(e: LearnEvent) {
+    this.events.push(e);
+    if (this.events.length > MAX_EVENTS) this.events.shift();
+    await this.repo.appendEvent(e);
+  }
+
+  /** Входная проверка: узнанное помечается «знакомо, нужно подтверждение» — коробка 2, проверим через день. */
+  async markFamiliar(ids: string[]) {
+    const now = this.clock.now();
+    for (const id of ids) {
+      const prev = this.state(id);
+      if (prev.status !== 'new') continue;
+      await this.put(id, { ...prev, status: 'familiar_pending', box: 2, firstSeen: now.toISOString(), lastSeen: now.toISOString(), due: new Date(now.getTime() + 864e5).toISOString() });
+    }
+  }
+
   /** Итог одной попытки задания по одному элементу. */
   async record(a: RecordArgs) {
     const now = this.clock.now();

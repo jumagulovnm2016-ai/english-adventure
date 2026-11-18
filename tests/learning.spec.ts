@@ -167,6 +167,11 @@ describe('Навыки «умеет»', () => {
   it('нет событий — не начато', () => {
     expect(evaluateCanDo(greet, [], true).status).toBe('not_started');
   });
+  it('только узнаёт фразу (а навык — сказать самому) — «в процессе», но не подтверждено', () => {
+    const r = evaluateCanDo(greet, [ev({ item: 'p.hello', t: '2026-11-20T09:00:00Z' })], false);
+    expect(r.status).toBe('in_progress');
+    expect(r.progress).toBeLessThan(0.1);
+  });
   it('подтверждается, когда все условия выполнены (без микрофона — без голоса)', () => {
     const evs = [prod('p.hello', '2026-11-20T09:00:00Z', 'a'), prod('p.goodbye', '2026-11-20T09:10:00Z', 'b'), prod('p.hello', '2026-11-21T09:00:00Z', 'c')];
     const off = evaluateCanDo(greet, evs, false, 0);
@@ -253,5 +258,34 @@ describe('LearningService', () => {
     const r = ls.canDo(c.skills, false);
     expect(r.size).toBe(c.skills.length);
     expect([...r.values()].every((x) => x.status === 'not_started')).toBe(true);
+  });
+});
+
+describe('Входная проверка: «знакомые» слова', () => {
+  it('знакомое — коробка 2, проверка через день; затем выучивается повторениями', async () => {
+    const clock = fixedClock(t0);
+    const ls = await LearningService.create(new MemoryLearningRepo(), clock);
+    await ls.markFamiliar(['w.red', 'w.blue']);
+    expect(ls.state('w.red')).toMatchObject({ status: 'familiar_pending', box: 2 });
+    expect(ls.dueForReview(5)).toEqual([]);
+    // квест «знакомит» — для знакомого слова ничего не меняется
+    await ls.introduce(['w.red']);
+    expect(ls.state('w.red').status).toBe('familiar_pending');
+    clock.advance(DAY);
+    expect(ls.dueForReview(5).sort()).toEqual(['w.blue', 'w.red']);
+    await ls.record({ item: 'w.red', mode: 'listen_choose', result: 'correct', hinted: false, firstTry: true, context: 'review.home' });
+    expect(ls.state('w.red')).toMatchObject({ status: 'familiar_pending', box: 3 });
+    clock.advance(4 * DAY);
+    await ls.record({ item: 'w.red', mode: 'listen_choose', result: 'correct', hinted: false, firstTry: true, context: 'review.street' });
+    expect(ls.state('w.red')).toMatchObject({ status: 'learned', box: 4 });
+    // ошибка в знакомом — обычное обучение с нуля
+    await ls.record({ item: 'w.blue', mode: 'listen_choose', result: 'wrong', hinted: false, firstTry: true, context: 'review.home', chosen: 'w.green' });
+    expect(ls.state('w.blue')).toMatchObject({ status: 'learning', box: 0 });
+  });
+  it('событие проверки записывается, но не меняет состояние', async () => {
+    const ls = await LearningService.create(new MemoryLearningRepo(), fixedClock(t0));
+    await ls.logOnly({ t: t0.toISOString(), item: 'w.cat', kind: 'comprehension', mode: 'placement', result: 'correct', hinted: false, context: 'placement' });
+    expect(ls.allEvents()).toHaveLength(1);
+    expect(ls.state('w.cat').status).toBe('new');
   });
 });

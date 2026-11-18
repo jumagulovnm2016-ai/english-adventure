@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "d.home.mum_apples_end",
+  "npc": "npc.mum",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Протяни вещь. Что говорят, когда что-то дают?",
+        "senior": "Что говорят, протягивая вещь?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.here_you_are"
+      },
+      "on_correct": "n2",
+      "on_wrong": "n2"
+    },
+    "n2": {
+      "speaker": "npc.mum",
+      "say": "p.thank_you",
+      "action": {
+        "type": "take_player_item",
+        "item": "it.apples_three"
+      },
+      "next": "n3"
+    },
+    "n3": {
+      "speaker": "npc.mum",
+      "say": "p.how_many_apples",
+      "ru_hint": {
+        "junior": "Мама спрашивает, сколько яблок.",
+        "senior": "Сколько?"
+      },
+      "next": "n4"
+    },
+    "n4_model": {
+      "speaker": "npc.mum",
+      "say": "p.three_apples",
+      "next": "n5"
+    },
+    "n4": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Сколько яблок?",
+        "senior": "Сколько яблок?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.three",
+        "prompt": {
+          "picture": "it.apples_three"
+        },
+        "options": [
+          "w.two",
+          "w.three",
+          "w.four"
+        ]
+      },
+      "on_correct": "n5",
+      "on_wrong": "n4_model"
+    },
+    "n5": {
+      "speaker": "npc.mum",
+      "say": "p.yes_well_done",
+      "action": {
+        "type": "emote",
+        "emote": "happy"
+      },
+      "next": "end"
+    }
+  }
+}

@@ -182,3 +182,18 @@ body { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color
 .qi-text { font-size: 1.1rem; }
 .rw-stars { font-size: 2.6rem; letter-spacing: .2rem; }
 .type-row input { -webkit-user-select: text; user-select: text; touch-action: manipulation; }
+
+.task-picture { width: 4.5rem; height: 4.5rem; image-rendering: pixelated; flex: none; background: #fff; border: 3px solid var(--ink); border-radius: var(--radius); }
+.task-head .task-title { flex: 1; }
+
+/* ---------- первый запуск ---------- */
+.onboard { color: #fff; }
+.onboard-box { width: min(40rem, 100%); background: var(--panel); color: var(--ink); border: 4px solid var(--ink); border-radius: calc(var(--radius) * 1.4); box-shadow: 0 8px 0 var(--ink); padding: 1.4rem; text-align: center; max-height: 100%; overflow: auto; }
+.onboard-box h2 { margin: 0 0 .8rem; }
+.ob-heroes { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+.ob-hero { border: 4px solid var(--ink); border-radius: var(--radius); background: #fff; padding: .4rem; cursor: pointer; box-shadow: 0 4px 0 var(--ink); min-height: 6rem; }
+.ob-hero img { width: 4.5rem; height: auto; image-rendering: pixelated; }
+.ob-hero:focus-visible { outline: 4px solid var(--blue); }
+.ob-progress { height: .8rem; border: 3px solid var(--ink); border-radius: 999px; overflow: hidden; margin-bottom: .8rem; background: #fff; }
+#ob-bar { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+.hud-right { display: flex; gap: .5rem; }

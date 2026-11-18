@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "id": "d.school.lee_lesson",
+  "npc": "npc.ms_lee",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.ms_lee",
+      "say": "p.good_morning_class",
+      "ru_hint": {
+        "junior": "Урок начинается!",
+        "senior": "Начало урока."
+      },
+      "next": "n2"
+    },
+    "n2_model": {
+      "speaker": "npc.ms_lee",
+      "say": "p.good_morning",
+      "next": "n3"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Ответь учительнице: «Доброе утро!»",
+        "senior": "Поздоровайся с учительницей."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.good_morning"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n2_model"
+    },
+    "n3": {
+      "speaker": "npc.ms_lee",
+      "say": "p.im_ms_lee",
+      "ru_hint": {
+        "junior": "Учительница представляется.",
+        "senior": "Учительница представилась."
+      },
+      "next": "n4"
+    },
+    "n4": {
+      "speaker": "npc.ms_lee",
+      "say": "p.stand_up",
+      "next": "n5"
+    },
+    "n5": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что сказала учительница? Выбери картинку.",
+        "senior": "Что попросила учительница?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.stand_up",
+        "options": [
+          "p.stand_up",
+          "p.sit_down",
+          "p.open_your_book"
+        ]
+      },
+      "on_correct": "n6",
+      "on_wrong": "n6"
+    },
+    "n6": {
+      "speaker": "npc.ms_lee",
+      "say": "p.sit_down",
+      "next": "n7"
+    },
+    "n7": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что сказала учительница? Выбери картинку.",
+        "senior": "Что попросила учительница?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.sit_down",
+        "options": [
+          "p.sit_down",
+          "p.stand_up",
+          "p.open_your_book"
+        ]
+      },
+      "on_correct": "n8",
+      "on_wrong": "n8"
+    },
+    "n8": {
+      "speaker": "npc.ms_lee",
+      "say": "p.open_your_book",
+      "next": "n9"
+    },
+    "n9": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что сказала учительница? Выбери картинку.",
+        "senior": "Что попросила учительница?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.open_your_book",
+        "options": [
+          "p.open_your_book",
+          "p.stand_up",
+          "p.sit_down"
+        ]
+      },
+      "on_correct": "n10",
+      "on_wrong": "n10"
+    },
+    "n10": {
+      "speaker": "npc.ms_lee",
+      "say": "p.close_your_book",
+      "next": "n11"
+    },
+    "n11": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что сказала учительница? Выбери картинку.",
+        "senior": "Что попросила учительница?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.close_your_book",
+        "options": [
+          "p.close_your_book",
+          "p.stand_up",
+          "p.sit_down"
+        ]
+      },
+      "on_correct": "n12",
+      "on_wrong": "n12"
+    },
+    "n12": {
+      "speaker": "npc.ms_lee",
+      "say": "p.well_done_class",
+      "action": {
+        "type": "emote",
+        "emote": "happy"
+      },
+      "next": "end"
+    }
+  }
+}

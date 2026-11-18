@@ -7,7 +7,7 @@ import type { ContentRegistry } from '../../content/registry';
 import { registerTextures, kidFrameKey } from '../art/textures';
 import { CHAR_H } from '../art/character';
 import { hash } from '../art/pixels';
-import { TILE_LEGEND, type MapDef, type TileChar } from '../maps/types';
+import { TILE_LEGEND, type Exit, type MapDef, type TileChar } from '../maps/types';
 import { Grid, TILE, type Point } from '../world/grid';
 import { findPath, smoothPath } from '../world/pathfinding';
 import { distToRect, facingFor, moveWithCollision, type Facing } from '../world/movement';
@@ -20,6 +20,12 @@ export interface WorldSceneDeps {
   start: { x: number; y: number } | null;
   onMoved: (p: Point) => void;
   onReady: (scene: WorldScene) => void;
+  /** Можно ли пройти в дверь: null — можно, иначе текст «почему нельзя». */
+  canExit: (e: Exit) => string | null;
+  onExit: (e: Exit) => void;
+  onLocked: (text: string) => void;
+  /** Показывать ли спутника. */
+  companion: boolean;
 }
 
 interface Target {
@@ -57,10 +63,24 @@ export class WorldScene extends Phaser.Scene {
   private tapMark!: Phaser.GameObjects.Image;
   private lastFrameAt = 0;
   private highlighted: string | null = null;
+  private lastCellKey = -1;
+  private leaving = false;
+  private pip: Phaser.GameObjects.Image | null = null;
+  private pipMarker: Phaser.GameObjects.Text | null = null;
+  private trail: Point[] = [];
+  private props: Phaser.GameObjects.Image[] = [];
+  private pipPos: Point = { x: 0, y: 0 };
 
   constructor() { super('world'); }
 
-  init(deps: WorldSceneDeps) { this.deps = deps; }
+  init(deps: WorldSceneDeps) {
+    // Phaser перезапускает тот же объект сцены при смене локации — сбрасываем всё состояние
+    this.deps = deps;
+    this.path = []; this.pendingTarget = null; this.targets = []; this.npcMarkers = new Map();
+    this.nearby = null; this.blocked = false; this.unblockedAt = 0; this.lastFrameAt = 0;
+    this.highlighted = null; this.leaving = false; this.carried = null;
+    this.pip = null; this.pipMarker = null; this.trail = []; this.props = [];
+  }
 
   create() {
     const { map, bus } = this.deps;
@@ -101,10 +121,19 @@ export class WorldScene extends Phaser.Scene {
       this.onTap({ x: p.worldX, y: p.worldY });
     });
 
-    bus.on('input-blocked', ({ blocked }) => {
+    const off = bus.on('input-blocked', ({ blocked }) => {
       this.blocked = blocked;
       if (blocked) this.stopWalking(); else this.unblockedAt = this.time.now;
     });
+    // при смене локации сцена перезапускается — снимаем подписки, чтобы они не копились
+    this.events.once('shutdown', () => { off(); this.scale.off('resize'); });
+
+    for (const sgn of map.signs) {
+      this.add.text(sgn.x, sgn.y, sgn.text, { fontFamily: 'system-ui, sans-serif', fontSize: '9px', color: '#ffffff', backgroundColor: '#2b2232', padding: { x: 3, y: 1 }, fontStyle: 'bold' })
+        .setOrigin(0.5, 0.5).setResolution(6).setDepth(5000);
+    }
+    this.lastCellKey = this.grid.key(this.grid.cellOf(this.pos));
+    if (this.deps.companion) this.createPip();
     this.deps.onReady(this);
   }
 
@@ -176,6 +205,33 @@ export class WorldScene extends Phaser.Scene {
     this.highlighted = itemId;
     const t = this.targets.find((x) => x.kind === 'pick' && x.id === itemId);
     if (t) this.tweens.add({ targets: t.obj, scale: 1.3, yoyo: true, repeat: 3, duration: 250 });
+  }
+
+  /** Показать неинтерактивные предметы (утки на пруду, книги на партах) на время шага квеста. */
+  showProps(itemIds: string[], spotSet: string) {
+    this.clearProps();
+    const spots = this.deps.map.spots[spotSet];
+    if (!spots || spots.length < itemIds.length) throw new Error(`Мест «${spotSet}» не хватает для показа`);
+    itemIds.forEach((id, i) => {
+      const s = spots[i];
+      const img = this.add.image(s.px, s.py, `item_${this.deps.content.item(id).sprite}`).setOrigin(0.5, 1).setDepth((s.ty + 1) * TILE + 1).setName('prop');
+      this.tweens.add({ targets: img, y: s.py - 1, yoyo: true, repeat: -1, duration: 700 + i * 90, ease: 'Sine.inOut' });
+      this.props.push(img);
+    });
+  }
+
+  clearProps() { for (const p of this.props) { this.tweens.killTweensOf(p); p.destroy(); } this.props = []; }
+
+  hasSpots(zone: string) { return !!this.deps.map.spots[zone]; }
+  hasNpc(npcId: string) { return this.deps.map.npcs.some((n) => n.npcId === npcId); }
+  get location() { return this.deps.map.id; }
+
+  /** Герой внутри именованной области карты. */
+  inZone(zone: string) {
+    const z = this.deps.map.zones[zone];
+    if (!z) return false;
+    const c = this.grid.cellOf({ x: this.pos.x, y: this.pos.y - 1 });
+    return c.tx >= z.tx && c.tx < z.tx + z.tw && c.ty >= z.ty && c.ty < z.ty + z.th;
   }
 
   /** Убрать один предмет «найди» (его взяли). */
@@ -270,6 +326,7 @@ export class WorldScene extends Phaser.Scene {
     for (let ty = 0; ty < this.grid.rows; ty++) for (let tx = 0; tx < this.grid.cols; tx++) {
       let art: string = TILE_LEGEND[map.tiles[ty][tx] as TileChar].art;
       if (art === 'floor_wood') art = hash(tx, ty, 5) > 0.7 ? 'floor_wood_1' : 'floor_wood_0';
+      if (art === 'grass') { const h = hash(tx, ty, 9); art = h > 0.93 ? 'grass_2' : h > 0.7 ? 'grass_1' : 'grass_0'; }
       rt.draw(`tile_${art}`, tx * TILE, ty * TILE);
     }
   }
@@ -285,6 +342,10 @@ export class WorldScene extends Phaser.Scene {
   // ---------- управление ----------
 
   private onTap(world: Point) {
+    if (this.pip) {
+      const b = this.pip.getBounds(); Phaser.Geom.Rectangle.Inflate(b, 4, 4);
+      if (b.contains(world.x, world.y)) { this.deps.bus.emit('interact', { kind: 'companion', id: 'pip' }); return; }
+    }
     // сначала — персонажи и предметы под пальцем (берём верхний)
     const hit = [...this.targets].sort((a, b) => b.obj.depth - a.obj.depth).find((t) => {
       const b = t.obj.getBounds();
@@ -380,9 +441,74 @@ export class WorldScene extends Phaser.Scene {
       this.hero.setTexture(kidFrameKey(this.deps.look, this.facing, 0));
     }
     this.syncHero();
+    this.checkExit();
+    this.updatePip(dt);
     this.updateNearby();
     this.updateMarkers();
   }
+
+  /** Вошёл в клетку-дверь (именно вошёл, а не стоит в ней) — переход или сообщение «закрыто». */
+  private checkExit() {
+    if (this.leaving) return;
+    const c = this.grid.cellOf({ x: this.pos.x, y: this.pos.y - 1 });
+    const k = this.grid.key(c);
+    if (k === this.lastCellKey) return;
+    const prevKey = this.lastCellKey;
+    this.lastCellKey = k;
+    const ex = this.deps.map.exits.find((e) => e.tx === c.tx && e.ty === c.ty);
+    if (!ex) return;
+    const locked = this.deps.canExit(ex);
+    if (locked) {
+      // вернуть на шаг назад
+      this.stopWalking();
+      const back = { tx: prevKey % this.grid.cols, ty: Math.floor(prevKey / this.grid.cols) };
+      const free = this.grid.nearestWalkable(back, this.pos) ?? back;
+      this.pos = this.grid.feetOf(free);
+      this.lastCellKey = this.grid.key(free);
+      this.syncHero();
+      this.deps.onLocked(locked);
+      return;
+    }
+    this.leaving = true;
+    this.stopWalking();
+    this.cameras.main.fadeOut(220, 27, 22, 38);
+    this.cameras.main.once('camerafadeoutcomplete', () => this.deps.onExit(ex));
+  }
+
+  // ---------- спутник ----------
+
+  private createPip() {
+    this.pipPos = { x: this.pos.x - 14, y: this.pos.y };
+    this.pip = this.add.image(this.pipPos.x, this.pipPos.y, 'pip_0').setOrigin(0.5, 1).setInteractive({ useHandCursor: true });
+    this.trail = [];
+  }
+
+  private updatePip(dt: number) {
+    if (!this.pip) return;
+    const last = this.trail[this.trail.length - 1];
+    if (!last || Math.hypot(last.x - this.pos.x, last.y - this.pos.y) > 2) this.trail.push({ ...this.pos });
+    if (this.trail.length > 12) this.trail.shift();
+    const target = this.trail.length > 8 ? this.trail[this.trail.length - 9] : this.trail[0] ?? this.pos;
+    const vx = target.x - this.pipPos.x, vy = target.y - this.pipPos.y;
+    const d = Math.hypot(vx, vy);
+    // держится рядом, но не залезает на героя
+    const nearHero = Math.hypot(this.pos.x - this.pipPos.x, this.pos.y - this.pipPos.y) < 15;
+    const moving = d > 1 && !nearHero;
+    if (moving) { const st = Math.min(d, 70 * dt); this.pipPos = { x: this.pipPos.x + (vx / d) * st, y: this.pipPos.y + (vy / d) * st }; }
+    const frame = moving && Math.floor(this.time.now / 160) % 2 ? 1 : 0;
+    const left = vx < -0.5 || (!moving && this.pos.x < this.pipPos.x);
+    this.pip.setTexture(`pip_${frame}${left ? '_l' : ''}`).setPosition(Math.round(this.pipPos.x), Math.round(this.pipPos.y)).setDepth(this.pipPos.y);
+    if (this.pipMarker) this.pipMarker.setPosition(this.pip.x, this.pip.y - 15 + Math.round(Math.sin(this.time.now / 180) * 1.5));
+  }
+
+  /** «?» над спутником: у него есть вопрос (повторение в мире). */
+  setCompanionMarker(on: boolean) {
+    if (!this.pip) return;
+    if (on && !this.pipMarker) this.pipMarker = this.makeBubble('?', '#9cc8ff');
+    else if (!on && this.pipMarker) { this.pipMarker.destroy(); this.pipMarker = null; }
+  }
+
+  companionScreenPos() { return this.pip ? this.worldToScreen(this.pip.x, this.pip.y - 6) : null; }
 
   private step(dx: number, dy: number) {
     this.facing = facingFor(dx, dy, this.facing);
@@ -451,6 +577,10 @@ export class WorldScene extends Phaser.Scene {
       npcs: this.targets.filter((t) => t.kind === 'npc').map((t) => t.id),
       markers: [...this.npcMarkers.keys()],
       highlighted: this.highlighted,
+      location: this.deps.map.id,
+      props: this.props.length,
+      companion: !!this.pip,
+      companionMarker: !!this.pipMarker,
     };
   }
 }

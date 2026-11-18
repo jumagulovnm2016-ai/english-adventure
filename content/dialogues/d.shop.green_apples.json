@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "id": "d.shop.green_apples",
+  "npc": "npc.mr_green",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.mr_green",
+      "say": "p.hello_can_i_help",
+      "ru_hint": {
+        "junior": "Это продавец, мистер Грин.",
+        "senior": "Продавец, мистер Грин."
+      },
+      "next": "n2"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Поздоровайся с продавцом!",
+        "senior": "Поздоровайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.hello"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n3"
+    },
+    "n3": {
+      "speaker": "npc.mr_green",
+      "say": "p.hello_can_i_help",
+      "ru_hint": {
+        "junior": "Он спрашивает, что тебе нужно.",
+        "senior": "Что тебе нужно?"
+      },
+      "next": "n4"
+    },
+    "n4_model": {
+      "speaker": "npc.mr_green",
+      "say": "p.three_apples_please",
+      "next": "n5"
+    },
+    "n4": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попроси три яблока!",
+        "senior": "Попроси то, что просила мама."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.three_apples_please"
+      },
+      "on_correct": "n5",
+      "on_wrong": "n4_model"
+    },
+    "n5": {
+      "speaker": "npc.mr_green",
+      "say": "p.here_you_are",
+      "ru_hint": {
+        "junior": "Он даёт тебе яблоки."
+      },
+      "action": {
+        "type": "give_player_item",
+        "item": "it.apples_three"
+      },
+      "next": "n6"
+    },
+    "n6": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Скажи спасибо!",
+        "senior": "Поблагодари."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.thank_you"
+      },
+      "on_correct": "n7",
+      "on_wrong": "n7"
+    },
+    "n7": {
+      "speaker": "npc.mr_green",
+      "say": "p.bye_see_you",
+      "next": "n8"
+    },
+    "n8": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попрощайся с мистером Грином!",
+        "senior": "Попрощайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.goodbye"
+      },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

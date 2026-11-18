@@ -63,6 +63,7 @@ export class ContentRegistry {
     return n;
   }
   hasItem(id: string): boolean { return this.items.has(id); }
+  npcsIn(location: string): Npc[] { return [...this.npcs.values()].filter((n) => n.location === location); }
 
   /** Слова предмета в естественном английском порядке: прилагательные перед существительным. */
   itemWords(itemId: string): Word[] {
@@ -72,11 +73,15 @@ export class ContentRegistry {
 
   /** Английское название предмета: «blue cup». */
   itemNameEn(itemId: string): string {
+    const it = this.item(itemId);
+    if (it.name_en) return it.name_en;
     return this.itemWords(itemId).map((w) => w.en).join(' ');
   }
 
   /** Русское название: «синяя чашка» — согласование рода делается по простому словарю окончаний. */
   itemNameRu(itemId: string): string {
+    const it = this.item(itemId);
+    if (it.name_ru) return it.name_ru;
     const words = this.itemWords(itemId);
     const noun = words.find((w) => w.pos === 'noun');
     return words.map((w) => (w.pos === 'adjective' && noun ? agreeAdjective(w.ru, noun.ru) : w.ru)).join(' ');

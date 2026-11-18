@@ -27,6 +27,8 @@ export interface Store {
   saveProfile(p: Profile): Promise<void>;
   getWorld(): Promise<WorldState | null>;
   saveWorld(w: WorldState): Promise<void>;
+  getMeta<T>(key: string): Promise<T | undefined>;
+  setMeta(key: string, value: unknown): Promise<void>;
   getQuests(): Promise<Map<string, QuestState>>;
   saveQuest(id: string, q: QuestState): Promise<void>;
   /** Хранилище учебного прогресса (состояния слов и журнал событий). */
@@ -85,6 +87,8 @@ class IdbStore implements Store {
       },
     };
   }
+  async getMeta<T>(key: string) { return (await this.db.get('meta', key)) as T | undefined; }
+  async setMeta(key: string, value: unknown) { await this.db.put('meta', value, key); }
   async getQuests() {
     const tx = this.db.transaction('quests');
     const [keys, vals] = await Promise.all([tx.store.getAllKeys(), tx.store.getAll()]);
@@ -106,6 +110,9 @@ class MemoryStore implements Store {
   readonly persistent = false;
   learning = new MemoryLearningRepo();
   private quests = new Map<string, QuestState>();
+  private meta = new Map<string, unknown>();
+  async getMeta<T>(key: string) { return this.meta.get(key) as T | undefined; }
+  async setMeta(key: string, value: unknown) { this.meta.set(key, value); }
   async getQuests() { return new Map(this.quests); }
   async saveQuest(id: string, q: QuestState) { this.quests.set(id, q); }
   private profile: Profile | undefined;

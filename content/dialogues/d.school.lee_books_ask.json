@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "d.school.lee_books_ask",
+  "npc": "npc.ms_lee",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.ms_lee",
+      "say": "p.give_me_blue_book",
+      "ru_hint": {
+        "junior": "Учительница о чём-то просит. Послушай ещё раз, если нужно.",
+        "senior": "Просьба. Можно переслушать."
+      },
+      "next": "end"
+    }
+  }
+}

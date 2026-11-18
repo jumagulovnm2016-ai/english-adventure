@@ -29,7 +29,11 @@ export function evaluateCanDo(skill: CanDoSkill, all: LearnEvent[], micEnabled: 
   const r = skill.rule;
   const relevant = all.filter((e) => r.items.includes(e.item) && r.kinds.includes(e.kind) && counts(e))
     .sort((a, b) => a.t.localeCompare(b.t));
-  if (!relevant.length) return { status: 'not_started', confirmedAt: null, withoutVoice: false, progress: 0 };
+  if (!relevant.length) {
+    // ребёнок уже встречал эти слова/фразы, но пока только узнаёт (а навык требует, например, сказать сам)
+    const touched = all.some((e) => r.items.includes(e.item) && counts(e));
+    return { status: touched ? 'in_progress' : 'not_started', confirmedAt: null, withoutVoice: false, progress: touched ? 0.05 : 0 };
+  }
   const good = relevant.filter((e) => e.result === 'correct' && !e.hinted);
 
   if (r.type === 'uses_in_contexts') {

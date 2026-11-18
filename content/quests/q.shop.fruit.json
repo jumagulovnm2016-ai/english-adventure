@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "q.shop.fruit",
+  "location": "shop",
+  "order": 2,
+  "title": {
+    "junior": "Фрукты на полке",
+    "senior": "Помощник продавца"
+  },
+  "intro": {
+    "junior": "Мистеру Грину нужна помощь с фруктами.",
+    "senior": "Продавцу некогда — помоги найти товар."
+  },
+  "giver": "npc.mr_green",
+  "requires": [
+    "q.shop.apples"
+  ],
+  "introduces": [
+    "w.banana",
+    "w.orange_fruit",
+    "w.egg"
+  ],
+  "practices": [
+    "w.apple",
+    "w.find"
+  ],
+  "steps": [
+    {
+      "id": "talk_start",
+      "type": "dialogue",
+      "dialogue": "d.shop.green_fruit_start"
+    },
+    {
+      "id": "find_banana",
+      "type": "find_item",
+      "zone": "shelves",
+      "instruction": "p.find_banana",
+      "target": "it.banana",
+      "distractors": [
+        "it.orange_fruit",
+        "it.apple_red",
+        "it.egg"
+      ],
+      "hint": {
+        "ru": {
+          "junior": "Banana — это банан. Он жёлтый и длинный.",
+          "senior": "Banana — банан."
+        },
+        "say": "p.find_banana"
+      }
+    },
+    {
+      "id": "give_banana",
+      "type": "give_item",
+      "npc": "npc.mr_green",
+      "item": "it.banana",
+      "hint": {
+        "ru": {
+          "junior": "Отнеси банан мистеру Грину!",
+          "senior": "Отдай банан продавцу."
+        }
+      }
+    },
+    {
+      "id": "talk_end",
+      "type": "dialogue",
+      "dialogue": "d.shop.green_fruit_end"
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

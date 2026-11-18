@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "id": "d.school.lee_books_start",
+  "npc": "npc.ms_lee",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.ms_lee",
+      "say": "p.good_morning_class",
+      "action": {
+        "type": "emote",
+        "emote": "wave"
+      },
+      "next": "n2"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Поздоровайся с учительницей!",
+        "senior": "Поздоровайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.good_morning"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n3"
+    },
+    "n3": {
+      "speaker": "npc.ms_lee",
+      "say": "p.look_books",
+      "ru_hint": {
+        "junior": "Учительница показывает на парты.",
+        "senior": "Посмотри на парты."
+      },
+      "next": "n4"
+    },
+    "n4": {
+      "speaker": "npc.ms_lee",
+      "say": "p.how_many_books",
+      "ru_hint": {
+        "junior": "Учительница спрашивает: сколько?",
+        "senior": "Сколько?"
+      },
+      "next": "n5"
+    },
+    "n5_model": {
+      "speaker": "npc.ms_lee",
+      "say": "p.six_books",
+      "next": "n6"
+    },
+    "n5": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Посчитай книги на партах!",
+        "senior": "Сосчитай книги."
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.six",
+        "options": [
+          "w.five",
+          "w.six",
+          "w.seven"
+        ]
+      },
+      "on_correct": "n6",
+      "on_wrong": "n5_model"
+    },
+    "n6": {
+      "speaker": "npc.ms_lee",
+      "say": "p.yes_well_done",
+      "action": {
+        "type": "emote",
+        "emote": "happy"
+      },
+      "next": "end"
+    }
+  }
+}

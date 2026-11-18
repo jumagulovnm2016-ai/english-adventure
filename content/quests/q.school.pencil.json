@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "q.school.pencil",
+  "location": "school",
+  "order": 2,
+  "title": {
+    "junior": "Карандаш Тома",
+    "senior": "Пропажа в классе"
+  },
+  "intro": {
+    "junior": "Однокласснику Тому нужна помощь. Подойди к нему!",
+    "senior": "Том что-то ищет на партах. Помоги."
+  },
+  "giver": "npc.tom",
+  "requires": [
+    "q.school.lesson"
+  ],
+  "introduces": [
+    "w.pencil",
+    "w.pen",
+    "w.ruler"
+  ],
+  "practices": [
+    "p.my_name_is",
+    "w.red"
+  ],
+  "steps": [
+    {
+      "id": "talk_start",
+      "type": "dialogue",
+      "dialogue": "d.school.tom_start"
+    },
+    {
+      "id": "find_pencil",
+      "type": "find_item",
+      "zone": "desks",
+      "instruction": "p.cant_find_pencil",
+      "target": "it.pencil_red",
+      "distractors": [
+        "it.pen_red",
+        "it.pencil_blue",
+        "it.ruler_green"
+      ],
+      "hint": {
+        "ru": {
+          "junior": "Pencil — карандаш, red — красный. Красная ручка — не то!",
+          "senior": "Pencil и red. Ручка (pen) — не то."
+        },
+        "say": "p.cant_find_pencil"
+      }
+    },
+    {
+      "id": "give_pencil",
+      "type": "give_item",
+      "npc": "npc.tom",
+      "item": "it.pencil_red",
+      "hint": {
+        "ru": {
+          "junior": "Отдай карандаш Тому!",
+          "senior": "Верни карандаш Тому."
+        }
+      }
+    },
+    {
+      "id": "talk_end",
+      "type": "dialogue",
+      "dialogue": "d.school.tom_end"
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

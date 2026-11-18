@@ -61,4 +61,10 @@ export const HOME: MapDef = {
     'it.decor_blue_lamp': { tx: 18, ty: 11, px: 18 * T + 8, py: 12 * T },
   },
   spawn: { tx: 9, ty: 11, dir: 'up' },
+  exits: [
+    { tx: 9, ty: 13, to: 'street', spawn: { tx: 5, ty: 5, dir: 'down' }, requires: 'q.home.dad_ball', lockedText: 'Сначала помоги маме, Эми и папе 🙂' },
+  ],
+  zones: { home_inside: { tx: 1, ty: 2, tw: 18, th: 11 } },
+  signs: [],
+  title: { ru: 'Дом', en: 'Home' },
 };

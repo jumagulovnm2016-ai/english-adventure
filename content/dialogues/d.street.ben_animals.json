@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "id": "d.street.ben_animals",
+  "npc": "npc.ben",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.ben",
+      "say": "p.hi_again",
+      "action": {
+        "type": "emote",
+        "emote": "wave"
+      },
+      "next": "n2"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Поздоровайся с Беном!",
+        "senior": "Поздоровайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.hello"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n3"
+    },
+    "n3": {
+      "speaker": "npc.ben",
+      "say": "p.whats_this",
+      "ru_hint": {
+        "junior": "Бен показывает на животное.",
+        "senior": "Бен спрашивает, кто это."
+      },
+      "next": "n4"
+    },
+    "n4_model": {
+      "speaker": "npc.ben",
+      "say": "p.its_a_bird",
+      "next": "n5"
+    },
+    "n4": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.bird",
+        "prompt": {
+          "picture": "it.bird_blue"
+        },
+        "options": [
+          "w.bird",
+          "w.duck",
+          "w.rabbit"
+        ]
+      },
+      "on_correct": "n5",
+      "on_wrong": "n4_model"
+    },
+    "n5": {
+      "speaker": "npc.ben",
+      "say": "p.whats_this",
+      "ru_hint": {
+        "junior": "А это кто?",
+        "senior": "А это?"
+      },
+      "next": "n6"
+    },
+    "n6_model": {
+      "speaker": "npc.ben",
+      "say": "p.its_a_rabbit",
+      "next": "n7"
+    },
+    "n6": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.rabbit",
+        "prompt": {
+          "picture": "it.rabbit_white"
+        },
+        "options": [
+          "w.rabbit",
+          "w.cat",
+          "w.frog"
+        ]
+      },
+      "on_correct": "n7",
+      "on_wrong": "n6_model"
+    },
+    "n7": {
+      "speaker": "npc.ben",
+      "say": "p.whats_this",
+      "ru_hint": {
+        "junior": "А это?",
+        "senior": "И это?"
+      },
+      "next": "n8"
+    },
+    "n8_model": {
+      "speaker": "npc.ben",
+      "say": "p.its_a_frog",
+      "next": "n9"
+    },
+    "n8": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.frog",
+        "prompt": {
+          "picture": "it.frog_green"
+        },
+        "options": [
+          "w.frog",
+          "w.bird",
+          "w.dog"
+        ]
+      },
+      "on_correct": "n9",
+      "on_wrong": "n8_model"
+    },
+    "n9": {
+      "speaker": "npc.ben",
+      "say": "p.great_animals",
+      "action": {
+        "type": "emote",
+        "emote": "happy"
+      },
+      "next": "n10"
+    },
+    "n10": {
+      "speaker": "npc.ben",
+      "say": "p.bye_see_you",
+      "next": "n11"
+    },
+    "n11": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попрощайся с Беном!",
+        "senior": "Попрощайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.goodbye"
+      },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

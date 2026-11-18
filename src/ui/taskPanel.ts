@@ -11,9 +11,9 @@ export interface Audio { id: string; text: string }
 export interface OptionView { id: string; en: string; ru: string; visual: Visual; audio: Audio }
 
 export type TaskView =
-  | { mode: 'listen_choose'; title: string; prompt?: Audio; playPromptFirst: boolean; options: OptionView[]; showText: boolean; correctId: string }
-  | { mode: 'build_phrase'; title: string; prompt?: Audio; pieces: string[]; shuffled: string[]; answerAudio: Audio; tail?: string }
-  | { mode: 'type_word'; title: string; prompt?: Audio; expected: string; accept: string[]; answerAudio: Audio };
+  | { mode: 'listen_choose'; title: string; prompt?: Audio; picture?: string; playPromptFirst: boolean; options: OptionView[]; showText: boolean; correctId: string }
+  | { mode: 'build_phrase'; title: string; prompt?: Audio; picture?: string; pieces: string[]; shuffled: string[]; answerAudio: Audio; tail?: string }
+  | { mode: 'type_word'; title: string; prompt?: Audio; picture?: string; expected: string; accept: string[]; answerAudio: Audio };
 
 export interface Answer { result: Result; chosen?: string }
 
@@ -32,6 +32,9 @@ export class TaskPanel {
     this.view = v;
     this.built = [];
     $('task-title').textContent = v.title;
+    const pic = $('task-picture') as HTMLImageElement;
+    pic.hidden = !v.picture;
+    if (v.picture) pic.src = v.picture;
     $('task-hint').hidden = true;
     this.feedback('', '');
     ($('task-say') as HTMLButtonElement).hidden = !v.prompt;
@@ -143,8 +146,7 @@ export class TaskPanel {
       const vis = o.visual;
       if (vis.kind === 'swatch') b.insertAdjacentHTML('beforeend', `<span class="swatch" style="background:${vis.color}"></span>`);
       else if (vis.kind === 'image') { const img = document.createElement('img'); img.src = vis.src; img.alt = ''; b.append(img); }
-      else if (vis.kind === 'digit') b.insertAdjacentHTML('beforeend', `<span class="digit"></span>`);
-      if (vis.kind === 'digit') b.querySelector('.digit')!.textContent = vis.text;
+      else if (vis.kind === 'digit' || vis.kind === 'emoji') { const d = document.createElement('span'); d.className = 'digit'; d.textContent = vis.text; b.append(d); }
       if (v.showText || vis.kind === 'text') { const t = document.createElement('span'); t.textContent = o.en; b.append(t); }
       b.setAttribute('aria-label', o.en);
       // кнопка «послушать вариант» — для вариантов-фраз (ребёнок может не уметь читать)

@@ -604,6 +604,254 @@
         "lamp",
         "a lamp"
       ]
+    },
+    {
+      "id": "w.duck",
+      "en": "duck",
+      "ru": "утка",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "duck.png",
+      "accept": [
+        "duck",
+        "a duck"
+      ],
+      "confusable": [
+        "w.bird"
+      ]
+    },
+    {
+      "id": "w.cat",
+      "en": "cat",
+      "ru": "кошка",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "cat.png",
+      "accept": [
+        "cat",
+        "a cat"
+      ],
+      "confusable": [
+        "w.dog"
+      ]
+    },
+    {
+      "id": "w.dog",
+      "en": "dog",
+      "ru": "собака",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "dog.png",
+      "accept": [
+        "dog",
+        "a dog"
+      ],
+      "confusable": [
+        "w.cat"
+      ]
+    },
+    {
+      "id": "w.bird",
+      "en": "bird",
+      "ru": "птица",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "bird.png",
+      "accept": [
+        "bird",
+        "a bird"
+      ],
+      "confusable": [
+        "w.duck"
+      ]
+    },
+    {
+      "id": "w.rabbit",
+      "en": "rabbit",
+      "ru": "кролик",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "rabbit.png",
+      "accept": [
+        "rabbit",
+        "a rabbit"
+      ],
+      "confusable": [
+        "w.cat"
+      ]
+    },
+    {
+      "id": "w.frog",
+      "en": "frog",
+      "ru": "лягушка",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "frog.png",
+      "accept": [
+        "frog",
+        "a frog"
+      ],
+      "confusable": [
+        "w.bird"
+      ]
+    },
+    {
+      "id": "w.apple",
+      "en": "apple",
+      "ru": "яблоко",
+      "topic": "food",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "apple.png",
+      "accept": [
+        "apple",
+        "an apple",
+        "apples"
+      ],
+      "confusable": [
+        "w.orange_fruit"
+      ]
+    },
+    {
+      "id": "w.banana",
+      "en": "banana",
+      "ru": "банан",
+      "topic": "food",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "banana.png",
+      "accept": [
+        "banana",
+        "a banana"
+      ]
+    },
+    {
+      "id": "w.orange_fruit",
+      "en": "orange",
+      "ru": "апельсин",
+      "topic": "food",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "orange_fruit.png",
+      "accept": [
+        "orange",
+        "an orange"
+      ],
+      "confusable": [
+        "w.apple"
+      ]
+    },
+    {
+      "id": "w.milk",
+      "en": "milk",
+      "ru": "молоко",
+      "topic": "food",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "milk.png",
+      "accept": [
+        "milk"
+      ],
+      "confusable": [
+        "w.egg"
+      ]
+    },
+    {
+      "id": "w.bread",
+      "en": "bread",
+      "ru": "хлеб",
+      "topic": "food",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "bread.png",
+      "accept": [
+        "bread"
+      ],
+      "confusable": [
+        "w.cake"
+      ]
+    },
+    {
+      "id": "w.egg",
+      "en": "egg",
+      "ru": "яйцо",
+      "topic": "food",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "egg.png",
+      "accept": [
+        "egg",
+        "an egg"
+      ],
+      "confusable": [
+        "w.milk"
+      ]
+    },
+    {
+      "id": "w.pencil",
+      "en": "pencil",
+      "ru": "карандаш",
+      "topic": "school",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "pencil.png",
+      "accept": [
+        "pencil",
+        "a pencil"
+      ],
+      "confusable": [
+        "w.pen"
+      ]
+    },
+    {
+      "id": "w.pen",
+      "en": "pen",
+      "ru": "ручка",
+      "topic": "school",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "pen.png",
+      "accept": [
+        "pen",
+        "a pen"
+      ],
+      "confusable": [
+        "w.pencil"
+      ]
+    },
+    {
+      "id": "w.ruler",
+      "en": "ruler",
+      "ru": "линейка",
+      "topic": "school",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "ruler.png",
+      "accept": [
+        "ruler",
+        "a ruler"
+      ],
+      "confusable": [
+        "w.pencil"
+      ]
+    },
+    {
+      "id": "w.teacher",
+      "en": "teacher",
+      "ru": "учитель, учительница",
+      "topic": "school",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "teacher.png",
+      "accept": [
+        "teacher"
+      ]
     }
   ]
 }

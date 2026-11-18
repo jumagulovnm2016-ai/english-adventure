@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "id": "q.school.books",
+  "location": "school",
+  "order": 3,
+  "title": {
+    "junior": "Считаем книги",
+    "senior": "Книжная задачка"
+  },
+  "intro": {
+    "junior": "Мисс Ли приготовила новое задание!",
+    "senior": "У мисс Ли задачка на счёт и внимательность."
+  },
+  "giver": "npc.ms_lee",
+  "requires": [
+    "q.school.pencil"
+  ],
+  "introduces": [
+    "w.six",
+    "w.seven",
+    "w.give"
+  ],
+  "practices": [
+    "w.book",
+    "w.blue",
+    "p.good_morning"
+  ],
+  "steps": [
+    {
+      "id": "count",
+      "type": "dialogue",
+      "dialogue": "d.school.lee_books_start",
+      "show": {
+        "items": [
+          "it.book_green",
+          "it.book_green",
+          "it.book_green",
+          "it.book_green",
+          "it.book_green",
+          "it.book_green"
+        ],
+        "zone": "desks"
+      }
+    },
+    {
+      "id": "ask",
+      "type": "dialogue",
+      "dialogue": "d.school.lee_books_ask"
+    },
+    {
+      "id": "find_book",
+      "type": "find_item",
+      "zone": "desks",
+      "instruction": "p.give_me_blue_book",
+      "target": "it.book_blue",
+      "distractors": [
+        "it.book_red",
+        "it.book_green",
+        "it.book_yellow"
+      ],
+      "hint": {
+        "ru": {
+          "junior": "Blue — синий, book — книга. Нужна синяя книга.",
+          "senior": "Синяя книга — blue book."
+        },
+        "say": "p.give_me_blue_book"
+      }
+    },
+    {
+      "id": "give_book",
+      "type": "give_item",
+      "npc": "npc.ms_lee",
+      "item": "it.book_blue",
+      "hint": {
+        "ru": {
+          "junior": "Отдай книгу учительнице!",
+          "senior": "Отдай книгу мисс Ли."
+        }
+      }
+    },
+    {
+      "id": "talk_end",
+      "type": "dialogue",
+      "dialogue": "d.school.lee_books_end"
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

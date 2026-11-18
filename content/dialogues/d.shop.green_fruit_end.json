@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "id": "d.shop.green_fruit_end",
+  "npc": "npc.mr_green",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Протяни вещь. Что говорят, когда что-то дают?",
+        "senior": "Что говорят, протягивая вещь?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.here_you_are"
+      },
+      "on_correct": "n2",
+      "on_wrong": "n2"
+    },
+    "n2": {
+      "speaker": "npc.mr_green",
+      "say": "p.thank_you",
+      "action": {
+        "type": "take_player_item",
+        "item": "it.banana"
+      },
+      "next": "n3"
+    },
+    "n3": {
+      "speaker": "npc.mr_green",
+      "say": "p.whats_this",
+      "ru_hint": {
+        "junior": "А что это?",
+        "senior": "Что это?"
+      },
+      "next": "n4"
+    },
+    "n4_model": {
+      "speaker": "npc.mr_green",
+      "say": "p.its_an_orange",
+      "next": "n5"
+    },
+    "n4": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что это?",
+        "senior": "Что это?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.orange_fruit",
+        "prompt": {
+          "picture": "it.orange_fruit"
+        },
+        "options": [
+          "w.orange_fruit",
+          "w.apple",
+          "w.banana"
+        ]
+      },
+      "on_correct": "n5",
+      "on_wrong": "n4_model"
+    },
+    "n5": {
+      "speaker": "npc.mr_green",
+      "say": "p.bye_see_you",
+      "next": "n6"
+    },
+    "n6": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попрощайся с мистером Грином!",
+        "senior": "Попрощайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.goodbye"
+      },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

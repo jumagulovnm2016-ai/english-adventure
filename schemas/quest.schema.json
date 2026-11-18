@@ -4,79 +4,295 @@
   "title": "Квест",
   "type": "object",
   "properties": {
-    "schemaVersion": { "const": 1 },
-    "id":       { "$ref": "common.schema.json#/$defs/questId" },
-    "location": { "$ref": "common.schema.json#/$defs/location" },
-    "order":    { "type": "integer", "minimum": 1, "description": "Порядок в сюжете локации" },
-    "title":    { "$ref": "common.schema.json#/$defs/ageText" },
-    "intro":    { "$ref": "common.schema.json#/$defs/ageText", "description": "Обёртка квеста: бытовое поручение для младших, загадка/расследование для старших" },
-    "giver":    { "$ref": "common.schema.json#/$defs/npcId" },
-    "requires": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/questId" }, "uniqueItems": true },
+    "schemaVersion": {
+      "const": 1
+    },
+    "id": {
+      "$ref": "common.schema.json#/$defs/questId"
+    },
+    "location": {
+      "$ref": "common.schema.json#/$defs/location"
+    },
+    "order": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Порядок в сюжете локации"
+    },
+    "title": {
+      "$ref": "common.schema.json#/$defs/ageText"
+    },
+    "intro": {
+      "$ref": "common.schema.json#/$defs/ageText",
+      "description": "Обёртка квеста: бытовое поручение для младших, загадка/расследование для старших"
+    },
+    "giver": {
+      "$ref": "common.schema.json#/$defs/npcId"
+    },
+    "requires": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/questId"
+      },
+      "uniqueItems": true
+    },
     "introduces": {
       "description": "Новые слова/фразы квеста (не больше 6)",
-      "type": "array", "items": { "$ref": "common.schema.json#/$defs/learnId" }, "maxItems": 6, "uniqueItems": true
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/learnId"
+      },
+      "maxItems": 6,
+      "uniqueItems": true
     },
     "practices": {
       "description": "Уже знакомые слова/фразы, которые закрепляются",
-      "type": "array", "items": { "$ref": "common.schema.json#/$defs/learnId" }, "uniqueItems": true
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/learnId"
+      },
+      "uniqueItems": true
     },
-    "steps": { "type": "array", "items": { "$ref": "#/$defs/step" }, "minItems": 1 },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/step"
+      },
+      "minItems": 1
+    },
     "rewards": {
       "type": "object",
       "properties": {
-        "stars": { "type": "integer", "minimum": 0, "maximum": 3 },
-        "decor": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/itemId" } }
+        "stars": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "decor": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/itemId"
+          }
+        }
       },
-      "required": ["stars"],
+      "required": [
+        "stars"
+      ],
       "additionalProperties": false
     }
   },
-  "required": ["schemaVersion", "id", "location", "order", "title", "intro", "giver", "requires", "introduces", "practices", "steps", "rewards"],
+  "required": [
+    "schemaVersion",
+    "id",
+    "location",
+    "order",
+    "title",
+    "intro",
+    "giver",
+    "requires",
+    "introduces",
+    "practices",
+    "steps",
+    "rewards"
+  ],
   "additionalProperties": false,
   "$defs": {
     "companionHint": {
       "description": "Что скажет спутник, если ребёнок застрял",
       "type": "object",
       "properties": {
-        "ru":  { "$ref": "common.schema.json#/$defs/ageText" },
-        "say": { "$ref": "common.schema.json#/$defs/learnId" }
+        "ru": {
+          "$ref": "common.schema.json#/$defs/ageText"
+        },
+        "say": {
+          "$ref": "common.schema.json#/$defs/learnId"
+        }
       },
-      "required": ["ru"],
+      "required": [
+        "ru"
+      ],
       "additionalProperties": false
     },
     "step": {
       "type": "object",
       "properties": {
-        "id":   { "$ref": "common.schema.json#/$defs/localId" },
-        "type": { "enum": ["dialogue", "go_to", "find_item", "give_item", "task", "review_slot"] },
-        "hint": { "$ref": "#/$defs/companionHint" },
-
-        "dialogue":    { "$ref": "common.schema.json#/$defs/dialogueId" },
-
-        "location":    { "$ref": "common.schema.json#/$defs/location" },
-        "zone":        { "type": "string", "description": "Имя зоны на карте Tiled" },
-
-        "instruction": { "$ref": "common.schema.json#/$defs/phraseId", "description": "Инструкция, которую надо понять (засчитывается как понимание)" },
-        "target":      { "$ref": "common.schema.json#/$defs/itemId" },
-        "distractors": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/itemId" }, "minItems": 1, "maxItems": 5 },
-
-        "npc":         { "$ref": "common.schema.json#/$defs/npcId" },
-        "item":        { "$ref": "common.schema.json#/$defs/itemId" },
-
-        "task":        { "$ref": "common.schema.json#/$defs/task" },
-
-        "count":        { "type": "integer", "minimum": 1, "maximum": 3 },
-        "prefer_topics": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/topic" } }
+        "id": {
+          "$ref": "common.schema.json#/$defs/localId"
+        },
+        "type": {
+          "enum": [
+            "dialogue",
+            "go_to",
+            "find_item",
+            "give_item",
+            "task",
+            "review_slot"
+          ]
+        },
+        "hint": {
+          "$ref": "#/$defs/companionHint"
+        },
+        "dialogue": {
+          "$ref": "common.schema.json#/$defs/dialogueId"
+        },
+        "location": {
+          "$ref": "common.schema.json#/$defs/location"
+        },
+        "zone": {
+          "type": "string",
+          "description": "Имя зоны на карте Tiled"
+        },
+        "instruction": {
+          "$ref": "common.schema.json#/$defs/phraseId",
+          "description": "Инструкция, которую надо понять (засчитывается как понимание)"
+        },
+        "target": {
+          "$ref": "common.schema.json#/$defs/itemId"
+        },
+        "distractors": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/itemId"
+          },
+          "minItems": 1,
+          "maxItems": 5
+        },
+        "npc": {
+          "$ref": "common.schema.json#/$defs/npcId"
+        },
+        "item": {
+          "$ref": "common.schema.json#/$defs/itemId"
+        },
+        "task": {
+          "$ref": "common.schema.json#/$defs/task"
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "prefer_topics": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/topic"
+          }
+        },
+        "show": {
+          "type": "object",
+          "description": "Что показать в мире на время шага (утки на пруду, книги на партах)",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "common.schema.json#/$defs/itemId"
+              },
+              "minItems": 1,
+              "maxItems": 8
+            },
+            "zone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "items",
+            "zone"
+          ],
+          "additionalProperties": false
+        }
       },
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "additionalProperties": false,
       "allOf": [
-        { "if": { "properties": { "type": { "const": "dialogue" } } },    "then": { "required": ["dialogue"] } },
-        { "if": { "properties": { "type": { "const": "go_to" } } },       "then": { "required": ["location", "zone"] } },
-        { "if": { "properties": { "type": { "const": "find_item" } } },   "then": { "required": ["instruction", "target", "distractors", "hint"] } },
-        { "if": { "properties": { "type": { "const": "give_item" } } },   "then": { "required": ["npc", "item"] } },
-        { "if": { "properties": { "type": { "const": "task" } } },        "then": { "required": ["task"] } },
-        { "if": { "properties": { "type": { "const": "review_slot" } } }, "then": { "required": ["count"] } }
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "dialogue"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "dialogue"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "go_to"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "zone"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "find_item"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "instruction",
+              "target",
+              "distractors",
+              "hint"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "give_item"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "npc",
+              "item"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "task"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "task"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "review_slot"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "count"
+            ]
+          }
+        }
       ]
     }
   }

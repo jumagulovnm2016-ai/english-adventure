@@ -135,6 +135,10 @@
             },
             "ru_hint": {
               "$ref": "#/$defs/ageText"
+            },
+            "picture": {
+              "$ref": "#/$defs/itemId",
+              "description": "Картинка предмета в задании («What's this?»)"
             }
           },
           "additionalProperties": false

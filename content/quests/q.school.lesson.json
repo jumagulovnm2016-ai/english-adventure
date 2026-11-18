@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "q.school.lesson",
+  "location": "school",
+  "order": 1,
+  "title": {
+    "junior": "Первый урок",
+    "senior": "Урок у мисс Ли"
+  },
+  "intro": {
+    "junior": "Начинается урок английского! Подойди к учительнице.",
+    "senior": "Урок английского. Учительница говорит только по-английски."
+  },
+  "giver": "npc.ms_lee",
+  "requires": [
+    "q.street.ducks"
+  ],
+  "introduces": [
+    "p.good_morning",
+    "p.stand_up",
+    "p.sit_down",
+    "p.open_your_book",
+    "p.close_your_book"
+  ],
+  "practices": [],
+  "steps": [
+    {
+      "id": "lesson",
+      "type": "dialogue",
+      "dialogue": "d.school.lee_lesson"
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

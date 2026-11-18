@@ -225,6 +225,497 @@
         "red"
       ],
       "why_ru": "It's = It is. Без is по-английски не скажешь."
+    },
+    {
+      "id": "p.hi_im_ben",
+      "en": "Hi! I'm Ben.",
+      "ru": "Привет! Я Бен.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.hello"
+      ]
+    },
+    {
+      "id": "p.look_ducks",
+      "en": "Look! Ducks!",
+      "ru": "Смотри! Утки!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.look",
+        "w.duck"
+      ]
+    },
+    {
+      "id": "p.how_many_ducks",
+      "en": "How many ducks?",
+      "ru": "Сколько уток?",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.duck"
+      ]
+    },
+    {
+      "id": "p.five_ducks",
+      "en": "Five ducks.",
+      "ru": "Пять уток.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.five",
+        "w.duck"
+      ]
+    },
+    {
+      "id": "p.its_yellow",
+      "en": "It's yellow.",
+      "ru": "Она жёлтая.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.yellow"
+      ],
+      "pieces": [
+        "It's",
+        "yellow"
+      ],
+      "accept": [
+        "it's yellow",
+        "it is yellow",
+        "yellow"
+      ]
+    },
+    {
+      "id": "p.bye_see_you",
+      "en": "Bye! See you!",
+      "ru": "Пока! Увидимся!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.goodbye"
+      ]
+    },
+    {
+      "id": "p.hello_dear",
+      "en": "Hello, dear!",
+      "ru": "Здравствуй, дорогой!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.hello"
+      ]
+    },
+    {
+      "id": "p.my_cat_is_lost",
+      "en": "Oh no! My cat is lost.",
+      "ru": "Ох! Моя кошка потерялась.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.cat"
+      ]
+    },
+    {
+      "id": "p.find_my_cat",
+      "en": "Find my cat, please. It's black.",
+      "ru": "Найди мою кошку, пожалуйста. Она чёрная.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.find",
+        "w.cat",
+        "w.please",
+        "w.black"
+      ]
+    },
+    {
+      "id": "p.bye_dear",
+      "en": "Goodbye, dear!",
+      "ru": "До свидания, дорогой!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.goodbye"
+      ]
+    },
+    {
+      "id": "p.hi_again",
+      "en": "Hi again!",
+      "ru": "Снова привет!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.hello"
+      ]
+    },
+    {
+      "id": "p.whats_this",
+      "en": "What's this?",
+      "ru": "Что это?",
+      "level": "preA1",
+      "role": "receptive",
+      "words": []
+    },
+    {
+      "id": "p.its_a_bird",
+      "en": "It's a bird.",
+      "ru": "Это птица.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.bird"
+      ],
+      "pieces": [
+        "It's",
+        "a",
+        "bird"
+      ],
+      "accept": [
+        "it's a bird",
+        "it is a bird",
+        "a bird",
+        "bird"
+      ]
+    },
+    {
+      "id": "p.its_a_rabbit",
+      "en": "It's a rabbit.",
+      "ru": "Это кролик.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.rabbit"
+      ],
+      "pieces": [
+        "It's",
+        "a",
+        "rabbit"
+      ],
+      "accept": [
+        "it's a rabbit",
+        "a rabbit",
+        "rabbit"
+      ]
+    },
+    {
+      "id": "p.its_a_frog",
+      "en": "It's a frog.",
+      "ru": "Это лягушка.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.frog"
+      ],
+      "pieces": [
+        "It's",
+        "a",
+        "frog"
+      ],
+      "accept": [
+        "it's a frog",
+        "a frog",
+        "frog"
+      ]
+    },
+    {
+      "id": "p.great_animals",
+      "en": "Great! You know animals!",
+      "ru": "Здорово! Ты знаешь животных!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": []
+    },
+    {
+      "id": "p.buy_three_apples",
+      "en": "Please buy three apples.",
+      "ru": "Пожалуйста, купи три яблока.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.please",
+        "w.three",
+        "w.apple"
+      ]
+    },
+    {
+      "id": "p.hello_can_i_help",
+      "en": "Hello! Can I help you?",
+      "ru": "Здравствуйте! Чем помочь?",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.hello"
+      ]
+    },
+    {
+      "id": "p.three_apples_please",
+      "en": "Three apples, please.",
+      "ru": "Три яблока, пожалуйста.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.three",
+        "w.apple",
+        "w.please"
+      ],
+      "pieces": [
+        "Three",
+        "apples,",
+        "please"
+      ],
+      "accept": [
+        "three apples please",
+        "three apples"
+      ]
+    },
+    {
+      "id": "p.how_many_apples",
+      "en": "How many apples?",
+      "ru": "Сколько яблок?",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.apple"
+      ]
+    },
+    {
+      "id": "p.three_apples",
+      "en": "Three apples.",
+      "ru": "Три яблока.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.three",
+        "w.apple"
+      ]
+    },
+    {
+      "id": "p.hello_again",
+      "en": "Hello again!",
+      "ru": "Снова здравствуй!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.hello"
+      ]
+    },
+    {
+      "id": "p.find_banana",
+      "en": "Find the banana, please.",
+      "ru": "Найди банан, пожалуйста.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.find",
+        "w.banana",
+        "w.please"
+      ]
+    },
+    {
+      "id": "p.its_an_orange",
+      "en": "It's an orange.",
+      "ru": "Это апельсин.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.orange_fruit"
+      ],
+      "pieces": [
+        "It's",
+        "an",
+        "orange"
+      ],
+      "accept": [
+        "it's an orange",
+        "an orange",
+        "orange"
+      ]
+    },
+    {
+      "id": "p.find_milk",
+      "en": "Find the milk, please.",
+      "ru": "Найди молоко, пожалуйста.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.find",
+        "w.milk",
+        "w.please"
+      ]
+    },
+    {
+      "id": "p.find_bread",
+      "en": "Now find the bread, please.",
+      "ru": "А теперь найди хлеб, пожалуйста.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.find",
+        "w.bread",
+        "w.please"
+      ]
+    },
+    {
+      "id": "p.good_morning_class",
+      "en": "Good morning, class!",
+      "ru": "Доброе утро, класс!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": []
+    },
+    {
+      "id": "p.good_morning",
+      "en": "Good morning!",
+      "ru": "Доброе утро!",
+      "level": "preA1",
+      "role": "productive",
+      "words": [],
+      "pieces": [
+        "Good",
+        "morning"
+      ],
+      "accept": [
+        "good morning",
+        "morning"
+      ]
+    },
+    {
+      "id": "p.im_ms_lee",
+      "en": "I'm Ms Lee. I'm your teacher.",
+      "ru": "Я мисс Ли. Я твоя учительница.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.teacher"
+      ]
+    },
+    {
+      "id": "p.stand_up",
+      "en": "Stand up, please.",
+      "ru": "Встаньте, пожалуйста.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.please"
+      ]
+    },
+    {
+      "id": "p.sit_down",
+      "en": "Sit down, please.",
+      "ru": "Садитесь, пожалуйста.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.please"
+      ]
+    },
+    {
+      "id": "p.open_your_book",
+      "en": "Open your book.",
+      "ru": "Откройте книгу.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.open",
+        "w.book"
+      ]
+    },
+    {
+      "id": "p.close_your_book",
+      "en": "Close your book.",
+      "ru": "Закройте книгу.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.close",
+        "w.book"
+      ]
+    },
+    {
+      "id": "p.well_done_class",
+      "en": "Well done, class!",
+      "ru": "Молодцы, класс!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": []
+    },
+    {
+      "id": "p.hi_im_tom",
+      "en": "Hi! I'm Tom.",
+      "ru": "Привет! Я Том.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.hello"
+      ]
+    },
+    {
+      "id": "p.cant_find_pencil",
+      "en": "I can't find my pencil. It's red.",
+      "ru": "Не могу найти свой карандаш. Он красный.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.pencil",
+        "w.red"
+      ]
+    },
+    {
+      "id": "p.look_books",
+      "en": "Look at the books.",
+      "ru": "Посмотрите на книги.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.look",
+        "w.book"
+      ]
+    },
+    {
+      "id": "p.how_many_books",
+      "en": "How many books?",
+      "ru": "Сколько книг?",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.book"
+      ]
+    },
+    {
+      "id": "p.six_books",
+      "en": "Six books.",
+      "ru": "Шесть книг.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.six",
+        "w.book"
+      ]
+    },
+    {
+      "id": "p.give_me_blue_book",
+      "en": "Give me the blue book, please.",
+      "ru": "Дай мне синюю книгу, пожалуйста.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.give",
+        "w.blue",
+        "w.book",
+        "w.please"
+      ]
+    },
+    {
+      "id": "p.goodbye_class",
+      "en": "Goodbye, class!",
+      "ru": "До свидания, класс!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.goodbye"
+      ]
     }
   ]
 }

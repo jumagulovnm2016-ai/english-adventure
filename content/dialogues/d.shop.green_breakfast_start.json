@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "d.shop.green_breakfast_start",
+  "npc": "npc.mr_green",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.mr_green",
+      "say": "p.hello_again",
+      "action": {
+        "type": "emote",
+        "emote": "wave"
+      },
+      "next": "n2"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Поздоровайся с мистером Грином!",
+        "senior": "Поздоровайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.hello"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n3"
+    },
+    "n3": {
+      "speaker": "npc.mr_green",
+      "say": "p.find_milk",
+      "ru_hint": {
+        "junior": "Найди на полке то, что просят.",
+        "senior": "Просьба. Можно переслушать."
+      },
+      "next": "end"
+    }
+  }
+}

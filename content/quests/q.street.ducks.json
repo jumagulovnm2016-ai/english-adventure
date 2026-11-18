@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "q.street.ducks",
+  "location": "street",
+  "order": 1,
+  "title": {
+    "junior": "Утки в пруду",
+    "senior": "Утиная перепись"
+  },
+  "intro": {
+    "junior": "В парке мальчик Бен кормит уток. Подойди к нему!",
+    "senior": "Бен в парке считает уток и, кажется, запутался. Поможешь?"
+  },
+  "giver": "npc.ben",
+  "requires": [
+    "q.home.dad_ball"
+  ],
+  "introduces": [
+    "w.duck",
+    "w.four",
+    "w.five",
+    "w.six",
+    "w.yellow"
+  ],
+  "practices": [
+    "p.hello",
+    "p.goodbye"
+  ],
+  "steps": [
+    {
+      "id": "talk",
+      "type": "dialogue",
+      "dialogue": "d.street.ben_ducks",
+      "show": {
+        "items": [
+          "it.duck",
+          "it.duck",
+          "it.duck",
+          "it.duck",
+          "it.duck"
+        ],
+        "zone": "pond"
+      }
+    },
+    {
+      "id": "review",
+      "type": "review_slot",
+      "count": 1,
+      "prefer_topics": [
+        "colours",
+        "numbers"
+      ]
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

@@ -16,7 +16,7 @@ export class EventBus<Events extends Record<string, unknown>> {
   }
 }
 
-export type TargetKind = 'item' | 'npc' | 'pick';
+export type TargetKind = 'item' | 'npc' | 'pick' | 'companion';
 
 /** События между сценой, интерфейсом и квестовым контроллером. */
 export type GameEvents = {

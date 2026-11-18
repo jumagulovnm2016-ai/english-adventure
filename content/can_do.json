@@ -11,7 +11,8 @@
         "type": "uses_in_contexts",
         "items": [
           "p.hello",
-          "p.goodbye"
+          "p.goodbye",
+          "p.good_morning"
         ],
         "kinds": [
           "production",
@@ -106,17 +107,17 @@
       "id": "cd.instructions",
       "order": 5,
       "level": "preA1",
-      "title_ru": "Понимает простые инструкции",
-      "explain_ru": "Правильно выполнил 5 из 6 разных инструкций (найди, дай, открой, закрой, смотри, слушай) спустя 2 дня после знакомства.",
+      "title_ru": "Понимает простые инструкции учителя",
+      "explain_ru": "Правильно понял 5 из 6 разных инструкций (встань, сядь, открой книгу, закрой книгу, найди, дай) спустя 2 дня после знакомства.",
       "rule": {
         "type": "accuracy_after_delay",
         "items": [
+          "p.stand_up",
+          "p.sit_down",
+          "p.open_your_book",
+          "p.close_your_book",
           "w.find",
-          "w.give",
-          "w.open",
-          "w.close",
-          "w.look",
-          "w.listen"
+          "w.give"
         ],
         "kinds": [
           "comprehension"
@@ -144,6 +145,99 @@
         "min_successes": 3,
         "min_distinct_contexts": 3,
         "min_distinct_days": 2
+      }
+    },
+    {
+      "id": "cd.animals",
+      "order": 7,
+      "level": "preA1",
+      "title_ru": "Знает животных",
+      "explain_ru": "Узнал 5 из 6 животных (утка, кошка, собака, птица, кролик, лягушка), когда они встретились снова — не раньше чем через 2 дня.",
+      "rule": {
+        "type": "accuracy_after_delay",
+        "items": [
+          "w.duck",
+          "w.cat",
+          "w.dog",
+          "w.bird",
+          "w.rabbit",
+          "w.frog"
+        ],
+        "kinds": [
+          "comprehension",
+          "production",
+          "spoken"
+        ],
+        "min_correct_items": 5,
+        "min_days_since_first_seen": 2
+      }
+    },
+    {
+      "id": "cd.food",
+      "order": 8,
+      "level": "preA1",
+      "title_ru": "Знает продукты",
+      "explain_ru": "Узнал 5 из 6 продуктов (яблоко, банан, апельсин, молоко, хлеб, яйцо) спустя 2 дня после знакомства.",
+      "rule": {
+        "type": "accuracy_after_delay",
+        "items": [
+          "w.apple",
+          "w.banana",
+          "w.orange_fruit",
+          "w.milk",
+          "w.bread",
+          "w.egg"
+        ],
+        "kinds": [
+          "comprehension",
+          "production",
+          "spoken"
+        ],
+        "min_correct_items": 5,
+        "min_days_since_first_seen": 2
+      }
+    },
+    {
+      "id": "cd.shop",
+      "order": 9,
+      "level": "preA1",
+      "title_ru": "Может попросить в магазине: «Three apples, please»",
+      "explain_ru": "Сам составил просьбу в магазине 2 раза в разных ситуациях, в 2 разных дня.",
+      "rule": {
+        "type": "uses_in_contexts",
+        "items": [
+          "p.three_apples_please"
+        ],
+        "kinds": [
+          "production",
+          "spoken"
+        ],
+        "min_successes": 2,
+        "min_distinct_contexts": 2,
+        "min_distinct_days": 2
+      }
+    },
+    {
+      "id": "cd.school_things",
+      "order": 10,
+      "level": "preA1",
+      "title_ru": "Знает школьные вещи",
+      "explain_ru": "Узнал 3 из 4 школьных вещей (карандаш, ручка, линейка, книга) спустя 2 дня после знакомства.",
+      "rule": {
+        "type": "accuracy_after_delay",
+        "items": [
+          "w.pencil",
+          "w.pen",
+          "w.ruler",
+          "w.book"
+        ],
+        "kinds": [
+          "comprehension",
+          "production",
+          "spoken"
+        ],
+        "min_correct_items": 3,
+        "min_days_since_first_seen": 2
       }
     }
   ]

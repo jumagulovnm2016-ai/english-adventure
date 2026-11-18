@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "id": "q.shop.apples",
+  "location": "shop",
+  "order": 1,
+  "title": {
+    "junior": "Яблоки для мамы",
+    "senior": "Первая покупка"
+  },
+  "intro": {
+    "junior": "Мама хочет испечь пирог, но дома нет яблок. Поговори с ней!",
+    "senior": "Маме нужны продукты. Пора в магазин — сам."
+  },
+  "giver": "npc.mum",
+  "requires": [
+    "q.street.ducks"
+  ],
+  "introduces": [
+    "w.apple",
+    "w.three",
+    "p.three_apples_please"
+  ],
+  "practices": [
+    "p.thank_you",
+    "p.here_you_are"
+  ],
+  "steps": [
+    {
+      "id": "talk_mum",
+      "type": "dialogue",
+      "dialogue": "d.home.mum_apples_start"
+    },
+    {
+      "id": "go_shop",
+      "type": "go_to",
+      "zone": "shop_inside",
+      "hint": {
+        "ru": {
+          "junior": "Иди в магазин — здание с надписью SHOP.",
+          "senior": "В магазин: вывеска SHOP."
+        }
+      }
+    },
+    {
+      "id": "buy",
+      "type": "dialogue",
+      "dialogue": "d.shop.green_apples"
+    },
+    {
+      "id": "give_mum",
+      "type": "give_item",
+      "npc": "npc.mum",
+      "item": "it.apples_three",
+      "hint": {
+        "ru": {
+          "junior": "Отнеси яблоки маме домой!",
+          "senior": "Домой, к маме."
+        }
+      }
+    },
+    {
+      "id": "talk_end",
+      "type": "dialogue",
+      "dialogue": "d.home.mum_apples_end"
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

@@ -153,9 +153,12 @@ for (const [file, q] of quests) {
       if (instr && ![...tw].every(w => instr.words.includes(w))) warn(file, `${p}: инструкция ${s.instruction} упоминает не все слова предмета ${s.target}`);
     }
     if (s.type === 'task') checkTask(file, p, s.task);
+    if (s.show && s.show.items.length > 8) err(file, `${p}: слишком много предметов для показа`);
     if (s.type === 'give_item') {
       const earlierFind = q.steps.slice(0, i).some(x => x.type === 'find_item' && x.target === s.item);
-      if (!earlierFind) warn(file, `${p}: отдаётся ${s.item}, но раньше в квесте его не находили`);
+      const givenInDialogue = q.steps.slice(0, i).some(x => x.type === 'dialogue' &&
+        Object.values(index.get(x.dialogue)?.data.nodes ?? {}).some(n => n.action?.type === 'give_player_item' && n.action.item === s.item));
+      if (!earlierFind && !givenInDialogue) err(file, `${p}: отдаётся ${s.item}, но раньше в квесте его не находили и не получали`);
     }
   }
   if (q.steps.filter(s => s.type === 'review_slot').reduce((a, s) => a + s.count, 0) > Math.ceil(q.steps.length * 0.3) + 1)

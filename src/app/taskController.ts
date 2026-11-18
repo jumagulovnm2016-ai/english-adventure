@@ -7,7 +7,7 @@ import { selectMode } from '../learning/modeSelector';
 import { buildOptions, shuffle } from '../learning/options';
 import { HelpLadder } from '../quests/helpLadder';
 import type { Audio, TaskPanel, TaskView } from '../ui/taskPanel';
-import { hasPicture, visualFor } from '../ui/visuals';
+import { hasPicture, itemPicture, visualFor } from '../ui/visuals';
 import { ageText, type AgeMode } from './ageText';
 
 export interface TaskContext {
@@ -39,6 +39,7 @@ export class TaskController {
     const answerAudio = { id: t.id, text: t.en };
     const prompt = task.prompt?.say ? this.audioOf(task.prompt.say) : ctx.promptAudio;
     const titleFromContent = ageText(task.prompt?.ru_hint ?? ctx.title, ctx.ageMode);
+    const picture = task.prompt?.picture ? itemPicture(this.content, task.prompt.picture) : undefined;
 
     if (mode === 'build_phrase') {
       const pieces = t.pieces!;
@@ -46,10 +47,10 @@ export class TaskController {
       if (shuffled.every((p, i) => p === pieces[i])) shuffled = [...pieces.slice(1), pieces[0]];
       const joined = pieces.join(' ');
       const tail = t.en.startsWith(joined) ? t.en.slice(joined.length) : undefined;
-      return { mode, view: { mode, title: titleFromContent ?? `Собери: «${t.ru}»`, prompt, pieces, shuffled, answerAudio, tail: tail?.trim() ? tail : undefined } };
+      return { mode, view: { mode, title: titleFromContent ?? `Собери: «${t.ru}»`, prompt, picture, pieces, shuffled, answerAudio, tail: tail?.trim() ? tail : undefined } };
     }
     if (mode === 'type_word') {
-      return { mode, view: { mode, title: titleFromContent ?? `Напиши по-английски: «${t.ru}»`, prompt: prompt ?? answerAudio, expected: t.en, accept: t.accept ?? [], answerAudio } };
+      return { mode, view: { mode, title: titleFromContent ?? `Напиши по-английски: «${t.ru}»`, prompt: prompt ?? answerAudio, picture, expected: t.en, accept: t.accept ?? [], answerAudio } };
     }
     if (mode === 'say_aloud') throw new Error('Режим «скажи вслух» включается только после проверки распознавания на устройстве (D7)');
 
@@ -59,17 +60,20 @@ export class TaskController {
       const l = this.content.learnable(id);
       return { id, en: l.en, ru: l.ru, visual: visualFor(this.content, id), audio: this.audioOf(id) };
     });
-    // «выбери ответ на вопрос» (фразы или есть вопрос) или «послушай слово и найди картинку»
-    const answerPick = !isWord || !!prompt;
+    // Два вида «выбери»:
+    //  • «ответь на вопрос» — прозвучал вопрос («What colour is it?», «Поздоровайся!»), варианты подписаны и озвучиваются;
+    //  • «послушай и найди» — звучит само слово/инструкция, варианты — картинки без подписей (понимание на слух).
     const pictures = ids.every((id) => hasPicture(this.content, id));
+    const question = !!prompt && prompt.id !== task.target;
+    const listenPick = !question && (isWord || pictures);
     return {
       mode,
       view: {
-        mode, options, correctId: task.target,
-        title: titleFromContent ?? (answerPick ? 'Выбери ответ' : 'Послушай и найди'),
-        prompt: answerPick ? prompt : answerAudio,
-        playPromptFirst: !answerPick,
-        showText: answerPick || !pictures,
+        mode, options, correctId: task.target, picture,
+        title: titleFromContent ?? (listenPick ? 'Послушай и найди' : question ? 'Выбери ответ' : `Как сказать: «${t.ru}»?`),
+        prompt: listenPick ? answerAudio : prompt,
+        playPromptFirst: listenPick,
+        showText: !listenPick || !pictures,
       },
     };
   }

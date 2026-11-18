@@ -33,6 +33,61 @@
       "name_ru": "Эми",
       "ru_with": "с Эми",
       "ru_to": "Эми"
+    },
+    {
+      "id": "npc.ben",
+      "name_en": "Ben",
+      "role_ru": "Мальчик в парке",
+      "name_ru": "Бен",
+      "ru_with": "с Беном",
+      "ru_to": "Бену",
+      "location": "street",
+      "gender": "m",
+      "sprite": "ben"
+    },
+    {
+      "id": "npc.mrs_brown",
+      "name_en": "Mrs Brown",
+      "role_ru": "Соседка-бабушка",
+      "name_ru": "миссис Браун",
+      "ru_with": "с миссис Браун",
+      "ru_to": "миссис Браун",
+      "location": "street",
+      "gender": "f",
+      "sprite": "mrs_brown"
+    },
+    {
+      "id": "npc.mr_green",
+      "name_en": "Mr Green",
+      "role_ru": "Продавец",
+      "name_ru": "мистер Грин",
+      "ru_with": "с мистером Грином",
+      "ru_to": "мистеру Грину",
+      "location": "shop",
+      "gender": "m",
+      "sprite": "mr_green"
+    },
+    {
+      "id": "npc.ms_lee",
+      "name_en": "Ms Lee",
+      "role_ru": "Учительница",
+      "name_ru": "мисс Ли",
+      "ru_with": "с мисс Ли",
+      "ru_to": "мисс Ли",
+      "location": "school",
+      "gender": "f",
+      "sprite": "ms_lee"
+    },
+    {
+      "id": "npc.tom",
+      "name_en": "Tom",
+      "role_ru": "Одноклассник",
+      "name_ru": "Том",
+      "ru_with": "с Томом",
+      "ru_to": "Тому",
+      "location": "school",
+      "gender": "m",
+      "sprite": "tom"
     }
   ]
 }

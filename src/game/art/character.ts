@@ -13,14 +13,40 @@ export interface KidLook {
 }
 
 export const LOOKS: Record<string, KidLook> = {
+  // герои на выбор (kid_1 — исходный)
   kid_1: { skin: 's', skinShade: 'S', hair: 'h', hairDark: 'H', shirt: 'c', shirtDark: 'C', pants: 'j', pantsDark: 'J' },
+  kid_2: { skin: 's', skinShade: 'S', hair: 'H', hairDark: 'k', shirt: 'x', shirtDark: 'X', pants: 'j', pantsDark: 'J', longHair: true },
+  kid_3: { skin: 'S', skinShade: '8', hair: 'k', hairDark: 'k', shirt: 'o', shirtDark: 'O', pants: 'M', pantsDark: 'k' },
+  kid_4: { skin: 'S', skinShade: '8', hair: 'k', hairDark: 'H', shirt: 'y', shirtDark: 'O', pants: 'b', pantsDark: 'B', longHair: true },
+  kid_5: { skin: 's', skinShade: 'S', hair: 'O', hairDark: 'v', shirt: 'g', shirtDark: 'G', pants: 'J', pantsDark: 'k' },
+  kid_6: { skin: 's', skinShade: 'S', hair: '9', hairDark: 'H', shirt: 'e', shirtDark: 'E', pants: 'M', pantsDark: 'k', longHair: true },
+  // жители городка
+  ben: { skin: 'S', skinShade: '8', hair: 'H', hairDark: 'k', shirt: 'e', shirtDark: 'E', pants: 'j', pantsDark: 'J' },
+  tom: { skin: 's', skinShade: 'S', hair: 'y', hairDark: 'O', shirt: 'b', shirtDark: 'B', pants: 'M', pantsDark: 'k' },
+  mrs_brown: { skin: 's', skinShade: 'S', hair: 'N', hairDark: 'm', shirt: 'x', shirtDark: 'X', pants: 'M', pantsDark: 'k', longHair: true },
+  mr_green: { skin: 's', skinShade: 'S', hair: 'h', hairDark: 'H', shirt: 'g', shirtDark: 'G', pants: 'j', pantsDark: 'J' },
+  ms_lee: { skin: 's', skinShade: 'S', hair: 'k', hairDark: 'H', shirt: 'c', shirtDark: 'C', pants: 'X', pantsDark: 'k', longHair: true },
   // взрослые (рисуются выше — см. drawPerson)
   mum: { skin: 's', skinShade: 'S', hair: 'O', hairDark: 'v', shirt: 'e', shirtDark: 'E', pants: 'x', pantsDark: 'X', longHair: true },
-  dad: { skin: 'S', skinShade: 'v', hair: 'H', hairDark: 'k', shirt: 'b', shirtDark: 'B', pants: 'M', pantsDark: 'k' },
+  dad: { skin: 'S', skinShade: '8', hair: 'H', hairDark: 'k', shirt: 'b', shirtDark: 'B', pants: 'M', pantsDark: 'k' },
   // соседская девочка
   amy: { skin: 's', skinShade: 'S', hair: 'y', hairDark: 'O', shirt: 'g', shirtDark: 'G', pants: 'b', pantsDark: 'B', longHair: true },
 };
-export const ADULTS = new Set(['mum', 'dad']);
+export const ADULTS = new Set(['mum', 'dad', 'mrs_brown', 'mr_green', 'ms_lee']);
+export const PLAYER_LOOKS = ['kid_1', 'kid_2', 'kid_3', 'kid_4', 'kid_5', 'kid_6'] as const;
+
+/** Спутник Пип — маленький лисёнок (собственный персонаж). 2 кадра. */
+export function drawPip(frame: 0 | 1, flip = false): Px {
+  const p = new Px(16, 14);
+  const y = frame;
+  p.rect(3, 6 + y, 9, 5, 'o'); p.rect(4, 9 + y, 6, 2, 'z');
+  p.rect(9, 2 + y, 6, 6, 'o'); p.px(9, 1 + y, 'o'); p.px(10, 0 + y, 'O'); p.px(14, 1 + y, 'o'); p.px(14, 0 + y, 'O');
+  p.rect(11, 6 + y, 4, 2, 'z'); p.px(11, 4 + y, 'i'); p.px(14, 4 + y, 'i'); p.px(15, 6 + y, 'k');
+  p.rect(0, 5 + y - frame, 4, 3, 'o'); p.px(0, 5 + y - frame, 'z');
+  p.rect(4, 11 + y, 2, 2 - y, 'k'); p.rect(9, 11 + y, 2, 2 - y, 'k');
+  const out = p.outline();
+  return flip ? out.flipX() : out;
+}
 
 const O = 1; // отступ сверху под контур
 

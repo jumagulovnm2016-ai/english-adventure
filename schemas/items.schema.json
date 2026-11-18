@@ -4,22 +4,52 @@
   "title": "Предметы мира",
   "type": "object",
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": {
+      "const": 1
+    },
     "items": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "id":       { "$ref": "common.schema.json#/$defs/itemId" },
-          "words":    { "description": "Какие слова описывают предмет (blue + cup)", "type": "array", "items": { "$ref": "common.schema.json#/$defs/wordId" }, "minItems": 1 },
-          "sprite":   { "type": "string" },
-          "pickable": { "type": "boolean" }
+          "id": {
+            "$ref": "common.schema.json#/$defs/itemId"
+          },
+          "words": {
+            "description": "Какие слова описывают предмет (blue + cup)",
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/wordId"
+            },
+            "minItems": 1
+          },
+          "sprite": {
+            "type": "string"
+          },
+          "pickable": {
+            "type": "boolean"
+          },
+          "name_en": {
+            "type": "string",
+            "description": "Название, если из слов не собрать (three apples)"
+          },
+          "name_ru": {
+            "type": "string"
+          }
         },
-        "required": ["id", "words", "sprite", "pickable"],
+        "required": [
+          "id",
+          "words",
+          "sprite",
+          "pickable"
+        ],
         "additionalProperties": false
       }
     }
   },
-  "required": ["schemaVersion", "items"],
+  "required": [
+    "schemaVersion",
+    "items"
+  ],
   "additionalProperties": false
 }

@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "id": "d.street.ben_ducks",
+  "npc": "npc.ben",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.ben",
+      "say": "p.hi_im_ben",
+      "ru_hint": {
+        "junior": "Мальчика зовут Бен.",
+        "senior": "Это Бен."
+      },
+      "action": {
+        "type": "emote",
+        "emote": "wave"
+      },
+      "next": "n2"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Поздоровайся с Беном!",
+        "senior": "Поздоровайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.hello"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n3"
+    },
+    "n3": {
+      "speaker": "npc.ben",
+      "say": "p.look_ducks",
+      "ru_hint": {
+        "junior": "Бен показывает на пруд.",
+        "senior": "Смотри на пруд."
+      },
+      "next": "n4"
+    },
+    "n4": {
+      "speaker": "npc.ben",
+      "say": "p.how_many_ducks",
+      "ru_hint": {
+        "junior": "Бен спрашивает: сколько?",
+        "senior": "Вопрос про количество."
+      },
+      "next": "n5"
+    },
+    "n5_model": {
+      "speaker": "npc.ben",
+      "say": "p.five_ducks",
+      "next": "n6"
+    },
+    "n5": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Посчитай уток на пруду!",
+        "senior": "Сосчитай уток."
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.five",
+        "options": [
+          "w.four",
+          "w.five",
+          "w.six"
+        ]
+      },
+      "on_correct": "n6",
+      "on_wrong": "n5_model"
+    },
+    "n6": {
+      "speaker": "npc.ben",
+      "say": "p.yes_well_done",
+      "action": {
+        "type": "emote",
+        "emote": "happy"
+      },
+      "next": "n7"
+    },
+    "n7": {
+      "speaker": "npc.ben",
+      "say": "p.what_colour_is_it",
+      "ru_hint": {
+        "junior": "А какого цвета утки?",
+        "senior": "Вопрос про цвет."
+      },
+      "next": "n8"
+    },
+    "n8_model": {
+      "speaker": "npc.ben",
+      "say": "p.its_yellow",
+      "next": "n9"
+    },
+    "n8": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Какого цвета утки?",
+        "senior": "Цвет уток?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.yellow",
+        "prompt": {
+          "picture": "it.duck"
+        },
+        "options": [
+          "w.yellow",
+          "w.orange",
+          "w.white"
+        ]
+      },
+      "on_correct": "n9",
+      "on_wrong": "n8_model"
+    },
+    "n9": {
+      "speaker": "npc.ben",
+      "say": "p.bye_see_you",
+      "next": "n10"
+    },
+    "n10": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попрощайся с Беном!",
+        "senior": "Попрощайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.goodbye"
+      },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

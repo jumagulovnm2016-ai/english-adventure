@@ -11,14 +11,14 @@ export interface Phrase {
   id: string; en: string; ru: string; level: 'preA1'; role: 'productive' | 'receptive';
   words: string[]; pieces?: string[]; accept?: string[]; why_ru?: string;
 }
-export interface Item { id: string; words: string[]; sprite: string; pickable: boolean }
+export interface Item { id: string; words: string[]; sprite: string; pickable: boolean; name_en?: string; name_ru?: string }
 export interface Npc { id: string; name_en: string; role_ru: string; name_ru: string; ru_with: string; ru_to: string; location: Location; gender: Gender; sprite: string }
 
 export interface AgeText { junior: string; senior?: string }
 export type TaskType = 'auto' | 'listen_choose' | 'build_phrase' | 'say_aloud' | 'type_word';
 export interface TaskDef {
   type: TaskType; target: string;
-  prompt?: { say?: string; ru_hint?: AgeText };
+  prompt?: { say?: string; ru_hint?: AgeText; picture?: string };
   options?: string[];
   allowed_types?: Exclude<TaskType, 'auto'>[];
 }
@@ -34,6 +34,7 @@ export interface StepDef {
   dialogue?: string; location?: Location; zone?: string;
   instruction?: string; target?: string; distractors?: string[];
   npc?: string; item?: string; task?: TaskDef; count?: number; prefer_topics?: string[];
+  show?: { items: string[]; zone: string };
 }
 export interface QuestDef {
   schemaVersion: 1; id: string; location: Location; order: number; title: AgeText; intro: AgeText; giver: string;

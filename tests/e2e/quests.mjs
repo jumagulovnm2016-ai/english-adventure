@@ -14,6 +14,18 @@ const PORT = 4188;
 const URL = `http://localhost:${PORT}/`;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+/** Первый запуск: выбрать героя, имя, режим и пропустить проверку (если экран появился). */
+async function passOnboarding(page, { age = 'junior', tap = false } = {}) {
+  const click = (sel) => (tap ? page.tap(sel) : page.click(sel));
+  try { await page.waitForFunction(() => !document.getElementById('onboard').hidden || window.__quests, { timeout: 5000 }); } catch { return; }
+  if (await page.$eval('#onboard', (e) => e.hidden)) return;
+  await click('.ob-hero[data-look="kid_2"]');
+  await click('#ob-name-form button');
+  await click(`[data-age="${age}"]`);
+  await click('#ob-skip');
+  await click('#ob-go');
+}
+
 const server = spawn('npx', ['vite', 'preview', '--port', String(PORT), '--strictPort'], { cwd: ROOT, stdio: 'ignore' });
 await sleep(2500);
 const browser = await puppeteer.launch({
@@ -95,6 +107,7 @@ async function playThrough({ stopWhen } = {}) {
 }
 
 await page.click('#btn-play');
+await passOnboarding(page);
 await waitFor(() => window.__quests);
 await sleep(600);
 
@@ -265,8 +278,9 @@ await check('отдал папе со словами «Here you are» → наг
   assert(!(await quests()).inventory.includes('it.ball_red'), 'мяч остался в руках');
 });
 
-await check('все квесты выполнены — цель в шапке скрыта', async () => {
-  assert(!(await visible('quest-goal')), 'цель видна');
+await check('дома всё сделано — цель зовёт на улицу к Бену', async () => {
+  const goal = await page.$eval('#quest-text', (e) => e.textContent);
+  assert(goal.includes('с Беном') && goal.includes('STREET'), goal);
 });
 
 await check('прогресс сохраняется: после перезагрузки 9 звёзд, Эми на месте, лампа стоит, журнал цел', async () => {
@@ -297,6 +311,7 @@ await p2.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true, 
 await p2.goto(URL, { waitUntil: 'networkidle0' });
 await check('телефон: квест начинается касанием, задание помещается на экран', async () => {
   await p2.tap('#btn-play');
+  await passOnboarding(p2, { tap: true });
   await p2.waitForFunction(() => window.__quests, { timeout: 8000 });
   await sleep(600);
   const pt = await p2.evaluate(() => {

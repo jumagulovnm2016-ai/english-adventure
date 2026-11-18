@@ -13,6 +13,18 @@ const PORT = 4187;
 const URL = `http://localhost:${PORT}/`;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+/** Первый запуск: выбрать героя, имя, режим и пропустить проверку (если экран появился). */
+async function passOnboarding(page, { age = 'junior', tap = false } = {}) {
+  const click = (sel) => (tap ? page.tap(sel) : page.click(sel));
+  try { await page.waitForFunction(() => !document.getElementById('onboard').hidden || window.__quests, { timeout: 5000 }); } catch { return; }
+  if (await page.$eval('#onboard', (e) => e.hidden)) return;
+  await click('.ob-hero[data-look="kid_2"]');
+  await click('#ob-name-form button');
+  await click(`[data-age="${age}"]`);
+  await click('#ob-skip');
+  await click('#ob-go');
+}
+
 const server = spawn('npx', ['vite', 'preview', '--port', String(PORT), '--strictPort'], { cwd: ROOT, stdio: 'ignore' });
 await sleep(2500);
 
@@ -62,6 +74,7 @@ const T = 16;
   });
 
   await page.click('#btn-play');
+  await passOnboarding(page);
   await waitWorld(page);
   await sleep(600);
 
@@ -193,6 +206,7 @@ const T = 16;
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto(URL, { waitUntil: 'networkidle0' });
   await page.tap('#btn-play');
+  await passOnboarding(page, { tap: true });
   await waitWorld(page);
   await sleep(600);
 

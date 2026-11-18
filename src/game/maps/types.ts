@@ -22,6 +22,17 @@ export interface NpcPlacement { npcId: string; tx: number; ty: number; dir: 'dow
 /** Место, куда квест «найди» раскладывает предметы. onFurniture — предмет лежит на мебели (клетки уже заняты). */
 export interface Spot { tx: number; ty: number; px: number; py: number; onFurniture: boolean }
 
+export interface Exit {
+  /** Клетка-дверь: войти в неё — перейти в другую локацию. */
+  tx: number; ty: number;
+  to: Location;
+  /** Где появиться в новой локации. */
+  spawn: { tx: number; ty: number; dir: 'down' | 'up' | 'left' | 'right' };
+  /** Дверь открывается после этого квеста. */
+  requires?: string;
+  lockedText?: string;
+}
+
 export interface MapDef {
   id: Location;
   /** Строки клеток. Обозначения — в TILE_LEGEND. */
@@ -34,13 +45,24 @@ export interface MapDef {
   /** Куда ставится украшение-награда. */
   decor: Record<string, { tx: number; ty: number; px: number; py: number }>;
   spawn: { tx: number; ty: number; dir: 'down' | 'up' | 'left' | 'right' };
+  exits: Exit[];
+  /** Именованные области: шаг квеста «дойди до» (go_to). */
+  zones: Record<string, { tx: number; ty: number; tw: number; th: number }>;
+  /** Надписи на зданиях (английские вывески — тоже чтение). */
+  signs: { text: string; x: number; y: number }[];
+  /** Название для шапки. */
+  title: { ru: string; en: string };
 }
 
 export const TILE_LEGEND = {
   '#': { art: 'wall_top', blocked: true },
   '=': { art: 'wall_face', blocked: true },
   'w': { art: 'wall_window', blocked: true },
-  'D': { art: 'door', blocked: true },
+  'D': { art: 'door', blocked: false },   // дверь — проход (выход задаётся в exits)
+  'g': { art: 'grass', blocked: false },
+  'p': { art: 'path', blocked: false },
+  '~': { art: 'water', blocked: true },
+  'X': { art: 'hedge', blocked: true },
   ',': { art: 'floor_tile', blocked: false },
   '.': { art: 'floor_wood', blocked: false },
 } as const;

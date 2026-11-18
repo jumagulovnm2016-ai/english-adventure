@@ -89,6 +89,187 @@
       ],
       "sprite": "book_red",
       "pickable": true
+    },
+    {
+      "id": "it.duck",
+      "words": [
+        "w.duck"
+      ],
+      "sprite": "duck",
+      "pickable": true
+    },
+    {
+      "id": "it.cat_black",
+      "words": [
+        "w.black",
+        "w.cat"
+      ],
+      "sprite": "cat_black",
+      "pickable": true
+    },
+    {
+      "id": "it.cat_white",
+      "words": [
+        "w.white",
+        "w.cat"
+      ],
+      "sprite": "cat_white",
+      "pickable": true
+    },
+    {
+      "id": "it.dog_black",
+      "words": [
+        "w.black",
+        "w.dog"
+      ],
+      "sprite": "dog_black",
+      "pickable": true
+    },
+    {
+      "id": "it.dog_brown",
+      "words": [
+        "w.brown",
+        "w.dog"
+      ],
+      "sprite": "dog_brown",
+      "pickable": true
+    },
+    {
+      "id": "it.bird_blue",
+      "words": [
+        "w.bird"
+      ],
+      "sprite": "bird_blue",
+      "pickable": true
+    },
+    {
+      "id": "it.rabbit_white",
+      "words": [
+        "w.rabbit"
+      ],
+      "sprite": "rabbit_white",
+      "pickable": true
+    },
+    {
+      "id": "it.frog_green",
+      "words": [
+        "w.frog"
+      ],
+      "sprite": "frog_green",
+      "pickable": true
+    },
+    {
+      "id": "it.apple_red",
+      "words": [
+        "w.apple"
+      ],
+      "sprite": "apple_red",
+      "pickable": true
+    },
+    {
+      "id": "it.banana",
+      "words": [
+        "w.banana"
+      ],
+      "sprite": "banana",
+      "pickable": true
+    },
+    {
+      "id": "it.orange_fruit",
+      "words": [
+        "w.orange_fruit"
+      ],
+      "sprite": "orange_fruit",
+      "pickable": true
+    },
+    {
+      "id": "it.milk",
+      "words": [
+        "w.milk"
+      ],
+      "sprite": "milk",
+      "pickable": true
+    },
+    {
+      "id": "it.bread",
+      "words": [
+        "w.bread"
+      ],
+      "sprite": "bread",
+      "pickable": true
+    },
+    {
+      "id": "it.egg",
+      "words": [
+        "w.egg"
+      ],
+      "sprite": "egg",
+      "pickable": true
+    },
+    {
+      "id": "it.pencil_red",
+      "words": [
+        "w.red",
+        "w.pencil"
+      ],
+      "sprite": "pencil_red",
+      "pickable": true
+    },
+    {
+      "id": "it.pencil_blue",
+      "words": [
+        "w.blue",
+        "w.pencil"
+      ],
+      "sprite": "pencil_blue",
+      "pickable": true
+    },
+    {
+      "id": "it.pen_red",
+      "words": [
+        "w.red",
+        "w.pen"
+      ],
+      "sprite": "pen_red",
+      "pickable": true
+    },
+    {
+      "id": "it.ruler_green",
+      "words": [
+        "w.green",
+        "w.ruler"
+      ],
+      "sprite": "ruler_green",
+      "pickable": true
+    },
+    {
+      "id": "it.book_blue",
+      "words": [
+        "w.blue",
+        "w.book"
+      ],
+      "sprite": "book_blue",
+      "pickable": true
+    },
+    {
+      "id": "it.book_yellow",
+      "words": [
+        "w.yellow",
+        "w.book"
+      ],
+      "sprite": "book_yellow",
+      "pickable": true
+    },
+    {
+      "id": "it.apples_three",
+      "words": [
+        "w.three",
+        "w.apple"
+      ],
+      "sprite": "apples_three",
+      "pickable": true,
+      "name_en": "three apples",
+      "name_ru": "три яблока"
     }
   ]
 }

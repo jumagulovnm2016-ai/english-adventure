@@ -64,7 +64,46 @@ function door() {
   return p;
 }
 
+function grass(variant: number) {
+  const p = new Px(16, 16);
+  p.rect(0, 0, 16, 16, 'A');
+  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) if (hash(x, y, 20 + variant) > 0.9) p.px(x, y, 'F');
+  if (variant === 1) { for (const [x, y] of [[3, 4], [11, 9], [6, 12]]) { p.px(x, y, 'F'); p.px(x + 1, y - 1, 'F'); p.px(x - 1, y - 1, 'F'); } }
+  if (variant === 2) { p.px(4, 5, 'n'); p.px(5, 4, 'n'); p.px(3, 4, 'n'); p.px(4, 3, 'n'); p.px(4, 4, 'y'); p.px(11, 11, 'e'); p.px(12, 10, 'e'); p.px(10, 10, 'e'); p.px(11, 9, 'e'); p.px(11, 10, 'y'); }
+  return p;
+}
+
+function path() {
+  const p = new Px(16, 16);
+  p.rect(0, 0, 16, 16, 'I');
+  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) if (hash(x, y, 31) > 0.88) p.px(x, y, 'K');
+  return p;
+}
+
+function water() {
+  const p = new Px(16, 16);
+  p.rect(0, 0, 16, 16, 'L');
+  for (const [x, y] of [[2, 3], [9, 7], [4, 12], [12, 13]]) p.hline(x, y, 3, 'V');
+  return p;
+}
+
+function hedge() {
+  const p = new Px(16, 16);
+  p.rect(0, 0, 16, 16, 'G');
+  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+    const h = hash(x, y, 41);
+    if (h > 0.75) p.px(x, y, 'g'); else if (h < 0.1) p.px(x, y, 'k');
+  }
+  return p;
+}
+
 export const TILE_ART = {
+  grass_0: () => grass(0),
+  grass_1: () => grass(1),
+  grass_2: () => grass(2),
+  path,
+  water,
+  hedge,
   floor_wood_0: () => woodFloor(0),
   floor_wood_1: () => woodFloor(1),
   floor_tile: tileFloor,

@@ -36,7 +36,8 @@ export class LeitnerScheduler implements Scheduler {
     // продвигаем не чаще, чем подошёл срок: нельзя «выучить» за один вечер
     if (s.due && now.getTime() < new Date(s.due).getTime()) return s;
     const box = Math.min(MAX_BOX, s.box + 1);
-    const status = s.status === 'familiar_pending' ? 'familiar_pending' : box >= LEARNED_BOX ? 'learned' : 'learning';
+    // «знакомое по входной проверке» становится выученным так же — через повторения с перерывами
+    const status = box >= LEARNED_BOX ? 'learned' : s.status === 'familiar_pending' ? 'familiar_pending' : 'learning';
     return { ...s, box, status, due: new Date(now.getTime() + BOX_DAYS[box] * DAY).toISOString() };
   }
 

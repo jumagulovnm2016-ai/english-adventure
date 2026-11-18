@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "id": "q.shop.breakfast",
+  "location": "shop",
+  "order": 3,
+  "title": {
+    "junior": "Завтрак",
+    "senior": "Продукты к завтраку"
+  },
+  "intro": {
+    "junior": "Мистер Грин собирает завтрак для покупателя. Помоги ему!",
+    "senior": "Собери заказ: два продукта."
+  },
+  "giver": "npc.mr_green",
+  "requires": [
+    "q.shop.fruit"
+  ],
+  "introduces": [
+    "w.milk",
+    "w.bread"
+  ],
+  "practices": [
+    "w.egg",
+    "p.here_you_are"
+  ],
+  "steps": [
+    {
+      "id": "talk_start",
+      "type": "dialogue",
+      "dialogue": "d.shop.green_breakfast_start"
+    },
+    {
+      "id": "find_milk",
+      "type": "find_item",
+      "zone": "shelves",
+      "instruction": "p.find_milk",
+      "target": "it.milk",
+      "distractors": [
+        "it.bread",
+        "it.egg",
+        "it.apple_red"
+      ],
+      "hint": {
+        "ru": {
+          "junior": "Milk — это молоко.",
+          "senior": "Milk — молоко."
+        },
+        "say": "p.find_milk"
+      }
+    },
+    {
+      "id": "give_milk",
+      "type": "give_item",
+      "npc": "npc.mr_green",
+      "item": "it.milk",
+      "hint": {
+        "ru": {
+          "junior": "Отнеси молоко мистеру Грину!",
+          "senior": "Отдай молоко."
+        }
+      }
+    },
+    {
+      "id": "talk_mid",
+      "type": "dialogue",
+      "dialogue": "d.shop.green_breakfast_mid"
+    },
+    {
+      "id": "find_bread",
+      "type": "find_item",
+      "zone": "shelves",
+      "instruction": "p.find_bread",
+      "target": "it.bread",
+      "distractors": [
+        "it.egg",
+        "it.banana",
+        "it.milk"
+      ],
+      "hint": {
+        "ru": {
+          "junior": "Bread — это хлеб.",
+          "senior": "Bread — хлеб."
+        },
+        "say": "p.find_bread"
+      }
+    },
+    {
+      "id": "give_bread",
+      "type": "give_item",
+      "npc": "npc.mr_green",
+      "item": "it.bread",
+      "hint": {
+        "ru": {
+          "junior": "Отнеси хлеб мистеру Грину!",
+          "senior": "Отдай хлеб."
+        }
+      }
+    },
+    {
+      "id": "talk_end",
+      "type": "dialogue",
+      "dialogue": "d.shop.green_breakfast_end"
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

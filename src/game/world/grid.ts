@@ -26,6 +26,8 @@ export class Grid {
     }
     for (const f of map.furniture) if (!f.walkable) this.blockRect(f.tx, f.ty, f.tw, f.th);
     for (const it of map.items) this.blockRect(it.tx, it.ty, it.tw, it.th);
+    // двери всегда проходимы, даже если попали в «след» здания
+    for (const e of map.exits ?? []) this.blocked[e.ty * this.cols + e.tx] = false;
   }
 
   private blockRect(tx: number, ty: number, tw: number, th: number) {

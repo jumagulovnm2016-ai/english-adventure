@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "d.street.brown_cat_start",
+  "npc": "npc.mrs_brown",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.mrs_brown",
+      "say": "p.hello_dear",
+      "ru_hint": {
+        "junior": "Это соседка, миссис Браун.",
+        "senior": "Соседка, миссис Браун."
+      },
+      "next": "n2"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Поздоровайся с миссис Браун!",
+        "senior": "Поздоровайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.hello"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n3"
+    },
+    "n3": {
+      "speaker": "npc.mrs_brown",
+      "say": "p.my_cat_is_lost",
+      "ru_hint": {
+        "junior": "Кажется, у неё что-то случилось…",
+        "senior": "Что-то случилось."
+      },
+      "next": "n4"
+    },
+    "n4": {
+      "speaker": "npc.mrs_brown",
+      "say": "p.find_my_cat",
+      "ru_hint": {
+        "junior": "Она о чём-то просит. Послушай ещё раз, если нужно.",
+        "senior": "Просьба. Можно переслушать."
+      },
+      "next": "end"
+    }
+  }
+}

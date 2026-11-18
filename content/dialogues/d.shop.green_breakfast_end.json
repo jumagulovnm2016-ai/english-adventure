@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "id": "d.shop.green_breakfast_end",
+  "npc": "npc.mr_green",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Протяни вещь. Что говорят, когда что-то дают?",
+        "senior": "Что говорят, протягивая вещь?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.here_you_are"
+      },
+      "on_correct": "n2",
+      "on_wrong": "n2"
+    },
+    "n2": {
+      "speaker": "npc.mr_green",
+      "say": "p.thank_you",
+      "action": {
+        "type": "take_player_item",
+        "item": "it.bread"
+      },
+      "next": "n3"
+    },
+    "n3": {
+      "speaker": "npc.mr_green",
+      "say": "p.whats_this",
+      "ru_hint": {
+        "junior": "А это что?",
+        "senior": "Что это?"
+      },
+      "next": "n4"
+    },
+    "n4": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что это?",
+        "senior": "Что это?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.egg",
+        "prompt": {
+          "picture": "it.egg"
+        },
+        "options": [
+          "w.egg",
+          "w.milk",
+          "w.bread"
+        ]
+      },
+      "on_correct": "n5",
+      "on_wrong": "n5"
+    },
+    "n5": {
+      "speaker": "npc.mr_green",
+      "say": "p.bye_see_you",
+      "action": {
+        "type": "emote",
+        "emote": "happy"
+      },
+      "next": "n6"
+    },
+    "n6": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попрощайся с мистером Грином!",
+        "senior": "Попрощайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.goodbye"
+      },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

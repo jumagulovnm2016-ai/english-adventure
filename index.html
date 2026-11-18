@@ -20,16 +20,61 @@
     </div>
   </section>
 
+  <section id="onboard" class="screen onboard" hidden aria-live="polite">
+    <div class="onboard-box">
+      <div id="ob-step-hero" class="ob-step">
+        <h2>Выбери героя</h2>
+        <div id="ob-heroes" class="ob-heroes"></div>
+      </div>
+      <div id="ob-step-name" class="ob-step" hidden>
+        <h2>Как тебя зовут?</h2>
+        <p class="notes">Только имя. Можно пропустить.</p>
+        <form id="ob-name-form" class="type-row"><input id="ob-name" maxlength="20" autocomplete="off" aria-label="Имя" /><button class="btn btn-primary" type="submit">Дальше ▶</button></form>
+      </div>
+      <div id="ob-step-age" class="ob-step" hidden>
+        <h2>Сколько тебе лет?</h2>
+        <div class="row">
+          <button class="btn btn-big" type="button" data-age="junior">6–9 лет</button>
+          <button class="btn btn-big" type="button" data-age="senior">10–15 лет</button>
+        </div>
+        <p class="notes">Возраст нигде не сохраняется — только выбранный вариант. Поменять можно в настройках.</p>
+      </div>
+      <div id="ob-step-offer" class="ob-step" hidden>
+        <h2>Проверим, что ты уже знаешь?</h2>
+        <p>3 минуты: слушаешь слово — нажимаешь на картинку. Знакомое игра не будет объяснять заново.</p>
+        <div class="row">
+          <button id="ob-check" class="btn btn-primary btn-big" type="button">Да, давай!</button>
+          <button id="ob-skip" class="btn" type="button">Пропустить</button>
+        </div>
+      </div>
+      <div id="ob-step-check" class="ob-step" hidden>
+        <div class="ob-progress"><div id="ob-bar"></div></div>
+        <h2>Послушай и нажми на картинку</h2>
+        <div class="row"><button id="ob-listen" class="btn btn-round" type="button" aria-label="Послушать ещё раз">🔊</button></div>
+        <div id="ob-options" class="options"></div>
+        <div class="row"><button id="ob-dunno" class="btn" type="button">Не знаю 🤷</button></div>
+      </div>
+      <div id="ob-step-done" class="ob-step" hidden>
+        <h2 id="ob-done-title"></h2>
+        <p id="ob-done-text"></p>
+        <div class="row"><button id="ob-go" class="btn btn-primary btn-big" type="button">▶ В игру!</button></div>
+      </div>
+    </div>
+  </section>
+
   <div id="hud" hidden>
     <div class="hud-left">
-      <div class="hud-place"><span class="ru">Дом</span> · <span class="en">Home</span></div>
+      <div class="hud-place"><span id="hud-place-ru" class="ru">Дом</span> · <span id="hud-place-en" class="en">Home</span></div>
       <div id="hud-stars" class="hud-stars" aria-label="Звёзды">⭐ <span>0</span></div>
     </div>
     <div id="quest-goal" class="quest-goal" hidden>
       <div id="quest-title" class="quest-title"></div>
       <div class="quest-row"><span id="quest-text"></span><button id="quest-say" class="btn btn-mini" type="button" aria-label="Послушать ещё раз" hidden>🔊</button></div>
     </div>
-    <button id="btn-settings" class="btn btn-round" type="button" aria-label="Настройки">⚙</button>
+    <div class="hud-right">
+      <button id="btn-pip" class="btn btn-round" type="button" aria-label="Позвать Пипа">🦊</button>
+      <button id="btn-settings" class="btn btn-round" type="button" aria-label="Настройки">⚙</button>
+    </div>
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
@@ -46,6 +91,7 @@
   <section id="task" class="task" role="dialog" aria-modal="true" aria-labelledby="task-title" hidden>
     <div class="task-box">
       <div class="task-head">
+        <img id="task-picture" class="task-picture" alt="" hidden />
         <div id="task-title" class="task-title"></div>
         <button id="task-say" class="btn btn-round" type="button" aria-label="Послушать">🔊</button>
       </div>
@@ -118,6 +164,25 @@
         <div class="seg" data-setting="narrator">
           <button type="button" data-value="f">Женский</button>
           <button type="button" data-value="m">Мужской</button>
+        </div>
+      </fieldset>
+      <fieldset class="field"><legend>Режим игры</legend>
+        <div class="seg" data-setting="ageMode">
+          <button type="button" data-value="junior">6–9 лет</button>
+          <button type="button" data-value="senior">10–15 лет</button>
+        </div>
+      </fieldset>
+      <fieldset class="field"><legend>Пип подсказывает</legend>
+        <div class="seg" data-setting="companionChatter">
+          <button type="button" data-value="rare">Редко</button>
+          <button type="button" data-value="normal">Обычно</button>
+          <button type="button" data-value="often">Часто</button>
+        </div>
+      </fieldset>
+      <fieldset class="field"><legend>Перевод на русский</legend>
+        <div class="seg" data-setting="ruHints">
+          <button type="button" data-value="true">Показывать</button>
+          <button type="button" data-value="false">Скрывать</button>
         </div>
       </fieldset>
       <div class="row">

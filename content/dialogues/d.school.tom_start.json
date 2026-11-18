@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "d.school.tom_start",
+  "npc": "npc.tom",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.tom",
+      "say": "p.hi_im_tom",
+      "ru_hint": {
+        "junior": "Это одноклассник Том.",
+        "senior": "Одноклассник Том."
+      },
+      "action": {
+        "type": "emote",
+        "emote": "wave"
+      },
+      "next": "n2"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Поздоровайся с Томом!",
+        "senior": "Поздоровайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.hello"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n3"
+    },
+    "n3": {
+      "speaker": "npc.tom",
+      "say": "p.whats_your_name",
+      "ru_hint": {
+        "junior": "Том спрашивает, как тебя зовут.",
+        "senior": "Тебя спросили об имени."
+      },
+      "next": "n4"
+    },
+    "n4": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Скажи: «Меня зовут …»",
+        "senior": "Назови себя."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.my_name_is",
+        "allowed_types": [
+          "listen_choose",
+          "build_phrase"
+        ]
+      },
+      "on_correct": "n5",
+      "on_wrong": "n5"
+    },
+    "n5": {
+      "speaker": "npc.tom",
+      "say": "p.cant_find_pencil",
+      "ru_hint": {
+        "junior": "У Тома пропала вещь. Послушай, какая.",
+        "senior": "Что-то потерялось."
+      },
+      "next": "end"
+    }
+  }
+}

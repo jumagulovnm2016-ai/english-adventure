@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "d.shop.green_breakfast_mid",
+  "npc": "npc.mr_green",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Протяни вещь. Что говорят, когда что-то дают?",
+        "senior": "Что говорят, протягивая вещь?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.here_you_are"
+      },
+      "on_correct": "n2",
+      "on_wrong": "n2"
+    },
+    "n2": {
+      "speaker": "npc.mr_green",
+      "say": "p.thank_you",
+      "action": {
+        "type": "take_player_item",
+        "item": "it.milk"
+      },
+      "next": "n3"
+    },
+    "n3": {
+      "speaker": "npc.mr_green",
+      "say": "p.find_bread",
+      "ru_hint": {
+        "junior": "А теперь — ещё одно.",
+        "senior": "Вторая просьба."
+      },
+      "next": "end"
+    }
+  }
+}

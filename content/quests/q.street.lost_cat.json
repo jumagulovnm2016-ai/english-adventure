@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "q.street.lost_cat",
+  "location": "street",
+  "order": 2,
+  "title": {
+    "junior": "Потерялась кошка",
+    "senior": "Где кошка миссис Браун?"
+  },
+  "intro": {
+    "junior": "У соседки, миссис Браун, что-то случилось. Подойди к ней!",
+    "senior": "Соседка явно расстроена. Узнай, в чём дело."
+  },
+  "giver": "npc.mrs_brown",
+  "requires": [
+    "q.street.ducks"
+  ],
+  "introduces": [
+    "w.cat",
+    "w.dog",
+    "w.black",
+    "w.white"
+  ],
+  "practices": [
+    "w.find",
+    "p.here_you_are"
+  ],
+  "steps": [
+    {
+      "id": "talk_start",
+      "type": "dialogue",
+      "dialogue": "d.street.brown_cat_start"
+    },
+    {
+      "id": "find_cat",
+      "type": "find_item",
+      "zone": "park",
+      "instruction": "p.find_my_cat",
+      "target": "it.cat_black",
+      "distractors": [
+        "it.cat_white",
+        "it.dog_black",
+        "it.dog_brown"
+      ],
+      "hint": {
+        "ru": {
+          "junior": "Cat — кошка, black — чёрная. Нужна чёрная кошка!",
+          "senior": "Два признака: cat и black. Чёрная собака — не то."
+        },
+        "say": "p.find_my_cat"
+      }
+    },
+    {
+      "id": "give_cat",
+      "type": "give_item",
+      "npc": "npc.mrs_brown",
+      "item": "it.cat_black",
+      "hint": {
+        "ru": {
+          "junior": "Отнеси кошку миссис Браун!",
+          "senior": "Верни кошку хозяйке."
+        }
+      }
+    },
+    {
+      "id": "talk_end",
+      "type": "dialogue",
+      "dialogue": "d.street.brown_cat_end"
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}
