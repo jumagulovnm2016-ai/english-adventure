@@ -122,9 +122,11 @@ export class ParentScreen {
 
   private async doExport() {
     const { name, text } = await this.a.exportFile();
-    const w = window as unknown as { claude?: { downloads?: { save?: (n: string, data: string, type: string) => Promise<void> } } };
+    // Внутри окна Claude скачивание идёт через разрешение «downloads»; в обычном браузере — обычной ссылкой.
+    const host = (window as unknown as { claude?: { use?: (n: string) => Promise<{ save: (o: { filename: string; data: string }) => Promise<unknown> } | null> } }).claude;
     try {
-      if (w.claude?.downloads?.save) await w.claude.downloads.save(name, text, 'application/json');
+      const dl = host?.use ? await host.use('downloads') : null;
+      if (dl) await dl.save({ filename: name, data: text });
       else {
         const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
         const link = document.createElement('a');
