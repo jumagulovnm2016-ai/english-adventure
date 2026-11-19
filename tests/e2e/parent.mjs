@@ -55,6 +55,7 @@ async function tapTarget(kind, id) {
 }
 async function answerRight() {
   await waitFor(() => !document.getElementById('task').hidden && window.__tasks.lastView);
+  await waitFor(() => !document.getElementById('task-body').classList.contains('listening')); // варианты оживают после звука (D55)
   const v = await page.evaluate(() => window.__tasks.lastView);
   await page.click(`#task-body .opt[data-id="${v.correctId}"]`);
   await waitFor((prev) => document.getElementById('task').hidden || JSON.stringify(window.__tasks.lastView) !== prev, JSON.stringify(v));
@@ -139,7 +140,7 @@ await check('сводка совпадает с игрой: 1 из 24 задан
   const stats = await page.$$eval('#parent-summary .stat', (els) => els.map((e) => e.textContent));
   assert(stats[0].includes('1 / 24'), stats[0]);
   const learning = await page.evaluate(() => [...window.__learning.allStates().values()].filter((s) => s.status === 'learning').length);
-  assert(stats[3].startsWith(String(learning)), `на экране «${stats[3]}», в данных ${learning}`);
+  assert(stats[4].startsWith(String(learning)), `на экране «${stats[4]}», в данных ${learning}`);
   await page.screenshot({ path: join(SHOTS, 'parent-1-skills.png') });
 });
 

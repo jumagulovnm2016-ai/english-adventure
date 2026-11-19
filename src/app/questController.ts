@@ -47,13 +47,17 @@ export interface QuestDeps {
 
 const placeName = (l: Location) => `${MAPS[l].title.ru} (${MAPS[l].title.en.toUpperCase()})`;
 
+/** Вежливые формулы, которые звучат почти в каждом разговоре (D54). */
+const ROUTINE = new Set(['p.hello', 'p.goodbye', 'p.thank_you', 'p.here_you_are', 'p.hi_again', 'p.good_morning']);
+
 export class QuestController {
   private scene: WorldScene | null = null;
   private active: { def: QuestDef; runner: QuestRunner } | null = null;
   private resumed = false;
   private busy = false;
   /** Ожидание выбора предмета в шаге «найди». */
-  private findState: { step: StepDef; ladder: HelpLadder } | null = null;
+  /** tried — неверные предметы, которые уже брали; lastWrongAt — защита от частых нажатий (D55). */
+  private findState: { step: StepDef; ladder: HelpLadder; tried: Set<string>; lastWrongAt: number } | null = null;
 
   constructor(private d: QuestDeps) {
     d.bus.on('interact', (t) => {
@@ -268,7 +272,7 @@ export class QuestController {
     if (s?.type === 'find_item') {
       if (!s.zone) throw new Error(`Шаг ${s.id}: не указана зона для предметов`);
       if (scene.hasSpots(s.zone)) scene.spawnPickables(shuffle([s.target!, ...s.distractors!], Date.now()), s.zone);
-      this.findState = { step: s, ladder: new HelpLadder() };
+      this.findState = { step: s, ladder: new HelpLadder(), tried: new Set(), lastWrongAt: 0 };
     }
   }
 
@@ -340,6 +344,13 @@ export class QuestController {
       while (!run.ended) {
         const n = run.current()!;
         this.applyAction(n, def.npc);
+        if (n.task && this.isRoutineKnown(n.task.target)) {
+          // «Hello», «Goodbye», «Thank you»… ребёнок уже знает — не спрашиваем снова, герой говорит сам (D54)
+          const p = this.d.content.learnable(n.task.target);
+          await this.d.dialogue.show({ speaker: 'Ты', en: p.en, ru: this.d.ruHints() ? p.ru : undefined, audio: this.d.tasks.audioOf(n.task.target), player: true });
+          run.advance('correct');
+          continue;
+        }
         if (n.task) {
           this.d.dialogue.hide();
           const branch = await this.d.tasks.run(n.task, {
@@ -359,6 +370,14 @@ export class QuestController {
     } finally {
       this.d.dialogue.hide();
     }
+  }
+
+  /** Ритуальная фраза, которую ребёнок уже уверенно знает и которую сегодня не пора повторять. */
+  private isRoutineKnown(target: string): boolean {
+    if (!ROUTINE.has(target)) return false;
+    const st = this.d.learning.state(target);
+    const notDue = !!st.due && new Date(st.due).getTime() > this.d.clock.now().getTime();
+    return st.correct >= 3 && st.correct >= st.wrong * 3 && notDue;
   }
 
   private applyAction(n: DialogueNode, npcId: string) {
@@ -386,6 +405,19 @@ export class QuestController {
     this.d.onProgress?.();
     const s = f.step;
     const target = s.target!;
+    if (itemId !== target) {
+      // тыканье подряд или тот же неверный предмет ещё раз — не ошибка обучения, а нетерпение:
+      // не пишем в журнал и не двигаем лестницу подсказок, только напоминаем (D55)
+      const now = this.d.clock.now().getTime();
+      const spam = now - f.lastWrongAt < 600;
+      if (spam || f.tried.has(itemId)) {
+        if (!spam) { sfx.wrong(); toast(`Это ${this.d.content.itemNameEn(itemId)} — уже пробовали. Нужно другое!`); }
+        f.lastWrongAt = now;
+        return;
+      }
+      f.tried.add(itemId);
+      f.lastWrongAt = now;
+    }
     const info = f.ladder.attemptInfo();
     // реакция ребёнку — сразу, запись в журнал — параллельно (D24)
     const saving = this.d.learning.recordFind({

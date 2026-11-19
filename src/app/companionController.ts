@@ -101,7 +101,7 @@ export class CompanionController {
     if (h) {
       toast(`🦊 Пип: ${h.text}`, 4500);
       if (h.say) void this.d.audio.speak(h.say.id, h.say.text);
-    } else toast(this.d.ageMode() === 'senior' ? '🦊 Пип: Всё сделано. Можешь просто погулять.' : '🦊 Пип: Всё сделано! Ты молодец! Погуляем?', 3000);
+    } else toast(this.d.ageMode() === 'senior' ? '🦊 Пип: Всё сделано. Завтра жители дадут новые поручения.' : '🦊 Пип: Всё сделано! Ты молодец! Завтра будут новые поручения!', 3000);
   }
 
   /** Для автотестов. */

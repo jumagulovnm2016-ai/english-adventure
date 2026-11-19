@@ -41,18 +41,27 @@ export class TaskPanel {
     ($('task-say') as HTMLButtonElement).hidden = !v.prompt;
     this.render();
     $('task').hidden = false;
-    if (v.mode === 'listen_choose' ? v.playPromptFirst : !!v.prompt) this.playPrompt();
+    const playFirst = v.mode === 'listen_choose' ? v.playPromptFirst : !!v.prompt;
+    if (playFirst && v.prompt) {
+      // варианты оживают, когда слово прозвучало: ответить раньше, чем услышал, нельзя (D55)
+      const body = $('task-body');
+      body.classList.add('listening');
+      const spoken = this.audio.speak(v.prompt.id, v.prompt.text).catch(() => undefined);
+      void Promise.race([spoken, new Promise((r) => setTimeout(r, 3500))])
+        .then(() => new Promise((r) => setTimeout(r, 150)))
+        .then(() => { if (this.view === v) body.classList.remove('listening'); });
+    } else if (playFirst) this.playPrompt();
     const first = $('task-body').querySelector<HTMLElement>('button, input');
     first?.focus({ preventScroll: true });
   }
 
-  close() { $('task').hidden = true; this.view = null; this.pending = null; }
+  close() { $('task').hidden = true; $('task-body').classList.remove('listening'); this.view = null; this.pending = null; }
 
   ask(): Promise<Answer> { return new Promise((r) => { this.pending = r; }); }
 
   private answer(a: Answer) {
     const p = this.pending;
-    if (!p) return;
+    if (!p || $('task-body').classList.contains('listening')) return;
     this.pending = null;
     p(a);
   }

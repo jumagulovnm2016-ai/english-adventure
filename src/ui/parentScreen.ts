@@ -76,6 +76,7 @@ export class ParentScreen {
     const s = r.summary;
     $('parent-summary').innerHTML = [
       [`${s.questsDone} / ${s.questsTotal}`, 'заданий выполнено'],
+      [String(s.errandsDone), 'поручений дня выполнено'],
       [`${r.skills.filter((x) => x.status === 'confirmed').length} / ${r.skills.length}`, 'навыков подтверждено'],
       [String(s.learned), 'слов и фраз выучено'],
       [String(s.learning + s.familiar), 'изучается сейчас'],

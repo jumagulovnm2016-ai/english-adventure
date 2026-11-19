@@ -83,6 +83,7 @@ async function tapTarget(kind, id, attempt = 0) {
 /** Ответить на текущее задание: правильно или выбрать конкретный неправильный вариант. */
 async function answer(correct = true) {
   await waitFor(() => !document.getElementById('task').hidden && window.__tasks.lastView);
+  await waitFor(() => !document.getElementById('task-body').classList.contains('listening')); // варианты оживают после звука (D55)
   const v = await view();
   if (v.mode === 'listen_choose') {
     const id = correct ? v.correctId : v.options.find((o) => o.id !== v.correctId).id;
@@ -347,6 +348,7 @@ await check('телефон: квест начинается касанием, �
 });
 await check('телефон: квест продолжается после перезагрузки посреди «найди»', async () => {
   const v = await p2.evaluate(() => window.__tasks.lastView);
+  await p2.waitForFunction(() => !document.getElementById('task-body').classList.contains('listening'));
   await p2.tap(`#task-body .opt[data-id="${v.correctId}"]`);
   await p2.waitForFunction(() => document.getElementById('dlg-en')?.textContent === 'Find the blue cup, please.', { timeout: 10000 });
   await p2.tap('#dlg-next');

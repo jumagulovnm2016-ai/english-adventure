@@ -98,7 +98,7 @@ await check('без интернета: родительский экран и �
   await page.type('#gate-input', String(Number(m[1]) * Number(m[2]))); await page.click('#gate-form button');
   await waitFor(() => !document.getElementById('parent').hidden);
   const stats = await page.$$eval('#parent-summary .stat', (els) => els.length);
-  assert(stats === 5, `сводка: ${stats}`);
+  assert(stats === 6, `сводка: ${stats}`);
   await page.setOfflineMode(false);
 });
 

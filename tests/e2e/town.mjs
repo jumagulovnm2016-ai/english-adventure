@@ -92,6 +92,7 @@ async function goTo(loc) {
 /** Ответить на открытое задание правильно. */
 async function answer() {
   await waitFor(() => !document.getElementById('task').hidden && window.__tasks.lastView);
+  await waitFor(() => !document.getElementById('task-body').classList.contains('listening')); // варианты оживают после звука (D55)
   const v = await page.evaluate(() => window.__tasks.lastView);
   if (v.mode === 'listen_choose') await page.click(`#task-body .opt[data-id="${v.correctId}"]`);
   else if (v.mode === 'build_phrase') {

@@ -63,6 +63,17 @@ export class ContentRegistry {
     return n;
   }
   hasItem(id: string): boolean { return this.items.has(id); }
+  hasPhrase(id: string): boolean { return this.phrases.has(id); }
+
+  /** Квесты, диалоги и фразы, созданные в игре (ежедневные поручения, D56). Старые с тем же префиксом убираются. */
+  setDynamic(prefix: { quest: string; dialogue: string; phrase: string }, add: { quests: QuestDef[]; dialogues: DialogueDef[]; phrases: Phrase[] }) {
+    for (const k of [...this.questsById.keys()]) if (k.startsWith(prefix.quest)) this.questsById.delete(k);
+    for (const k of [...this.dialoguesById.keys()]) if (k.startsWith(prefix.dialogue)) this.dialoguesById.delete(k);
+    for (const k of [...this.phrases.keys()]) if (k.startsWith(prefix.phrase)) this.phrases.delete(k);
+    for (const p of add.phrases) this.phrases.set(p.id, p);
+    for (const d of add.dialogues) this.dialoguesById.set(d.id, d);
+    for (const q of add.quests) this.questsById.set(q.id, q);
+  }
   npcsIn(location: string): Npc[] { return [...this.npcs.values()].filter((n) => n.location === location); }
 
   /** Слова предмета в естественном английском порядке: прилагательные перед существительным. */

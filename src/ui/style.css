@@ -275,3 +275,7 @@ body { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color
 .bump { animation: bump .5s cubic-bezier(.3, 1.6, .5, 1); }
 @keyframes bump { 30% { transform: scale(1.35); } }
 .opt.correct { animation: pulse .5s 1; }
+
+/* пока звучит слово, варианты приглушены и не нажимаются (D55) */
+#task-body.listening { pointer-events: none; }
+#task-body.listening .opt { opacity: .55; transition: opacity .2s; }

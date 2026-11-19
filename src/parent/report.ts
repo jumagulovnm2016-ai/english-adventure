@@ -1,4 +1,5 @@
 // Отчёт для родителя: только подтверждённое реальными ответами, а не «сколько пройдено уроков».
+import { isErrand } from '../quests/errands';
 import type { ContentRegistry } from '../content/registry';
 import type { LearningService } from '../learning/learningService';
 import type { QuestState } from '../quests/questRunner';
@@ -10,7 +11,7 @@ export interface WordRow { id: string; en: string; ru: string; status: Status; c
 export interface SkillRow extends CanDoResult { id: string; title: string; explain: string }
 
 export interface Report {
-  summary: { questsDone: number; questsTotal: number; stars: number; learned: number; learning: number; familiar: number; minutesWeek: number; daysPlayed14: number };
+  summary: { questsDone: number; questsTotal: number; errandsDone: number; stars: number; learned: number; learning: number; familiar: number; minutesWeek: number; daysPlayed14: number };
   skills: SkillRow[];
   words: { learned: WordRow[]; learning: WordRow[]; familiar: WordRow[] };
   hard: WordRow[];
@@ -44,13 +45,16 @@ export function buildReport(args: {
     const d = dayKey(new Date(now.getTime() - i * 864e5));
     days.push({ day: d, minutes: Math.round((playtime.get(d) ?? 0) / 60) });
   }
-  const questsAll = content.quests();
+  // ежедневные поручения в «пройдено из» не входят — их число растёт каждый день
+  const questsAll = content.quests().filter((q) => !isErrand(q.id));
   const done = questsAll.filter((q) => quests.get(q.id)?.status === 'done');
+  const errandsDone = [...quests.entries()].filter(([id, s]) => isErrand(id) && s.status === 'done');
 
   return {
     summary: {
       questsDone: done.length, questsTotal: questsAll.length,
-      stars: done.reduce((s, q) => s + (quests.get(q.id)?.stars ?? 0), 0),
+      stars: done.reduce((s, q) => s + (quests.get(q.id)?.stars ?? 0), 0) + errandsDone.reduce((s, [, st]) => s + st.stars, 0),
+      errandsDone: errandsDone.length,
       learned: by('learned').length, learning: by('learning').length, familiar: by('familiar_pending').length,
       minutesWeek: days.slice(-7).reduce((s, d) => s + d.minutes, 0),
       daysPlayed14: days.filter((d) => d.minutes > 0).length,

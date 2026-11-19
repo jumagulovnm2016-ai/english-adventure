@@ -23,6 +23,8 @@ import { WorldScene, type WorldSceneDeps } from './game/scenes/WorldScene';
 import { MAPS } from './game/maps';
 import type { Exit } from './game/maps/types';
 import { prepareArt, prepareFloor, personImageUrl, pipImageUrl } from './game/art/textures';
+import { planErrands, isErrand, type ErrandPlan } from './quests/errands';
+import { questStatus } from './quests/questRunner';
 import { visualFor } from './ui/visuals';
 import { ItemCard } from './ui/itemCard';
 import { SettingsPanel } from './ui/settingsPanel';
@@ -234,6 +236,22 @@ async function boot() {
     const placement = await store.getMeta<{ known: number; total: number; skipped: boolean }>('placement');
     const strongStart = !!placement && !placement.skipped && placement.total > 0 && placement.known / placement.total >= 0.8;
     const waived: ReadonlySet<string> = new Set(strongStart ? ['q.street.animals'] : []);
+
+    // Ежедневные поручения (D56): со второго дня игры жители дают 3 задания из слов, которые пора повторить.
+    // План дня хранится, чтобы после перезапуска поручения были те же.
+    const today = dayKey(clock.now());
+    const installed = await store.getMeta<string>('installedAt');
+    if (installed && dayKey(new Date(installed)) !== today) {
+      let plan = await store.getMeta<ErrandPlan>('errands');
+      if (plan?.date !== today) {
+        const visited = [...new Set(content.quests().filter((q) => !isErrand(q.id) && questStates.get(q.id)?.status === 'done').map((q) => q.location))];
+        const due = learning.dueForReview(40, {}).filter((id) => id.startsWith('w.'));
+        const busyNpcs = content.quests().filter((q) => !isErrand(q.id) && ['available', 'active'].includes(questStatus(q, questStates, waived))).map((q) => q.giver);
+        plan = planErrands({ date: today, content, visited, due, inventory: world.inventory, busyNpcs });
+        await store.setMeta('errands', plan);
+      }
+      content.setDynamic({ quest: 'q.daily.', dialogue: 'd.daily.', phrase: 'p.daily.' }, plan);
+    }
     const quests = new QuestController({
       content, learning, bus, clock, audio, tasks, canListen, waived: () => waived, location: () => world.location,
       dialogue: new DialogueBox(audio),
