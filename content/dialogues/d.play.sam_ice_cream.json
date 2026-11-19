@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "id": "d.play.sam_ice_cream",
+  "npc": "npc.sam",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.sam",
+      "say": "p.ice_cream_hello",
+      "ru_hint": {
+        "junior": "Это Сэм, он продаёт мороженое.",
+        "senior": "Продавец мороженого, Сэм."
+      },
+      "action": {
+        "type": "emote",
+        "emote": "wave"
+      },
+      "next": "n2"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Поздоровайся с Сэмом!",
+        "senior": "Поздоровайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.hello"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n3"
+    },
+    "n3_model": {
+      "speaker": "npc.sam",
+      "say": "p.one_ice_cream_please",
+      "next": "n4"
+    },
+    "n3": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попроси одно мороженое!",
+        "senior": "Попроси одну порцию."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.one_ice_cream_please"
+      },
+      "on_correct": "n4",
+      "on_wrong": "n3_model"
+    },
+    "n4": {
+      "speaker": "npc.sam",
+      "say": "p.here_you_are",
+      "ru_hint": {
+        "junior": "Сэм даёт тебе мороженое."
+      },
+      "action": {
+        "type": "give_player_item",
+        "item": "it.ice_cream"
+      },
+      "next": "n5"
+    },
+    "n5": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Скажи спасибо!",
+        "senior": "Поблагодари."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.thank_you"
+      },
+      "on_correct": "n6",
+      "on_wrong": "n6"
+    },
+    "n6": {
+      "speaker": "npc.sam",
+      "say": "p.what_colour_is_it",
+      "ru_hint": {
+        "junior": "Какого цвета мороженое?",
+        "senior": "Вопрос про цвет."
+      },
+      "next": "n7"
+    },
+    "n7": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Какого цвета мороженое?",
+        "senior": "Цвет мороженого?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.pink",
+        "prompt": {
+          "picture": "it.ice_cream"
+        },
+        "options": [
+          "w.pink",
+          "w.brown",
+          "w.white"
+        ]
+      },
+      "on_correct": "n8",
+      "on_wrong": "n8"
+    },
+    "n8": {
+      "speaker": "npc.sam",
+      "say": "p.its_hot_today",
+      "ru_hint": {
+        "junior": "Сэм говорит о погоде.",
+        "senior": "Что сегодня с погодой?"
+      },
+      "next": "n9"
+    },
+    "n9_model": {
+      "speaker": "npc.sam",
+      "say": "p.its_hot",
+      "next": "n10"
+    },
+    "n9": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Какая сегодня погода?",
+        "senior": "Что сказал Сэм о погоде?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.hot",
+        "options": [
+          "w.hot",
+          "w.cold",
+          "w.rainy"
+        ]
+      },
+      "on_correct": "n10",
+      "on_wrong": "n9_model"
+    },
+    "n10": {
+      "speaker": "npc.sam",
+      "say": "p.bye_see_you",
+      "action": {
+        "type": "emote",
+        "emote": "happy"
+      },
+      "next": "n11"
+    },
+    "n11": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попрощайся с Сэмом!",
+        "senior": "Попрощайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.goodbye"
+      },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

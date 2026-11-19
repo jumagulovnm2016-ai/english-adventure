@@ -1,5 +1,5 @@
 // Типы контента. Соответствуют schemas/*.schema.json (источник правды — схемы).
-export type Location = 'home' | 'street' | 'shop' | 'school';
+export type Location = 'home' | 'street' | 'shop' | 'school' | 'playground' | 'zoo';
 export type Accent = 'us' | 'uk';
 export type Gender = 'f' | 'm';
 
@@ -24,7 +24,7 @@ export interface TaskDef {
 }
 export interface DialogueNode {
   speaker: string; say?: string; ru_hint?: AgeText; task?: TaskDef;
-  action?: { type: 'give_player_item' | 'take_player_item' | 'emote'; item?: string; emote?: string };
+  action?: { type: 'give_player_item' | 'take_player_item' | 'emote' | 'weather'; item?: string; emote?: string; weather?: 'rain' | 'sun' };
   next?: string; on_correct?: string; on_wrong?: string;
 }
 export interface DialogueDef { schemaVersion: 1; id: string; npc: string; start: string; nodes: Record<string, DialogueNode> }

@@ -19,15 +19,15 @@ export const STREET: MapDef = {
     row('X' + G(12) + 'pp' + G(12) + 'X'),
     row('X' + G(12) + 'pp' + G(12) + 'X'),
     row('X' + G(3) + '~~~~~' + G(4) + 'pp' + G(12) + 'X'),
-    row('X' + G(3) + '~~~~~' + G(4) + 'pppppppp' + G(6) + 'X'),
+    row('X' + G(3) + '~~~~~' + G(4) + 'p'.repeat(14) + 'p'), // направо — на площадку
     row('X' + G(3) + '~~~~~' + G(4) + 'pp' + G(12) + 'X'),
     row('X' + G(3) + '~~~~~' + G(4) + 'pp' + G(12) + 'X'),
     row('X' + G(12) + 'pp' + G(12) + 'X'),
     row('X' + G(12) + 'pp' + G(12) + 'X'),
     row('X' + G(12) + 'pp' + G(12) + 'X'),
     row('X' + G(12) + 'pp' + G(12) + 'X'),
-    row('X' + G(26) + 'X'),
-    row('X'.repeat(28)),
+    row('X' + G(12) + 'pp' + G(12) + 'X'),
+    row('X'.repeat(13) + 'pp' + 'X'.repeat(13)), // вниз — в зоопарк
   ],
   furniture: [
     { key: 'house', tx: 2, ty: 1, tw: 6, th: 4 },
@@ -79,6 +79,9 @@ export const STREET: MapDef = {
     { tx: 5, ty: 4, to: 'home', spawn: { tx: 9, ty: 12, dir: 'up' } },
     { tx: 14, ty: 4, to: 'shop', spawn: { tx: 6, ty: 8, dir: 'up' }, requires: 'q.street.ducks', lockedText: 'Магазин откроется чуть позже — сначала загляни к Бену в парк 🦆' },
     { tx: 23, ty: 4, to: 'school', spawn: { tx: 7, ty: 9, dir: 'up' }, requires: 'q.street.ducks', lockedText: 'Школа откроется чуть позже — сначала загляни к Бену в парк 🦆' },
+    { tx: 27, ty: 11, to: 'playground', spawn: { tx: 1, ty: 8, dir: 'right' }, requires: 'q.street.animals', lockedText: 'Площадка откроется, когда поможешь Бену со зверями в парке 🐸' },
+    { tx: 13, ty: 19, to: 'zoo', spawn: { tx: 14, ty: 1, dir: 'down' }, requires: 'q.play.actions', lockedText: 'Зоопарк откроется, когда познакомишься с Мией на площадке 🛝' },
+    { tx: 14, ty: 19, to: 'zoo', spawn: { tx: 15, ty: 1, dir: 'down' }, requires: 'q.play.actions', lockedText: 'Зоопарк откроется, когда познакомишься с Мией на площадке 🛝' },
   ],
   zones: { street: { tx: 1, ty: 5, tw: 26, th: 14 } },
   signs: [
@@ -86,6 +89,8 @@ export const STREET: MapDef = {
     { text: 'HOME', x: 5 * T, y: 3 * T + 4 },
     { text: 'SHOP', x: 14 * T, y: 3 * T + 4 },
     { text: 'SCHOOL', x: 23.5 * T, y: 3 * T + 4 },
+    { text: 'PLAYGROUND →', x: 23.5 * T, y: 10 * T + 4 },
+    { text: 'ZOO ↓', x: 16.5 * T, y: 18 * T + 6 },
   ],
   title: { ru: 'Улица', en: 'Street' },
 };

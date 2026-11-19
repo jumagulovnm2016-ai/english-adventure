@@ -852,6 +852,579 @@
       "accept": [
         "teacher"
       ]
+    },
+    {
+      "id": "w.kite",
+      "en": "kite",
+      "ru": "воздушный змей",
+      "topic": "toys",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "kite.png",
+      "accept": [
+        "kite",
+        "a kite"
+      ]
+    },
+    {
+      "id": "w.bike",
+      "en": "bike",
+      "ru": "велосипед",
+      "topic": "toys",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "bike.png",
+      "accept": [
+        "bike",
+        "a bike",
+        "bicycle"
+      ]
+    },
+    {
+      "id": "w.ice_cream",
+      "en": "ice cream",
+      "ru": "мороженое",
+      "topic": "food",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "ice_cream.png",
+      "accept": [
+        "ice cream",
+        "an ice cream",
+        "icecream"
+      ]
+    },
+    {
+      "id": "w.swing",
+      "en": "swing",
+      "ru": "качели",
+      "topic": "places",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "swing.png",
+      "accept": [
+        "swing",
+        "a swing",
+        "swings"
+      ],
+      "confusable": [
+        "w.slide"
+      ]
+    },
+    {
+      "id": "w.slide",
+      "en": "slide",
+      "ru": "горка",
+      "topic": "places",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "slide.png",
+      "accept": [
+        "slide",
+        "a slide"
+      ],
+      "confusable": [
+        "w.swing"
+      ]
+    },
+    {
+      "id": "w.tree",
+      "en": "tree",
+      "ru": "дерево",
+      "topic": "places",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "tree.png",
+      "accept": [
+        "tree",
+        "a tree"
+      ],
+      "confusable": [
+        "w.flower"
+      ]
+    },
+    {
+      "id": "w.flower",
+      "en": "flower",
+      "ru": "цветок",
+      "topic": "places",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "flower.png",
+      "accept": [
+        "flower",
+        "a flower"
+      ],
+      "confusable": [
+        "w.tree"
+      ]
+    },
+    {
+      "id": "w.run",
+      "en": "run",
+      "ru": "бегать",
+      "topic": "actions",
+      "pos": "verb",
+      "level": "preA1",
+      "image": "run.png",
+      "confusable": [
+        "w.jump"
+      ]
+    },
+    {
+      "id": "w.jump",
+      "en": "jump",
+      "ru": "прыгать",
+      "topic": "actions",
+      "pos": "verb",
+      "level": "preA1",
+      "image": "jump.png",
+      "confusable": [
+        "w.run"
+      ]
+    },
+    {
+      "id": "w.swim",
+      "en": "swim",
+      "ru": "плавать",
+      "topic": "actions",
+      "pos": "verb",
+      "level": "preA1",
+      "image": "swim.png",
+      "confusable": [
+        "w.fly"
+      ]
+    },
+    {
+      "id": "w.fly",
+      "en": "fly",
+      "ru": "летать",
+      "topic": "actions",
+      "pos": "verb",
+      "level": "preA1",
+      "image": "fly.png",
+      "confusable": [
+        "w.swim"
+      ]
+    },
+    {
+      "id": "w.climb",
+      "en": "climb",
+      "ru": "лазать",
+      "topic": "actions",
+      "pos": "verb",
+      "level": "preA1",
+      "image": "climb.png"
+    },
+    {
+      "id": "w.sing",
+      "en": "sing",
+      "ru": "петь",
+      "topic": "actions",
+      "pos": "verb",
+      "level": "preA1",
+      "image": "sing.png",
+      "confusable": [
+        "w.dance"
+      ]
+    },
+    {
+      "id": "w.dance",
+      "en": "dance",
+      "ru": "танцевать",
+      "topic": "actions",
+      "pos": "verb",
+      "level": "preA1",
+      "image": "dance.png",
+      "confusable": [
+        "w.sing"
+      ]
+    },
+    {
+      "id": "w.ride",
+      "en": "ride",
+      "ru": "кататься",
+      "topic": "actions",
+      "pos": "verb",
+      "level": "preA1",
+      "image": "ride.png",
+      "accept": [
+        "ride",
+        "ride a bike"
+      ]
+    },
+    {
+      "id": "w.sunny",
+      "en": "sunny",
+      "ru": "солнечно",
+      "topic": "weather",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "sunny.png",
+      "confusable": [
+        "w.rainy"
+      ]
+    },
+    {
+      "id": "w.rainy",
+      "en": "rainy",
+      "ru": "дождливо",
+      "topic": "weather",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "rainy.png",
+      "accept": [
+        "rainy",
+        "raining"
+      ],
+      "confusable": [
+        "w.sunny"
+      ]
+    },
+    {
+      "id": "w.hot",
+      "en": "hot",
+      "ru": "жарко",
+      "topic": "weather",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "hot.png",
+      "confusable": [
+        "w.cold"
+      ]
+    },
+    {
+      "id": "w.cold",
+      "en": "cold",
+      "ru": "холодно",
+      "topic": "weather",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "cold.png",
+      "confusable": [
+        "w.hot"
+      ]
+    },
+    {
+      "id": "w.lion",
+      "en": "lion",
+      "ru": "лев",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "lion.png",
+      "accept": [
+        "lion",
+        "a lion"
+      ],
+      "confusable": [
+        "w.tiger"
+      ]
+    },
+    {
+      "id": "w.tiger",
+      "en": "tiger",
+      "ru": "тигр",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "tiger.png",
+      "accept": [
+        "tiger",
+        "a tiger"
+      ],
+      "confusable": [
+        "w.lion"
+      ]
+    },
+    {
+      "id": "w.elephant",
+      "en": "elephant",
+      "ru": "слон",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "elephant.png",
+      "accept": [
+        "elephant",
+        "an elephant"
+      ],
+      "confusable": [
+        "w.hippo"
+      ]
+    },
+    {
+      "id": "w.monkey",
+      "en": "monkey",
+      "ru": "обезьяна",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "monkey.png",
+      "accept": [
+        "monkey",
+        "a monkey"
+      ]
+    },
+    {
+      "id": "w.giraffe",
+      "en": "giraffe",
+      "ru": "жираф",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "giraffe.png",
+      "accept": [
+        "giraffe",
+        "a giraffe"
+      ],
+      "confusable": [
+        "w.zebra"
+      ]
+    },
+    {
+      "id": "w.zebra",
+      "en": "zebra",
+      "ru": "зебра",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "zebra.png",
+      "accept": [
+        "zebra",
+        "a zebra"
+      ],
+      "confusable": [
+        "w.giraffe"
+      ]
+    },
+    {
+      "id": "w.bear",
+      "en": "bear",
+      "ru": "медведь",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "bear.png",
+      "accept": [
+        "bear",
+        "a bear"
+      ]
+    },
+    {
+      "id": "w.snake",
+      "en": "snake",
+      "ru": "змея",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "snake.png",
+      "accept": [
+        "snake",
+        "a snake"
+      ],
+      "confusable": [
+        "w.crocodile"
+      ]
+    },
+    {
+      "id": "w.penguin",
+      "en": "penguin",
+      "ru": "пингвин",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "penguin.png",
+      "accept": [
+        "penguin",
+        "a penguin"
+      ]
+    },
+    {
+      "id": "w.hippo",
+      "en": "hippo",
+      "ru": "бегемот",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "hippo.png",
+      "accept": [
+        "hippo",
+        "a hippo",
+        "hippopotamus"
+      ],
+      "confusable": [
+        "w.elephant"
+      ]
+    },
+    {
+      "id": "w.crocodile",
+      "en": "crocodile",
+      "ru": "крокодил",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "crocodile.png",
+      "accept": [
+        "crocodile",
+        "a crocodile",
+        "croc"
+      ],
+      "confusable": [
+        "w.snake"
+      ]
+    },
+    {
+      "id": "w.parrot",
+      "en": "parrot",
+      "ru": "попугай",
+      "topic": "animals",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "parrot.png",
+      "accept": [
+        "parrot",
+        "a parrot"
+      ]
+    },
+    {
+      "id": "w.head",
+      "en": "head",
+      "ru": "голова",
+      "topic": "body",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "head.png"
+    },
+    {
+      "id": "w.eyes",
+      "en": "eyes",
+      "ru": "глаза",
+      "topic": "body",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "eyes.png",
+      "accept": [
+        "eyes",
+        "eye"
+      ],
+      "confusable": [
+        "w.ears"
+      ]
+    },
+    {
+      "id": "w.ears",
+      "en": "ears",
+      "ru": "уши",
+      "topic": "body",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "ears.png",
+      "accept": [
+        "ears",
+        "ear"
+      ],
+      "confusable": [
+        "w.eyes"
+      ]
+    },
+    {
+      "id": "w.nose",
+      "en": "nose",
+      "ru": "нос",
+      "topic": "body",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "nose.png",
+      "confusable": [
+        "w.mouth"
+      ]
+    },
+    {
+      "id": "w.mouth",
+      "en": "mouth",
+      "ru": "рот",
+      "topic": "body",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "mouth.png",
+      "confusable": [
+        "w.nose"
+      ]
+    },
+    {
+      "id": "w.legs",
+      "en": "legs",
+      "ru": "ноги",
+      "topic": "body",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "legs.png",
+      "accept": [
+        "legs",
+        "leg"
+      ]
+    },
+    {
+      "id": "w.tail",
+      "en": "tail",
+      "ru": "хвост",
+      "topic": "body",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "tail.png",
+      "confusable": [
+        "w.neck"
+      ]
+    },
+    {
+      "id": "w.neck",
+      "en": "neck",
+      "ru": "шея",
+      "topic": "body",
+      "pos": "noun",
+      "level": "preA1",
+      "image": "neck.png",
+      "confusable": [
+        "w.tail"
+      ]
+    },
+    {
+      "id": "w.big",
+      "en": "big",
+      "ru": "большой",
+      "topic": "describing",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "big.png",
+      "confusable": [
+        "w.small"
+      ]
+    },
+    {
+      "id": "w.small",
+      "en": "small",
+      "ru": "маленький",
+      "topic": "describing",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "small.png",
+      "accept": [
+        "small",
+        "little"
+      ],
+      "confusable": [
+        "w.big"
+      ]
+    },
+    {
+      "id": "w.long",
+      "en": "long",
+      "ru": "длинный",
+      "topic": "describing",
+      "pos": "adjective",
+      "level": "preA1",
+      "image": "long.png"
     }
   ]
 }

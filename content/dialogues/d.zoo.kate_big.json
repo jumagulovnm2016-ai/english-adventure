@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "id": "d.zoo.kate_big",
+  "npc": "npc.kate",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.kate",
+      "say": "p.hi_again",
+      "action": {
+        "type": "emote",
+        "emote": "wave"
+      },
+      "next": "n2"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Поздоровайся с Кейт!",
+        "senior": "Поздоровайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.hello"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n3"
+    },
+    "n3": {
+      "speaker": "npc.kate",
+      "say": "p.look_elephant",
+      "ru_hint": {
+        "junior": "Кейт показывает на слона.",
+        "senior": "Смотри на слона."
+      },
+      "next": "n4"
+    },
+    "n4": {
+      "speaker": "npc.kate",
+      "say": "p.is_it_big_or_small",
+      "ru_hint": {
+        "junior": "Кейт спрашивает про размер.",
+        "senior": "Вопрос про размер."
+      },
+      "next": "n5"
+    },
+    "n5_model": {
+      "speaker": "npc.kate",
+      "say": "p.its_big",
+      "next": "n6"
+    },
+    "n5": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Слон большой или маленький?",
+        "senior": "Какой он?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.big",
+        "prompt": {
+          "picture": "it.elephant"
+        },
+        "options": [
+          "w.big",
+          "w.small"
+        ]
+      },
+      "on_correct": "n6",
+      "on_wrong": "n5_model"
+    },
+    "n6": {
+      "speaker": "npc.kate",
+      "say": "p.look_penguin",
+      "ru_hint": {
+        "junior": "А теперь — пингвин.",
+        "senior": "Пингвин."
+      },
+      "next": "n7"
+    },
+    "n7": {
+      "speaker": "npc.kate",
+      "say": "p.is_it_big_or_small",
+      "next": "n8"
+    },
+    "n8_model": {
+      "speaker": "npc.kate",
+      "say": "p.its_small",
+      "next": "n9"
+    },
+    "n8": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Пингвин большой или маленький?",
+        "senior": "Какой он?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.small",
+        "prompt": {
+          "picture": "it.penguin"
+        },
+        "options": [
+          "w.small",
+          "w.big"
+        ]
+      },
+      "on_correct": "n9",
+      "on_wrong": "n8_model"
+    },
+    "n9": {
+      "speaker": "npc.kate",
+      "say": "p.look_giraffe",
+      "ru_hint": {
+        "junior": "Смотри на жирафа!",
+        "senior": "Жираф."
+      },
+      "next": "n10"
+    },
+    "n10": {
+      "speaker": "npc.kate",
+      "say": "p.it_has_a_long_neck",
+      "ru_hint": {
+        "junior": "Что у жирафа длинное?",
+        "senior": "Что длинное?"
+      },
+      "next": "n11"
+    },
+    "n11": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что у жирафа длинное?",
+        "senior": "Что длинное?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.neck",
+        "prompt": {
+          "picture": "it.giraffe"
+        },
+        "options": [
+          "w.neck",
+          "w.tail",
+          "w.legs"
+        ]
+      },
+      "on_correct": "n12",
+      "on_wrong": "n12"
+    },
+    "n12": {
+      "speaker": "npc.kate",
+      "say": "p.yes_well_done",
+      "action": {
+        "type": "emote",
+        "emote": "happy"
+      },
+      "next": "n13"
+    },
+    "n13": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попрощайся с Кейт!",
+        "senior": "Попрощайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.goodbye"
+      },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

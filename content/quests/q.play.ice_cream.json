@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "q.play.ice_cream",
+  "location": "playground",
+  "order": 4,
+  "title": {
+    "junior": "Мороженое",
+    "senior": "Купи мороженое сам"
+  },
+  "intro": {
+    "junior": "У тележки с мороженым стоит Сэм. Подойди к нему!",
+    "senior": "Купи мороженое по-английски."
+  },
+  "giver": "npc.sam",
+  "requires": [
+    "q.play.mia"
+  ],
+  "introduces": [
+    "w.ice_cream",
+    "w.hot",
+    "w.cold",
+    "p.one_ice_cream_please"
+  ],
+  "practices": [
+    "w.pink",
+    "p.thank_you",
+    "w.one"
+  ],
+  "steps": [
+    {
+      "id": "talk",
+      "type": "dialogue",
+      "dialogue": "d.play.sam_ice_cream"
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

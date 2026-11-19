@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "d.zoo.kate_bananas_start",
+  "npc": "npc.kate",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.kate",
+      "say": "p.hi_again",
+      "action": {
+        "type": "emote",
+        "emote": "wave"
+      },
+      "next": "n2"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Поздоровайся с Кейт!",
+        "senior": "Поздоровайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.hello"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n3"
+    },
+    "n3": {
+      "speaker": "npc.kate",
+      "say": "p.monkeys_hungry",
+      "ru_hint": {
+        "junior": "Кейт рассказывает про обезьянок.",
+        "senior": "Что с обезьянками?"
+      },
+      "next": "n4"
+    },
+    "n4": {
+      "speaker": "npc.kate",
+      "say": "p.give_me_three_bananas",
+      "ru_hint": {
+        "junior": "Кейт о чём-то просит. Послушай ещё раз, если нужно.",
+        "senior": "Просьба. Можно переслушать."
+      },
+      "next": "end"
+    }
+  }
+}

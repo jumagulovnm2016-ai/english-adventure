@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "q.play.things",
+  "location": "playground",
+  "order": 6,
+  "title": {
+    "junior": "Что есть на площадке?",
+    "senior": "Экскурсия по площадке"
+  },
+  "intro": {
+    "junior": "Мия покажет тебе площадку!",
+    "senior": "Мия устроит экскурсию. Слушай внимательно."
+  },
+  "giver": "npc.mia",
+  "requires": [
+    "q.play.bike"
+  ],
+  "introduces": [
+    "w.slide",
+    "w.swing",
+    "w.tree",
+    "w.flower"
+  ],
+  "practices": [
+    "p.yes_i_can",
+    "w.climb"
+  ],
+  "steps": [
+    {
+      "id": "talk",
+      "type": "dialogue",
+      "dialogue": "d.play.mia_park"
+    },
+    {
+      "id": "review",
+      "type": "review_slot",
+      "count": 2,
+      "prefer_topics": [
+        "actions",
+        "weather"
+      ]
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

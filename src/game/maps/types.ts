@@ -60,6 +60,7 @@ export const TILE_LEGEND = {
   'w': { art: 'wall_window', blocked: true },
   'D': { art: 'door', blocked: false },   // дверь — проход (выход задаётся в exits)
   'g': { art: 'grass', blocked: false },
+  's': { art: 'sand', blocked: false },
   'p': { art: 'path', blocked: false },
   '~': { art: 'water', blocked: true },
   'X': { art: 'hedge', blocked: true },

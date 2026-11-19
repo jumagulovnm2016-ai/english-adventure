@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "id": "d.play.mia_bike_end",
+  "npc": "npc.mia",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Протяни вещь. Что говорят, когда что-то дают?",
+        "senior": "Что говорят, протягивая вещь?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.here_you_are"
+      },
+      "on_correct": "n2",
+      "on_wrong": "n2"
+    },
+    "n2": {
+      "speaker": "npc.mia",
+      "say": "p.thank_you",
+      "action": {
+        "type": "take_player_item",
+        "item": "it.bike_blue"
+      },
+      "next": "n3"
+    },
+    "n3": {
+      "speaker": "npc.mia",
+      "say": "p.oh_no_its_rainy",
+      "ru_hint": {
+        "junior": "Ой! Что случилось с погодой?",
+        "senior": "Погода поменялась."
+      },
+      "action": {
+        "type": "weather",
+        "weather": "rain"
+      },
+      "next": "n4"
+    },
+    "n4_model": {
+      "speaker": "npc.mia",
+      "say": "p.its_rainy",
+      "next": "n5"
+    },
+    "n4": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Какая теперь погода?",
+        "senior": "Погода?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.rainy",
+        "options": [
+          "w.rainy",
+          "w.sunny",
+          "w.hot"
+        ]
+      },
+      "on_correct": "n5",
+      "on_wrong": "n4_model"
+    },
+    "n5": {
+      "speaker": "npc.mia",
+      "say": "p.bye_see_you",
+      "ru_hint": {
+        "junior": "Дождь кончается!"
+      },
+      "action": {
+        "type": "weather",
+        "weather": "sun"
+      },
+      "next": "n6"
+    },
+    "n6": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попрощайся с Мией!",
+        "senior": "Попрощайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.goodbye"
+      },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

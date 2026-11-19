@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "q.zoo.leo_body",
+  "location": "zoo",
+  "order": 4,
+  "title": {
+    "junior": "Игра с Лео",
+    "senior": "Слушай и показывай"
+  },
+  "intro": {
+    "junior": "Мальчик Лео хочет поиграть. Подойди к нему!",
+    "senior": "Лео придумал игру на внимательность."
+  },
+  "giver": "npc.leo",
+  "requires": [
+    "q.zoo.welcome"
+  ],
+  "introduces": [
+    "p.touch_your_head",
+    "p.touch_your_nose",
+    "p.touch_your_ears",
+    "p.touch_your_eyes",
+    "p.touch_your_mouth",
+    "p.touch_your_legs"
+  ],
+  "practices": [
+    "p.lets_play"
+  ],
+  "steps": [
+    {
+      "id": "talk",
+      "type": "dialogue",
+      "dialogue": "d.zoo.leo_touch"
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

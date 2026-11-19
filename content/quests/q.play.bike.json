@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "id": "q.play.bike",
+  "location": "playground",
+  "order": 5,
+  "title": {
+    "junior": "Велосипед Мии",
+    "senior": "Прогулка на велосипеде"
+  },
+  "intro": {
+    "junior": "Мия хочет покататься. Поговори с ней!",
+    "senior": "Мия собралась кататься. Помоги ей."
+  },
+  "giver": "npc.mia",
+  "requires": [
+    "q.play.kite"
+  ],
+  "introduces": [
+    "w.bike",
+    "w.ride",
+    "w.sunny",
+    "w.rainy"
+  ],
+  "practices": [
+    "w.blue",
+    "w.find",
+    "p.here_you_are"
+  ],
+  "steps": [
+    {
+      "id": "talk_start",
+      "type": "dialogue",
+      "dialogue": "d.play.mia_bike_start"
+    },
+    {
+      "id": "find_bike",
+      "type": "find_item",
+      "zone": "field",
+      "instruction": "p.find_my_bike",
+      "target": "it.bike_blue",
+      "distractors": [
+        "it.bike_red",
+        "it.kite_blue",
+        "it.ball_blue"
+      ],
+      "hint": {
+        "ru": {
+          "junior": "Bike — велосипед, blue — синий. Синий змей — не то!",
+          "senior": "Bike и blue. Синий змей и мяч — не то."
+        },
+        "say": "p.find_my_bike"
+      }
+    },
+    {
+      "id": "give_bike",
+      "type": "give_item",
+      "npc": "npc.mia",
+      "item": "it.bike_blue",
+      "hint": {
+        "ru": {
+          "junior": "Отдай велосипед Мие!",
+          "senior": "Верни велосипед Мие."
+        }
+      }
+    },
+    {
+      "id": "talk_end",
+      "type": "dialogue",
+      "dialogue": "d.play.mia_bike_end"
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

@@ -135,17 +135,17 @@ await check('вход для взрослых: неверный ответ не 
   await waitFor(() => !document.getElementById('parent').hidden);
 });
 
-await check('сводка совпадает с игрой: 1 из 12 заданий, слова в изучении', async () => {
+await check('сводка совпадает с игрой: 1 из 24 заданий, слова в изучении', async () => {
   const stats = await page.$$eval('#parent-summary .stat', (els) => els.map((e) => e.textContent));
-  assert(stats[0].includes('1 / 12'), stats[0]);
+  assert(stats[0].includes('1 / 24'), stats[0]);
   const learning = await page.evaluate(() => [...window.__learning.allStates().values()].filter((s) => s.status === 'learning').length);
   assert(stats[3].startsWith(String(learning)), `на экране «${stats[3]}», в данных ${learning}`);
   await page.screenshot({ path: join(SHOTS, 'parent-1-skills.png') });
 });
 
-await check('навыки: 10 штук, ни один не «подтверждён» после одного дня, цвета — «учится»', async () => {
+await check('навыки: 16 штук, ни один не «подтверждён» после одного дня, цвета — «учится»', async () => {
   const skills = await page.$$eval('#parent-skills .skill', (els) => els.map((e) => ({ cls: e.className, t: e.querySelector('summary').textContent })));
-  assert(skills.length === 10, `навыков ${skills.length}`);
+  assert(skills.length === 16, `навыков ${skills.length}`);
   assert(!skills.some((s) => s.cls.includes('confirmed')), 'что-то подтверждено за один день');
   const colours = skills.find((s) => s.t.includes('цвета'));
   assert(colours.cls.includes('in_progress'), colours.cls);

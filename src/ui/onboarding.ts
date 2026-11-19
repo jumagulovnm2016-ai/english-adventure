@@ -68,7 +68,7 @@ export function runOnboarding(content: ContentRegistry, learning: LearningServic
       $('ob-done-text').textContent = skipped
         ? 'Всё объясним по ходу игры.'
         : known >= total * 0.8
-          ? 'Здорово! Этот городок — для начинающих, тебе здесь будет легко. Пройди его быстро — новые уровни появятся позже.'
+          ? 'Здорово! Эти слова ты уже знаешь. Помоги маме дома, а потом выходи на улицу и иди направо — на площадку и в зоопарк: там много нового!'
           : known > 0 ? 'Знакомые слова игра не будет объяснять заново — только проверит через день.' : 'Ничего страшного — всему научимся вместе!';
       $('ob-go').addEventListener('click', () => { $('onboard').hidden = true; resolve(res as OnboardingResult); }, { once: true });
     };

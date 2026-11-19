@@ -25,6 +25,7 @@ export const FX_ART = {
   fx_star: () => star('#ffd23f'),
   fx_puff: () => art(6, 4, `<g fill="#fff" opacity="0.9"><circle cx="8" cy="10" r="5"/><circle cx="14" cy="8" r="6"/><circle cx="18" cy="11" r="4"/></g>`),
   fx_ring: () => art(12, 5, `<ellipse cx="24" cy="10" rx="21" ry="7.5" fill="none" stroke="#fff" stroke-width="3"/><ellipse cx="24" cy="10" rx="21" ry="7.5" fill="none" stroke="#ffd23f" stroke-width="1.5"/>`),
+  fx_drop: () => art(2, 6, `<path d="M5 2 L3 22" stroke="#bfe3ff" stroke-width="2.6" stroke-linecap="round"/>`),
   fx_ripple: () => art(10, 4, `<ellipse cx="20" cy="8" rx="17" ry="5.5" fill="none" stroke="#fff" stroke-width="2.4" opacity="0.85"/>`),
 };
 export type FxKey = keyof typeof FX_ART;

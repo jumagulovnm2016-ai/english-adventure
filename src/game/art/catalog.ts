@@ -6,6 +6,7 @@ import { floorArt } from './floor';
 import { MAPS } from '../maps';
 import { LOOKS, drawPerson, drawPersonBlink, drawPip, shadow, type Dir } from './character';
 import { FX_ART } from './fx';
+import { ICON_ART } from './icons';
 
 export const DIRS: Dir[] = ['down', 'up', 'left', 'right'];
 export function kidFrameKey(look: string, dir: Dir, frame: number) { return `${look}_${dir}_${frame}`; }
@@ -20,6 +21,7 @@ export function allSprites(): Record<string, Art> {
   out.pip_0 = drawPip(0); out.pip_1 = drawPip(1); out.pip_0_l = drawPip(0, true); out.pip_1_l = drawPip(1, true);
   for (const look of Object.keys(LOOKS)) for (const d of ['down', 'left', 'right'] as const) out[blinkKey(look, d)] = drawPersonBlink(look, d);
   for (const [k, f] of Object.entries(FX_ART)) out[k] = f();
+  for (const [k, f] of Object.entries(ICON_ART)) out[`icon_${k}`] = f();
   out.shadow = shadow();
   return out;
 }

@@ -34,9 +34,10 @@
           "description": "Игровое действие при показе реплики",
           "type": "object",
           "properties": {
-            "type": { "enum": ["give_player_item", "take_player_item", "emote"] },
+            "type": { "enum": ["give_player_item", "take_player_item", "emote", "weather"] },
             "item": { "$ref": "common.schema.json#/$defs/itemId" },
-            "emote": { "enum": ["happy", "surprised", "thinking", "wave"] }
+            "emote": { "enum": ["happy", "surprised", "thinking", "wave", "jump", "dance", "run"] },
+            "weather": { "enum": ["rain", "sun"] }
           },
           "required": ["type"],
           "additionalProperties": false

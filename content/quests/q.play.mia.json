@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "q.play.mia",
+  "location": "playground",
+  "order": 1,
+  "title": {
+    "junior": "Новая подружка",
+    "senior": "Знакомство на площадке"
+  },
+  "intro": {
+    "junior": "На площадке девочка Мия. Подойди к ней — над ней «!»",
+    "senior": "На площадке новая знакомая. Поговори с ней."
+  },
+  "giver": "npc.mia",
+  "requires": [
+    "q.street.animals"
+  ],
+  "introduces": [
+    "w.jump",
+    "p.i_can_jump",
+    "p.yes_i_can"
+  ],
+  "practices": [
+    "p.hello",
+    "p.my_name_is"
+  ],
+  "steps": [
+    {
+      "id": "talk",
+      "type": "dialogue",
+      "dialogue": "d.play.mia_hello"
+    },
+    {
+      "id": "review",
+      "type": "review_slot",
+      "count": 1,
+      "prefer_topics": [
+        "animals",
+        "colours"
+      ]
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

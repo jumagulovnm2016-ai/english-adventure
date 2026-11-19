@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "q.zoo.bananas",
+  "location": "zoo",
+  "order": 6,
+  "title": {
+    "junior": "Обед для обезьянок",
+    "senior": "Покорми обезьянок"
+  },
+  "intro": {
+    "junior": "Кейт нужна помощь с обедом для зверей!",
+    "senior": "Помоги Кейт накормить обезьянок."
+  },
+  "giver": "npc.kate",
+  "requires": [
+    "q.zoo.monkey",
+    "q.zoo.leo_animals"
+  ],
+  "introduces": [
+    "w.ears"
+  ],
+  "practices": [
+    "w.three",
+    "w.banana",
+    "w.big",
+    "p.here_you_are"
+  ],
+  "steps": [
+    {
+      "id": "talk_start",
+      "type": "dialogue",
+      "dialogue": "d.zoo.kate_bananas_start"
+    },
+    {
+      "id": "find_bananas",
+      "type": "find_item",
+      "zone": "zoo_paths",
+      "instruction": "p.give_me_three_bananas",
+      "target": "it.bananas_three",
+      "distractors": [
+        "it.apples_three",
+        "it.banana",
+        "it.orange_fruit"
+      ],
+      "hint": {
+        "ru": {
+          "junior": "Three bananas — три банана. Один банан — мало!",
+          "senior": "Три банана: three bananas."
+        },
+        "say": "p.give_me_three_bananas"
+      }
+    },
+    {
+      "id": "give_bananas",
+      "type": "give_item",
+      "npc": "npc.kate",
+      "item": "it.bananas_three",
+      "hint": {
+        "ru": {
+          "junior": "Отнеси бананы Кейт!",
+          "senior": "Отдай бананы Кейт."
+        }
+      }
+    },
+    {
+      "id": "talk_end",
+      "type": "dialogue",
+      "dialogue": "d.zoo.kate_bananas_end"
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

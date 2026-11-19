@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "id": "d.play.mia_park",
+  "npc": "npc.mia",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.mia",
+      "say": "p.hi_again",
+      "action": {
+        "type": "emote",
+        "emote": "wave"
+      },
+      "next": "n2"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Поздоровайся с Мией!",
+        "senior": "Поздоровайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.hello"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n3"
+    },
+    "n3": {
+      "speaker": "npc.mia",
+      "say": "p.look_slide",
+      "ru_hint": {
+        "junior": "Мия показывает на площадку. Куда смотреть?",
+        "senior": "Куда она показывает?"
+      },
+      "next": "n4"
+    },
+    "n4": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "На что показывает Мия?",
+        "senior": "Что она назвала?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.slide",
+        "options": [
+          "w.slide",
+          "w.swing",
+          "w.tree"
+        ]
+      },
+      "on_correct": "n5",
+      "on_wrong": "n5"
+    },
+    "n5": {
+      "speaker": "npc.mia",
+      "say": "p.look_swing",
+      "ru_hint": {
+        "junior": "А теперь?",
+        "senior": "А теперь?"
+      },
+      "next": "n6"
+    },
+    "n6": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "На что показывает Мия?",
+        "senior": "Что она назвала?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.swing",
+        "options": [
+          "w.swing",
+          "w.slide",
+          "w.flower"
+        ]
+      },
+      "on_correct": "n7",
+      "on_wrong": "n7"
+    },
+    "n7": {
+      "speaker": "npc.mia",
+      "say": "p.look_tree",
+      "ru_hint": {
+        "junior": "А это?",
+        "senior": "А это?"
+      },
+      "next": "n8"
+    },
+    "n8": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "На что показывает Мия?",
+        "senior": "Что она назвала?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.tree",
+        "options": [
+          "w.tree",
+          "w.flower",
+          "w.kite"
+        ]
+      },
+      "on_correct": "n9",
+      "on_wrong": "n9"
+    },
+    "n9": {
+      "speaker": "npc.mia",
+      "say": "p.look_flower",
+      "ru_hint": {
+        "junior": "И последнее!",
+        "senior": "Последнее."
+      },
+      "next": "n10"
+    },
+    "n10": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "На что показывает Мия?",
+        "senior": "Что она назвала?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.flower",
+        "options": [
+          "w.flower",
+          "w.tree",
+          "w.swing"
+        ]
+      },
+      "on_correct": "n11",
+      "on_wrong": "n11"
+    },
+    "n11": {
+      "speaker": "npc.mia",
+      "say": "p.can_you_climb",
+      "ru_hint": {
+        "junior": "Мия спрашивает: а ты умеешь?",
+        "senior": "Вопрос с can."
+      },
+      "next": "n12"
+    },
+    "n12_model": {
+      "speaker": "npc.mia",
+      "say": "p.yes_i_can",
+      "next": "n13"
+    },
+    "n12": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Ответь: «Да, умею!»",
+        "senior": "Ответь, что умеешь."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.yes_i_can",
+        "allowed_types": [
+          "listen_choose",
+          "build_phrase"
+        ]
+      },
+      "on_correct": "n13",
+      "on_wrong": "n12_model"
+    },
+    "n13": {
+      "speaker": "npc.mia",
+      "say": "p.lets_play",
+      "action": {
+        "type": "emote",
+        "emote": "dance"
+      },
+      "next": "n14"
+    },
+    "n14": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попрощайся с Мией!",
+        "senior": "Попрощайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.goodbye"
+      },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

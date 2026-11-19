@@ -716,6 +716,692 @@
       "words": [
         "w.goodbye"
       ]
+    },
+    {
+      "id": "p.hi_im_mia",
+      "en": "Hi! I'm Mia.",
+      "ru": "Привет! Я Мия.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": []
+    },
+    {
+      "id": "p.lets_play",
+      "en": "Let's play!",
+      "ru": "Давай играть!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": []
+    },
+    {
+      "id": "p.i_can_jump",
+      "en": "I can jump!",
+      "ru": "Я умею прыгать!",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.jump"
+      ],
+      "pieces": [
+        "I",
+        "can",
+        "jump"
+      ],
+      "accept": [
+        "i can jump",
+        "jump"
+      ]
+    },
+    {
+      "id": "p.i_can_run",
+      "en": "I can run!",
+      "ru": "Я умею бегать!",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.run"
+      ],
+      "pieces": [
+        "I",
+        "can",
+        "run"
+      ],
+      "accept": [
+        "i can run",
+        "run"
+      ],
+      "why_ru": "Can — «умею, могу». После can действие без изменений: I can run, I can swim."
+    },
+    {
+      "id": "p.i_can_climb",
+      "en": "I can climb!",
+      "ru": "Я умею лазать!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.climb"
+      ]
+    },
+    {
+      "id": "p.i_can_dance",
+      "en": "I can dance!",
+      "ru": "Я умею танцевать!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.dance"
+      ]
+    },
+    {
+      "id": "p.i_can_sing",
+      "en": "I can sing!",
+      "ru": "Я умею петь!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.sing"
+      ]
+    },
+    {
+      "id": "p.i_can_swim",
+      "en": "I can swim!",
+      "ru": "Я умею плавать!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.swim"
+      ]
+    },
+    {
+      "id": "p.can_you_jump",
+      "en": "Can you jump?",
+      "ru": "А ты умеешь прыгать?",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.jump"
+      ]
+    },
+    {
+      "id": "p.can_you_climb",
+      "en": "Can you climb?",
+      "ru": "А ты умеешь лазать?",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.climb"
+      ]
+    },
+    {
+      "id": "p.yes_i_can",
+      "en": "Yes, I can.",
+      "ru": "Да, умею.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [],
+      "pieces": [
+        "Yes,",
+        "I",
+        "can"
+      ],
+      "accept": [
+        "yes i can",
+        "yes"
+      ],
+      "why_ru": "Короткий ответ на вопрос с can: Yes, I can — да, умею. «Нет» — No, I can't."
+    },
+    {
+      "id": "p.find_my_kite",
+      "en": "Find my kite, please. It's red.",
+      "ru": "Найди моего змея, пожалуйста. Он красный.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.find",
+        "w.kite",
+        "w.red",
+        "w.please"
+      ]
+    },
+    {
+      "id": "p.look_it_can_fly",
+      "en": "Look! It can fly!",
+      "ru": "Смотри! Он умеет летать!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.fly"
+      ]
+    },
+    {
+      "id": "p.find_my_bike",
+      "en": "Find my bike, please. It's blue.",
+      "ru": "Найди мой велосипед, пожалуйста. Он синий.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.find",
+        "w.bike",
+        "w.blue",
+        "w.please"
+      ]
+    },
+    {
+      "id": "p.lets_ride",
+      "en": "Let's ride a bike!",
+      "ru": "Давай кататься на велосипеде!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.ride",
+        "w.bike"
+      ]
+    },
+    {
+      "id": "p.its_sunny",
+      "en": "It's sunny.",
+      "ru": "Солнечно.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.sunny"
+      ],
+      "pieces": [
+        "It's",
+        "sunny"
+      ],
+      "accept": [
+        "it's sunny",
+        "it is sunny",
+        "sunny"
+      ]
+    },
+    {
+      "id": "p.oh_no_its_rainy",
+      "en": "Oh no! It's rainy!",
+      "ru": "Ой! Пошёл дождь!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.rainy"
+      ]
+    },
+    {
+      "id": "p.its_rainy",
+      "en": "It's rainy.",
+      "ru": "Дождливо.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.rainy"
+      ],
+      "pieces": [
+        "It's",
+        "rainy"
+      ],
+      "accept": [
+        "it's rainy",
+        "it is rainy",
+        "rainy",
+        "it's raining"
+      ]
+    },
+    {
+      "id": "p.ice_cream_hello",
+      "en": "Hello! Ice cream?",
+      "ru": "Привет! Мороженое?",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.hello",
+        "w.ice_cream"
+      ]
+    },
+    {
+      "id": "p.one_ice_cream_please",
+      "en": "One ice cream, please.",
+      "ru": "Одно мороженое, пожалуйста.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.one",
+        "w.ice_cream",
+        "w.please"
+      ],
+      "pieces": [
+        "One",
+        "ice cream,",
+        "please"
+      ],
+      "accept": [
+        "one ice cream please",
+        "one ice cream",
+        "ice cream please"
+      ]
+    },
+    {
+      "id": "p.its_hot_today",
+      "en": "It's hot today!",
+      "ru": "Сегодня жарко!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.hot"
+      ]
+    },
+    {
+      "id": "p.its_hot",
+      "en": "It's hot.",
+      "ru": "Жарко.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.hot"
+      ],
+      "pieces": [
+        "It's",
+        "hot"
+      ],
+      "accept": [
+        "it's hot",
+        "it is hot",
+        "hot"
+      ]
+    },
+    {
+      "id": "p.look_slide",
+      "en": "Look at the slide!",
+      "ru": "Посмотри на горку!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.slide"
+      ]
+    },
+    {
+      "id": "p.look_swing",
+      "en": "Look at the swing!",
+      "ru": "Посмотри на качели!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.swing"
+      ]
+    },
+    {
+      "id": "p.look_tree",
+      "en": "Look at the tree!",
+      "ru": "Посмотри на дерево!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.tree"
+      ]
+    },
+    {
+      "id": "p.look_flower",
+      "en": "Look at the flower!",
+      "ru": "Посмотри на цветок!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.flower"
+      ]
+    },
+    {
+      "id": "p.welcome_zoo",
+      "en": "Welcome to the zoo!",
+      "ru": "Добро пожаловать в зоопарк!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": []
+    },
+    {
+      "id": "p.im_kate",
+      "en": "I'm Kate. I'm a zookeeper.",
+      "ru": "Я Кейт. Я смотритель зоопарка.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": []
+    },
+    {
+      "id": "p.its_a_lion",
+      "en": "It's a lion.",
+      "ru": "Это лев.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.lion"
+      ],
+      "pieces": [
+        "It's",
+        "a",
+        "lion"
+      ],
+      "accept": [
+        "it's a lion",
+        "it is a lion",
+        "a lion",
+        "lion"
+      ]
+    },
+    {
+      "id": "p.its_an_elephant",
+      "en": "It's an elephant.",
+      "ru": "Это слон.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.elephant"
+      ],
+      "pieces": [
+        "It's",
+        "an",
+        "elephant"
+      ],
+      "accept": [
+        "it's an elephant",
+        "it is an elephant",
+        "an elephant",
+        "elephant"
+      ]
+    },
+    {
+      "id": "p.its_a_monkey",
+      "en": "It's a monkey.",
+      "ru": "Это обезьяна.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.monkey"
+      ],
+      "pieces": [
+        "It's",
+        "a",
+        "monkey"
+      ],
+      "accept": [
+        "it's a monkey",
+        "it is a monkey",
+        "a monkey",
+        "monkey"
+      ]
+    },
+    {
+      "id": "p.its_a_tiger",
+      "en": "It's a tiger.",
+      "ru": "Это тигр.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.tiger"
+      ],
+      "pieces": [
+        "It's",
+        "a",
+        "tiger"
+      ],
+      "accept": [
+        "it's a tiger",
+        "it is a tiger",
+        "a tiger",
+        "tiger"
+      ]
+    },
+    {
+      "id": "p.its_big",
+      "en": "It's big!",
+      "ru": "Он большой!",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.big"
+      ],
+      "pieces": [
+        "It's",
+        "big"
+      ],
+      "accept": [
+        "it's big",
+        "it is big",
+        "big"
+      ]
+    },
+    {
+      "id": "p.its_small",
+      "en": "It's small.",
+      "ru": "Он маленький.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.small"
+      ],
+      "pieces": [
+        "It's",
+        "small"
+      ],
+      "accept": [
+        "it's small",
+        "it is small",
+        "small",
+        "it's little"
+      ]
+    },
+    {
+      "id": "p.look_elephant",
+      "en": "Look at the elephant!",
+      "ru": "Посмотри на слона!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.elephant"
+      ]
+    },
+    {
+      "id": "p.look_penguin",
+      "en": "Look at the penguin!",
+      "ru": "Посмотри на пингвина!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.penguin"
+      ]
+    },
+    {
+      "id": "p.look_giraffe",
+      "en": "Look at the giraffe!",
+      "ru": "Посмотри на жирафа!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.giraffe"
+      ]
+    },
+    {
+      "id": "p.is_it_big_or_small",
+      "en": "Is it big or small?",
+      "ru": "Он большой или маленький?",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.big",
+        "w.small"
+      ]
+    },
+    {
+      "id": "p.it_has_a_long_neck",
+      "en": "It has a long neck.",
+      "ru": "У него длинная шея.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.long",
+        "w.neck"
+      ]
+    },
+    {
+      "id": "p.oh_no_monkey",
+      "en": "Oh no! Where is the monkey?",
+      "ru": "Ой! Где же обезьянка?",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.monkey"
+      ]
+    },
+    {
+      "id": "p.find_the_monkey",
+      "en": "Find the monkey, please.",
+      "ru": "Найди обезьянку, пожалуйста.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.find",
+        "w.monkey",
+        "w.please"
+      ]
+    },
+    {
+      "id": "p.it_has_a_long_tail",
+      "en": "It has a long tail.",
+      "ru": "У неё длинный хвост.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.long",
+        "w.tail"
+      ]
+    },
+    {
+      "id": "p.hi_im_leo",
+      "en": "Hi! I'm Leo.",
+      "ru": "Привет! Я Лео.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": []
+    },
+    {
+      "id": "p.touch_your_head",
+      "en": "Touch your head!",
+      "ru": "Дотронься до головы!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.head"
+      ]
+    },
+    {
+      "id": "p.touch_your_eyes",
+      "en": "Touch your eyes!",
+      "ru": "Дотронься до глаз!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.eyes"
+      ]
+    },
+    {
+      "id": "p.touch_your_ears",
+      "en": "Touch your ears!",
+      "ru": "Дотронься до ушей!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.ears"
+      ]
+    },
+    {
+      "id": "p.touch_your_nose",
+      "en": "Touch your nose!",
+      "ru": "Дотронься до носа!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.nose"
+      ]
+    },
+    {
+      "id": "p.touch_your_mouth",
+      "en": "Touch your mouth!",
+      "ru": "Дотронься до рта!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.mouth"
+      ]
+    },
+    {
+      "id": "p.touch_your_legs",
+      "en": "Touch your legs!",
+      "ru": "Дотронься до ног!",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.legs"
+      ]
+    },
+    {
+      "id": "p.monkeys_hungry",
+      "en": "The monkeys are hungry.",
+      "ru": "Обезьянки проголодались.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.monkey"
+      ]
+    },
+    {
+      "id": "p.give_me_three_bananas",
+      "en": "Give me three bananas, please.",
+      "ru": "Дай мне три банана, пожалуйста.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.give",
+        "w.three",
+        "w.banana",
+        "w.please"
+      ]
+    },
+    {
+      "id": "p.how_many_bananas",
+      "en": "How many bananas?",
+      "ru": "Сколько бананов?",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.banana"
+      ]
+    },
+    {
+      "id": "p.three_bananas",
+      "en": "Three bananas.",
+      "ru": "Три банана.",
+      "level": "preA1",
+      "role": "productive",
+      "words": [
+        "w.three",
+        "w.banana"
+      ],
+      "pieces": [
+        "Three",
+        "bananas"
+      ],
+      "accept": [
+        "three bananas",
+        "three"
+      ]
+    },
+    {
+      "id": "p.it_has_big_ears",
+      "en": "Look! It has big ears.",
+      "ru": "Смотри! У него большие уши.",
+      "level": "preA1",
+      "role": "receptive",
+      "words": [
+        "w.big",
+        "w.ears"
+      ]
     }
   ]
 }

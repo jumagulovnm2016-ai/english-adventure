@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "id": "d.zoo.kate_bananas_end",
+  "npc": "npc.kate",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Протяни вещь. Что говорят, когда что-то дают?",
+        "senior": "Что говорят, протягивая вещь?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.here_you_are"
+      },
+      "on_correct": "n2",
+      "on_wrong": "n2"
+    },
+    "n2": {
+      "speaker": "npc.kate",
+      "say": "p.thank_you",
+      "action": {
+        "type": "take_player_item",
+        "item": "it.bananas_three"
+      },
+      "next": "n3"
+    },
+    "n3": {
+      "speaker": "npc.kate",
+      "say": "p.how_many_bananas",
+      "ru_hint": {
+        "junior": "Кейт спрашивает: сколько?",
+        "senior": "Сколько?"
+      },
+      "next": "n4"
+    },
+    "n4_model": {
+      "speaker": "npc.kate",
+      "say": "p.three_bananas",
+      "next": "n5"
+    },
+    "n4": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Сколько бананов?",
+        "senior": "Сколько?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.three",
+        "prompt": {
+          "picture": "it.bananas_three"
+        },
+        "options": [
+          "w.two",
+          "w.three",
+          "w.four"
+        ]
+      },
+      "on_correct": "n5",
+      "on_wrong": "n4_model"
+    },
+    "n5": {
+      "speaker": "npc.kate",
+      "say": "p.it_has_big_ears",
+      "ru_hint": {
+        "junior": "Кейт показывает на слона.",
+        "senior": "Смотри на слона."
+      },
+      "next": "n6"
+    },
+    "n6": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что у слона большое?",
+        "senior": "Что большое?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.ears",
+        "prompt": {
+          "picture": "it.elephant"
+        },
+        "options": [
+          "w.ears",
+          "w.eyes",
+          "w.nose"
+        ]
+      },
+      "on_correct": "n7",
+      "on_wrong": "n7"
+    },
+    "n7": {
+      "speaker": "npc.kate",
+      "say": "p.bye_see_you",
+      "action": {
+        "type": "emote",
+        "emote": "happy"
+      },
+      "next": "n8"
+    },
+    "n8": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попрощайся с Кейт!",
+        "senior": "Попрощайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.goodbye"
+      },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

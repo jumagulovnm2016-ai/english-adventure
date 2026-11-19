@@ -50,7 +50,9 @@
         "home",
         "street",
         "shop",
-        "school"
+        "school",
+        "playground",
+        "zoo"
       ]
     },
     "level": {
@@ -80,7 +82,12 @@
         "food",
         "toys",
         "instructions",
-        "politeness"
+        "politeness",
+        "actions",
+        "weather",
+        "body",
+        "describing",
+        "places"
       ]
     },
     "ageText": {

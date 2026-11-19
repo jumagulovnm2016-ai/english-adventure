@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "q.zoo.monkey",
+  "location": "zoo",
+  "order": 3,
+  "title": {
+    "junior": "Сбежала обезьянка",
+    "senior": "Побег из вольера"
+  },
+  "intro": {
+    "junior": "У Кейт что-то случилось. Подойди к ней!",
+    "senior": "В зоопарке переполох. Узнай у Кейт."
+  },
+  "giver": "npc.kate",
+  "requires": [
+    "q.zoo.big_small"
+  ],
+  "introduces": [
+    "w.tail",
+    "w.parrot"
+  ],
+  "practices": [
+    "w.monkey",
+    "w.long",
+    "w.find",
+    "p.here_you_are"
+  ],
+  "steps": [
+    {
+      "id": "talk_start",
+      "type": "dialogue",
+      "dialogue": "d.zoo.kate_monkey_start"
+    },
+    {
+      "id": "find_monkey",
+      "type": "find_item",
+      "zone": "zoo_paths",
+      "instruction": "p.find_the_monkey",
+      "target": "it.monkey",
+      "distractors": [
+        "it.parrot",
+        "it.penguin",
+        "it.snake"
+      ],
+      "hint": {
+        "ru": {
+          "junior": "Monkey — обезьянка. Она коричневая, с длинным хвостом.",
+          "senior": "Monkey — обезьяна."
+        },
+        "say": "p.find_the_monkey"
+      }
+    },
+    {
+      "id": "give_monkey",
+      "type": "give_item",
+      "npc": "npc.kate",
+      "item": "it.monkey",
+      "hint": {
+        "ru": {
+          "junior": "Отнеси обезьянку Кейт!",
+          "senior": "Верни обезьянку Кейт."
+        }
+      }
+    },
+    {
+      "id": "talk_end",
+      "type": "dialogue",
+      "dialogue": "d.zoo.kate_monkey_end"
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

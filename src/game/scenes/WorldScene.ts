@@ -73,6 +73,8 @@ export class WorldScene extends Phaser.Scene {
   private heroNextBlink = 0;
   private lastPuff = 0;
   private calm = false;
+  private rain: Phaser.Time.TimerEvent | null = null;
+  private rainShade: Phaser.GameObjects.Rectangle | null = null;
   private trail: Point[] = [];
   private props: Phaser.GameObjects.Image[] = [];
   private pipPos: Point = { x: 0, y: 0 };
@@ -86,7 +88,7 @@ export class WorldScene extends Phaser.Scene {
     this.nearby = null; this.blocked = false; this.unblockedAt = 0; this.lastFrameAt = 0;
     this.highlighted = null; this.leaving = false; this.carried = null;
     this.pip = null; this.pipMarker = null; this.trail = []; this.props = [];
-    this.heroBlinkUntil = 0; this.heroNextBlink = 0; this.lastPuff = 0;
+    this.heroBlinkUntil = 0; this.heroNextBlink = 0; this.lastPuff = 0; this.rain = null; this.rainShade = null;
     this.calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
@@ -194,6 +196,19 @@ export class WorldScene extends Phaser.Scene {
     const dir = facingFor(this.pos.x - spr.x, this.pos.y - spr.y, 'down');
     spr.setTexture(kidFrameKey(spr.getData('look'), dir, 0)).setData('dir', dir);
     if (emote === 'happy' || emote === 'wave') this.tweens.add({ targets: spr, y: spr.y - 3, yoyo: true, duration: 120, repeat: emote === 'happy' ? 1 : 0 });
+    if (emote === 'jump') {
+      // «I can jump!» — высокий прыжок с пылью при приземлении
+      this.tweens.add({ targets: spr, y: spr.y - 10, yoyo: true, duration: 220, ease: 'Quad.out', repeat: 1, onComplete: () => this.puff(spr.x, spr.y) });
+    }
+    if (emote === 'dance') {
+      this.tweens.add({ targets: spr, angle: { from: -12, to: 12 }, yoyo: true, repeat: 3, duration: 180, ease: 'Sine.inOut', onComplete: () => spr.setAngle(0) });
+      this.floatUp('fx_star', spr.x, spr.y - spr.displayHeight, 3);
+    }
+    if (emote === 'run') {
+      const look = spr.getData('look') as string;
+      spr.play(`${look}_walk_${dir === 'left' ? 'left' : 'right'}`);
+      this.tweens.add({ targets: spr, x: spr.x + 14, yoyo: true, duration: 500, ease: 'Sine.inOut', onComplete: () => { spr.anims.stop(); spr.setTexture(kidFrameKey(look, dir, 0)); } });
+    }
     if (emote === 'happy') this.floatUp('fx_heart', spr.x, spr.y - spr.displayHeight, 3);
     else if (emote === 'wave') this.floatUp('fx_star', spr.x, spr.y - spr.displayHeight, 2);
   }
@@ -330,6 +345,26 @@ export class WorldScene extends Phaser.Scene {
     this.tweens.add({ targets: img, y: y - 3, scale: ART_SCALE * 1.1, alpha: 0, duration: 450, onComplete: () => img.destroy() });
   }
 
+  /** Погода по ходу диалога: «Oh no! It's raining!» — пошёл дождь; sun — снова солнце. */
+  setWeather(w: 'rain' | 'sun') {
+    if (w === 'rain') {
+      if (this.rain) return;
+      const m = this.deps.map;
+      this.rainShade = this.add.rectangle(0, 0, m.tiles[0].length * TILE, m.tiles.length * TILE, 0x2c4f7c, 0).setOrigin(0).setDepth(9700);
+      this.tweens.add({ targets: this.rainShade, fillAlpha: 0.2, duration: 800 });
+      this.rain = this.time.addEvent({ delay: this.calm ? 120 : 35, loop: true, callback: () => {
+        const v = this.cameras.main.worldView;
+        const x = v.x + Math.random() * (v.width + 20), y = v.y - 8;
+        const d = this.add.image(x, y, 'fx_drop').setDepth(9800).setScale(ART_SCALE).setAlpha(0.8);
+        this.tweens.add({ targets: d, x: x - 10, y: y + v.height * (0.6 + Math.random() * 0.4), duration: 550, onComplete: () => d.destroy() });
+      } });
+    } else {
+      this.rain?.remove(); this.rain = null;
+      const shade = this.rainShade; this.rainShade = null;
+      if (shade) this.tweens.add({ targets: shade, fillAlpha: 0, duration: 800, onComplete: () => shade.destroy() });
+    }
+  }
+
   /** Круги на воде пруда. */
   private startRipples() {
     if (this.calm) return;
@@ -350,7 +385,7 @@ export class WorldScene extends Phaser.Scene {
       if (t.kind !== 'npc') continue;
       const spr = t.obj as Phaser.GameObjects.Sprite;
       const dir = spr.getData('dir') as Facing;
-      if (dir === 'up' || now < (spr.getData('blinkAt') as number)) continue;
+      if (dir === 'up' || spr.anims?.isPlaying || now < (spr.getData('blinkAt') as number)) continue;
       const look = spr.getData('look') as string;
       spr.setTexture(blinkKey(look, dir)).setData('blinkAt', now + 2500 + Math.random() * 3500);
       this.time.delayedCall(130, () => { if (spr.active && spr.getData('dir') === dir) spr.setTexture(kidFrameKey(look, dir, 0)); });

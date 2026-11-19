@@ -39,6 +39,10 @@ export interface QuestDeps {
   block: (on: boolean) => void;
   /** Игрок что-то сделал по квесту (для спутника: сбросить таймер подсказки). */
   onProgress?: () => void;
+  /** Требования, снятые для знающего ребёнка (см. D50). */
+  waived?: () => ReadonlySet<string>;
+  /** Где сейчас герой — подсказка сначала предлагает задание рядом. */
+  location?: () => Location;
 }
 
 const placeName = (l: Location) => `${MAPS[l].title.ru} (${MAPS[l].title.en.toUpperCase()})`;
@@ -87,12 +91,22 @@ export class QuestController {
   totalStars() { return [...this.d.states.values()].reduce((s, q) => s + (q.status === 'done' ? q.stars : 0), 0); }
 
   /** Можно ли пройти в дверь (требование — выполненный квест). */
-  canEnter(requires?: string) { return !requires || this.d.states.get(requires)?.status === 'done'; }
+  canEnter(requires?: string) { return !requires || this.d.states.get(requires)?.status === 'done' || this.waived.has(requires); }
+  /** Следующее доступное задание для подсказки в шапке. Знающему ребёнку — сначала новое (площадка, зоопарк). */
+  private nextAvailable() {
+    const avail = this.d.content.quests().filter((q) => questStatus(q, this.d.states, this.waived) === 'available');
+    const here = this.d.location?.();
+    const giverHere = (q: (typeof avail)[number]) => this.d.content.npc(q.giver).location === here;
+    return avail.find(giverHere)
+      ?? (this.waived.size ? avail.find((q) => q.location === 'playground' || q.location === 'zoo') : undefined)
+      ?? avail[0];
+  }
+  private get waived(): ReadonlySet<string> { return this.d.waived?.() ?? new Set(); }
 
   /** Что подсказать спутнику: короткий текст и, если есть, фраза для озвучки. */
   companionHint(): { text: string; say?: { id: string; text: string } } | null {
     if (!this.active) {
-      const next = this.d.content.quests().find((q) => questStatus(q, this.d.states) === 'available');
+      const next = this.nextAvailable();
       if (!next) return null;
       const npc = this.d.content.npc(next.giver);
       const where = npc.location !== this.scene?.location ? ` Это в локации «${placeName(npc.location)}».` : '';
@@ -126,7 +140,7 @@ export class QuestController {
   private involvedNpcs(): Set<string> {
     const out = new Set<string>();
     for (const q of this.d.content.quests()) {
-      if (questStatus(q, this.d.states) === 'locked') continue;
+      if (questStatus(q, this.d.states, this.waived) === 'locked') continue;
       out.add(q.giver);
       for (const s of q.steps) {
         if (s.type === 'dialogue') out.add(this.d.content.dialogue(s.dialogue!).npc);
@@ -157,7 +171,7 @@ export class QuestController {
       if (s.type === 'give_item') return s.npc === npcId && this.d.inventory().includes(s.item!);
       return false;
     }
-    return !!questForNpc(npcId, this.d.content.quests(), this.d.states);
+    return !!questForNpc(npcId, this.d.content.quests(), this.d.states, this.waived);
   }
 
   private updateGoal() {
@@ -165,7 +179,7 @@ export class QuestController {
     const here = this.scene?.location;
     const where = (l: Location) => (l !== here ? ` → ${placeName(l)}` : '');
     if (!this.active) {
-      const next = this.d.content.quests().find((q) => questStatus(q, this.d.states) === 'available');
+      const next = this.nextAvailable();
       if (!next) { this.d.hud.setGoal(null); return; }
       const npc = this.d.content.npc(next.giver);
       this.d.hud.setGoal({ title: 'Новое задание', text: `Поговори ${npc.ru_with} — над ${npc.gender === 'f' ? 'ней' : 'ним'} «!»${where(npc.location)}` });
@@ -207,7 +221,7 @@ export class QuestController {
       if (s.type === 'find_item' && this.active.def.giver === npcId) return this.say(npcId, s.instruction!);
       return this.say(npcId, 'p.hello_mum');
     }
-    const q = questForNpc(npcId, this.d.content.quests(), this.d.states);
+    const q = questForNpc(npcId, this.d.content.quests(), this.d.states, this.waived);
     if (!q) return this.say(npcId, 'p.hello_mum');
     await this.startQuest(q, npcId);
   }
@@ -351,6 +365,7 @@ export class QuestController {
     const a = n.action;
     if (!a) return;
     if (a.type === 'emote') this.scene?.npcReact(npcId, a.emote);
+    if (a.type === 'weather' && a.weather) this.scene?.setWeather(a.weather);
     if (a.type === 'take_player_item' && a.item) {
       this.d.setInventory(this.d.inventory().filter((i) => i !== a.item));
       this.scene?.setCarried(null);

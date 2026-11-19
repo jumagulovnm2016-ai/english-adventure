@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "id": "q.zoo.leo_animals",
+  "location": "zoo",
+  "order": 5,
+  "title": {
+    "junior": "Кто живёт в зоопарке?",
+    "senior": "Знаток зверей"
+  },
+  "intro": {
+    "junior": "Лео знает всех зверей. А ты?",
+    "senior": "Лео проверит, знаешь ли ты зверей."
+  },
+  "giver": "npc.leo",
+  "requires": [
+    "q.zoo.leo_body"
+  ],
+  "introduces": [
+    "w.tiger",
+    "w.zebra",
+    "w.bear",
+    "w.hippo",
+    "w.crocodile",
+    "w.snake"
+  ],
+  "practices": [
+    "w.lion",
+    "w.elephant"
+  ],
+  "steps": [
+    {
+      "id": "talk",
+      "type": "dialogue",
+      "dialogue": "d.zoo.leo_animals"
+    },
+    {
+      "id": "review",
+      "type": "review_slot",
+      "count": 2,
+      "prefer_topics": [
+        "animals",
+        "body"
+      ]
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

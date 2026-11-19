@@ -34,6 +34,11 @@ export const LOOKS: Record<string, Look> = {
   ms_lee: { skin: SKIN.light, hair: '#1f1712', shirt: '#2fb5b0', pants: '#2b3460', shoes: '#4a3a2a', style: 'long', adult: true, glasses: true },
   mum: { skin: SKIN.light, hair: '#c45a2a', shirt: '#e53935', pants: '#7d5cd6', shoes: '#4a3a2a', style: 'long', adult: true, skirt: true },
   dad: { skin: SKIN.tan, hair: '#2a1a12', shirt: '#2f7de1', pants: '#4a4f5c', shoes: '#4a3a2a', style: 'short', adult: true },
+  // юнит 2: площадка и зоопарк
+  mia: { skin: SKIN.fair, hair: '#a0522d', shirt: '#ff8a3d', pants: '#2f7de1', shoes: '#ffffff', style: 'pony' },
+  sam: { skin: SKIN.brown, hair: '#1f1712', shirt: '#ff6f91', pants: '#f4f4f8', shoes: '#4a3a2a', style: 'curly', adult: true },
+  kate: { skin: SKIN.light, hair: '#e0a040', shirt: '#7a8a3a', pants: '#5a4a2a', shoes: '#4a3a2a', style: 'pony', adult: true },
+  leo: { skin: SKIN.tan, hair: '#2a1a12', shirt: '#2fb5b0', pants: '#4a4f5c', shoes: '#ffcc1f', style: 'curly' },
 };
 export const ADULTS = new Set(Object.entries(LOOKS).filter(([, l]) => l.adult).map(([k]) => k));
 export const PLAYER_LOOKS = ['kid_1', 'kid_2', 'kid_3', 'kid_4', 'kid_5', 'kid_6'] as const;

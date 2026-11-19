@@ -88,6 +88,50 @@
       "location": "school",
       "gender": "m",
       "sprite": "tom"
+    },
+    {
+      "id": "npc.mia",
+      "name_en": "Mia",
+      "role_ru": "Девочка на площадке",
+      "name_ru": "Мия",
+      "ru_with": "с Мией",
+      "ru_to": "Мие",
+      "location": "playground",
+      "gender": "f",
+      "sprite": "mia"
+    },
+    {
+      "id": "npc.sam",
+      "name_en": "Sam",
+      "role_ru": "Продавец мороженого",
+      "name_ru": "Сэм",
+      "ru_with": "с Сэмом",
+      "ru_to": "Сэму",
+      "location": "playground",
+      "gender": "m",
+      "sprite": "sam"
+    },
+    {
+      "id": "npc.kate",
+      "name_en": "Kate",
+      "role_ru": "Смотритель зоопарка",
+      "name_ru": "Кейт",
+      "ru_with": "с Кейт",
+      "ru_to": "Кейт",
+      "location": "zoo",
+      "gender": "f",
+      "sprite": "kate"
+    },
+    {
+      "id": "npc.leo",
+      "name_en": "Leo",
+      "role_ru": "Мальчик в зоопарке",
+      "name_ru": "Лео",
+      "ru_with": "с Лео",
+      "ru_to": "Лео",
+      "location": "zoo",
+      "gender": "m",
+      "sprite": "leo"
     }
   ]
 }

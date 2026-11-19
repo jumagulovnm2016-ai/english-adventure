@@ -136,6 +136,7 @@ body { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color
 }
 
 .toast {
+  pointer-events: none; /* сообщение только для чтения: касание проходит в мир под ним */
   position: fixed; left: 50%; top: 30%; transform: translateX(-50%); z-index: 50;
   background: var(--ink); color: #fff; font-weight: 800; padding: .7rem 1.2rem; border-radius: 999px;
   animation: pop .2s ease-out; max-width: calc(100% - 2rem); text-align: center;

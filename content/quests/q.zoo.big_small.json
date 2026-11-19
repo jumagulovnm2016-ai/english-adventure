@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "q.zoo.big_small",
+  "location": "zoo",
+  "order": 2,
+  "title": {
+    "junior": "Большой и маленький",
+    "senior": "Размеры зверей"
+  },
+  "intro": {
+    "junior": "Кейт хочет показать тебе разных зверей!",
+    "senior": "Кейт задаст вопросы про размер."
+  },
+  "giver": "npc.kate",
+  "requires": [
+    "q.zoo.welcome"
+  ],
+  "introduces": [
+    "w.big",
+    "w.small",
+    "w.penguin",
+    "w.giraffe",
+    "w.neck",
+    "w.long"
+  ],
+  "practices": [
+    "w.elephant"
+  ],
+  "steps": [
+    {
+      "id": "talk",
+      "type": "dialogue",
+      "dialogue": "d.zoo.kate_big"
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

@@ -289,8 +289,10 @@ await check('навыки считаются по всем квестам', asyn
     const m = window.__learning.canDo(window.__content.skills, false);
     return [...m.entries()].map(([k, v]) => [k, v.status]);
   });
-  assert(r.length === 10, `навыков ${r.length}`);
-  assert(r.every(([, s]) => s !== 'not_started'), JSON.stringify(r));
+  assert(r.length === 16, `навыков ${r.length}`);
+  // навыки юнита 1 (первые 10) — все начаты; навыки площадки и зоопарка — ещё нет
+  const unit1 = r.slice(0, 10);
+  assert(unit1.every(([, s]) => s !== 'not_started'), JSON.stringify(unit1));
 });
 
 await check('Пип: вопрос на повторение → «?» → нажал на Пипа → задание → ответ записан', async () => {

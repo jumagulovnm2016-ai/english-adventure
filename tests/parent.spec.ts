@@ -30,7 +30,7 @@ describe('Отчёт для родителя', () => {
     const quests = new Map([['q.home.blue_cup', { status: 'done' as const, step: null, stars: 3, completedAt: t0.toISOString() }]]);
     const today = dayKey(clock.now());
     const r = buildReport({ content, learning: ls, quests, playtime: new Map([[today, 25 * 60]]), now: clock.now(), micEnabled: false });
-    expect(r.summary).toMatchObject({ questsDone: 1, questsTotal: 12, stars: 3, familiar: 1 });
+    expect(r.summary).toMatchObject({ questsDone: 1, questsTotal: 24, stars: 3, familiar: 1 });
     expect(r.words.learning.map((w) => w.en).sort()).toEqual(['Hello!', 'blue', 'cup']);
     expect(r.words.familiar[0]).toMatchObject({ en: 'red', ru: 'красный' });
     expect(r.hard.map((w) => w.en)).toEqual(['blue']);

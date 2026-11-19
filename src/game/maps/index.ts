@@ -4,8 +4,10 @@ import { HOME } from './home';
 import { STREET } from './street';
 import { SHOP } from './shop';
 import { SCHOOL } from './school';
+import { PLAYGROUND } from './playground';
+import { ZOO } from './zoo';
 
-export const MAPS: Record<Location, MapDef> = { home: HOME, street: STREET, shop: SHOP, school: SCHOOL };
+export const MAPS: Record<Location, MapDef> = { home: HOME, street: STREET, shop: SHOP, school: SCHOOL, playground: PLAYGROUND, zoo: ZOO };
 
 /** В какой локации находится набор мест (zone) — для шагов «найди» в других локациях. */
 export function locationOfSpots(zone: string): Location | null {

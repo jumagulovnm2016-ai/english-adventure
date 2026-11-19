@@ -5,9 +5,9 @@ import { art, hash, D, FLOOR_RES, INK, type Art } from './svg';
 
 const C = 16 * D; // клетка в единицах рисования
 
-type Kind = 'grass' | 'path' | 'water' | 'hedge' | 'wood' | 'tile' | 'wallTop' | 'wallFace' | 'window' | 'door';
+type Kind = 'grass' | 'sand' | 'path' | 'water' | 'hedge' | 'wood' | 'tile' | 'wallTop' | 'wallFace' | 'window' | 'door';
 const KIND: Record<string, Kind> = {
-  g: 'grass', p: 'path', '~': 'water', X: 'hedge', '.': 'wood', ',': 'tile',
+  g: 'grass', s: 'sand', p: 'path', '~': 'water', X: 'hedge', '.': 'wood', ',': 'tile',
   '#': 'wallTop', '=': 'wallFace', w: 'window', D: 'door',
 };
 
@@ -57,6 +57,11 @@ export function floorArt(map: MapDef): Art {
     }
     if (h > 0.93) parts.push(`<circle cx="${x + 20}" cy="${y + 40}" r="3.5" fill="#fff"/><circle cx="${x + 20}" cy="${y + 40}" r="1.5" fill="#ffd23f"/>`);
   }
+
+  // ---------- песок: площадка, вольеры ----------
+  parts.push(shape('sand', 22, 3, '#d9b06a'));
+  parts.push(shape('sand', 22, 0, '#f3dc9c'));
+  for (const { tx, ty } of cells('sand')) if (hash(tx, ty, 7) > 0.5) parts.push(`<circle cx="${tx * C + 10 + hash(tx, ty, 8) * 44}" cy="${ty * C + 10 + hash(tx, ty, 9) * 44}" r="2.2" fill="#d9b06a"/>`);
 
   // ---------- дорожка: кайма, заливка, камешки ----------
   parts.push(shape('path', 18, 4, '#d4a96a'));

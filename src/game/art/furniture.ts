@@ -1,6 +1,8 @@
 // Мебель, здания, деревья. Мировые размеры прежние (ширина = клетки × 16), холст рисования ×4.
 // Вид «сверху-спереди»: видна верхняя плоскость (светлее) и передняя грань (темнее).
 import { art, groundShadow, rgrad, shine, tint, vgrad, ST, ST2, INK, D, type Art } from './svg';
+import { swingArt, slideArt } from './icons';
+import { ANIMALS, animal, type AnimalKind } from './animals';
 
 const WOOD = '#c98a52', WOOD_D = '#9a6034', WOOD_L = '#e8b47c';
 
@@ -210,11 +212,45 @@ function desk(): Art {
     <path d="M18 12 H60" stroke="#fff" stroke-width="3" opacity="0.35" stroke-linecap="round"/>`, vgrad('t', WOOD_L, 0.15, -0.08));
 }
 
+// ---------- юнит 2: площадка и зоопарк ----------
+function iceCreamCart(): Art {
+  return art(32, 34, `${groundShadow(64, 132, 56, 7)}
+    <circle cx="30" cy="118" r="12" fill="#4a4f5c" ${ST}/><circle cx="100" cy="118" r="12" fill="#4a4f5c" ${ST}/>
+    <rect x="12" y="62" width="104" height="52" rx="10" fill="url(#c)" ${ST}/>
+    <rect x="12" y="62" width="104" height="12" rx="6" fill="#fff" ${ST2}/>
+    <circle cx="44" cy="90" r="10" fill="#ff9ec4" ${ST2}/><path d="M36 96 L44 110 L52 96Z" fill="#f2b968" ${ST2}/>
+    <circle cx="80" cy="90" r="10" fill="#8a5a33" ${ST2}/><path d="M72 96 L80 110 L88 96Z" fill="#f2b968" ${ST2}/>
+    <rect x="61" y="18" width="5" height="46" fill="#9aa6b8" ${ST2}/>
+    <path d="M10 26 Q64 -8 118 26 Z" fill="url(#u)" ${ST}/>
+    ${[0, 1, 2, 3].map((i) => `<path d="M${10 + i * 27} 26 Q${23 + i * 27} ${i === 0 || i === 3 ? 10 : 2} ${37 + i * 27} 26" fill="${i % 2 ? '#fff' : '#ff6f91'}" opacity="0.9"/>`).join('')}
+    <path d="M10 26 H118" ${ST}/>`, vgrad('c', '#7fd0f0', 0.25, -0.1) + vgrad('u', '#ff6f91', 0.2, -0.1));
+}
+
+function sandbox(): Art {
+  return art(32, 22, `<rect x="4" y="8" width="120" height="76" rx="10" fill="#c98a52" ${ST}/>
+    <rect x="14" y="16" width="100" height="60" rx="6" fill="url(#s)"/>
+    <path d="M30 50 q8 -10 16 0 M70 40 q6 -8 12 0" fill="none" stroke="#d9b06a" stroke-width="3" stroke-linecap="round"/>
+    <path d="M86 58 L96 44 L100 46 L92 60Z" fill="#e53935" ${ST2}/><path d="M40 62 h14 l-3 10 h-8Z" fill="#3d8bf2" ${ST2}/>`, vgrad('s', '#f6dd9c', 0.15, -0.08));
+}
+
+/** Ограда вольера: столбики и перекладины по краю, внутри пусто — там пол карты и зверь. */
+function pen(tw: number, th: number): Art {
+  const W = tw * 16 * D, H = th * 16 * D;
+  const rail = (x1: number, y1: number, x2: number, y2: number) => `<path d="M${x1} ${y1} L${x2} ${y2}" stroke="${INK}" stroke-width="8" stroke-linecap="round"/><path d="M${x1} ${y1} L${x2} ${y2}" stroke="#c98a52" stroke-width="4.5" stroke-linecap="round"/>`;
+  const posts: string[] = [];
+  for (let x = 6; x <= W - 6; x += 32) posts.push(`<rect x="${x - 4}" y="${H - 34}" width="8" height="30" rx="3" fill="#9a6034" ${ST2}/>`, `<rect x="${x - 4}" y="2" width="8" height="24" rx="3" fill="#9a6034" ${ST2}/>`);
+  for (let y = 10; y <= H - 20; y += 32) posts.push(`<rect x="2" y="${y}" width="8" height="24" rx="3" fill="#9a6034" ${ST2}/>`, `<rect x="${W - 10}" y="${y}" width="8" height="24" rx="3" fill="#9a6034" ${ST2}/>`);
+  return art(tw * 16, th * 16, `${rail(6, 10, W - 6, 10)}${rail(6, 20, W - 6, 20)}${rail(6, 10, 6, H - 12)}${rail(W - 6, 10, W - 6, H - 12)}${posts.join('')}${rail(6, H - 26, W - 6, H - 26)}${rail(6, H - 12, W - 6, H - 12)}`);
+}
+
 export const FURNITURE_ART = {
   rug, table, counter, fridge, sofa, bookshelf, plant, tv,
   house: () => building(6, '#fff1d6', '#ef6a4a', 'house'),
   shop_building: () => building(6, '#cfe9ff', '#5aa9e6', 'shop'),
   school_building: () => building(7, '#f2a77f', '#8a8fa3', 'school'),
   tree, bench, flowers, shelf, shop_counter: shopCounter, blackboard, teacher_desk: teacherDesk, desk,
+  swing: () => swingArt(), slide: () => slideArt(), ice_cream_cart: iceCreamCart, sandbox,
+  pen_5x4: () => pen(5, 4), pen_6x4: () => pen(6, 4), pen_4x4: () => pen(4, 4),
+  ...Object.fromEntries(ANIMALS.map((k) => [`zoo_${k}`, () => animal(k, k === 'elephant' || k === 'giraffe' || k === 'hippo' ? 34 : 26)])) as Record<`zoo_${AnimalKind}`, () => Art>,
 };
 export type FurnitureKey = keyof typeof FURNITURE_ART;

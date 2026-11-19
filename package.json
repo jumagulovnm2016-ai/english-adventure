@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest run && node --test tests/*.test.mjs",
-    "test:e2e": "node tests/e2e/smoke.mjs && node tests/e2e/quests.mjs && node tests/e2e/town.mjs && node tests/e2e/parent.mjs && node tests/e2e/offline.mjs && node tests/e2e/a11y.mjs",
+    "test:e2e": "node tests/e2e/smoke.mjs && node tests/e2e/quests.mjs && node tests/e2e/town.mjs && node tests/e2e/parent.mjs && node tests/e2e/offline.mjs && node tests/e2e/a11y.mjs && node tests/e2e/unit2.mjs",
     "test:perf": "node tests/e2e/perf.mjs",
     "art-preview": "vite-node tools/art-preview.ts art-preview.png",
     "validate-content": "node tools/validate-content.mjs",

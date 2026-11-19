@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "id": "d.zoo.kate_monkey_end",
+  "npc": "npc.kate",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Протяни вещь. Что говорят, когда что-то дают?",
+        "senior": "Что говорят, протягивая вещь?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.here_you_are"
+      },
+      "on_correct": "n2",
+      "on_wrong": "n2"
+    },
+    "n2": {
+      "speaker": "npc.kate",
+      "say": "p.thank_you",
+      "action": {
+        "type": "take_player_item",
+        "item": "it.monkey"
+      },
+      "next": "n3"
+    },
+    "n3": {
+      "speaker": "npc.kate",
+      "say": "p.it_has_a_long_tail",
+      "ru_hint": {
+        "junior": "Что у обезьянки длинное?",
+        "senior": "Что длинное?"
+      },
+      "next": "n4"
+    },
+    "n4": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что у обезьянки длинное?",
+        "senior": "Что длинное?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.tail",
+        "prompt": {
+          "picture": "it.monkey"
+        },
+        "options": [
+          "w.tail",
+          "w.neck",
+          "w.ears"
+        ]
+      },
+      "on_correct": "n5",
+      "on_wrong": "n5"
+    },
+    "n5": {
+      "speaker": "npc.kate",
+      "say": "p.whats_this",
+      "ru_hint": {
+        "junior": "Кейт показывает на птицу.",
+        "senior": "Кто это?"
+      },
+      "next": "n6"
+    },
+    "n6": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.parrot",
+        "prompt": {
+          "picture": "it.parrot"
+        },
+        "options": [
+          "w.parrot",
+          "w.penguin",
+          "w.snake"
+        ]
+      },
+      "on_correct": "n7",
+      "on_wrong": "n7"
+    },
+    "n7": {
+      "speaker": "npc.kate",
+      "say": "p.bye_see_you",
+      "action": {
+        "type": "emote",
+        "emote": "happy"
+      },
+      "next": "n8"
+    },
+    "n8": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попрощайся с Кейт!",
+        "senior": "Попрощайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.goodbye"
+      },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

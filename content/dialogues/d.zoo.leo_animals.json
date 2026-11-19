@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 1,
+  "id": "d.zoo.leo_animals",
+  "npc": "npc.leo",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.leo",
+      "say": "p.hi_again",
+      "action": {
+        "type": "emote",
+        "emote": "wave"
+      },
+      "next": "n2"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Поздоровайся с Лео!",
+        "senior": "Поздоровайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.hello"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n3"
+    },
+    "n3": {
+      "speaker": "npc.leo",
+      "say": "p.whats_this",
+      "ru_hint": {
+        "junior": "Лео показывает на зверя.",
+        "senior": "Кто это?"
+      },
+      "next": "n4"
+    },
+    "n4_model": {
+      "speaker": "npc.leo",
+      "say": "p.its_a_tiger",
+      "next": "n5"
+    },
+    "n4": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.tiger",
+        "prompt": {
+          "picture": "it.tiger"
+        },
+        "options": [
+          "w.tiger",
+          "w.lion",
+          "w.cat"
+        ]
+      },
+      "on_correct": "n5",
+      "on_wrong": "n4_model"
+    },
+    "n5": {
+      "speaker": "npc.leo",
+      "say": "p.whats_this",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "next": "n6"
+    },
+    "n6": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.zebra",
+        "prompt": {
+          "picture": "it.zebra"
+        },
+        "options": [
+          "w.zebra",
+          "w.giraffe",
+          "w.dog"
+        ]
+      },
+      "on_correct": "n7",
+      "on_wrong": "n7"
+    },
+    "n7": {
+      "speaker": "npc.leo",
+      "say": "p.whats_this",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "next": "n8"
+    },
+    "n8": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.bear",
+        "prompt": {
+          "picture": "it.bear"
+        },
+        "options": [
+          "w.bear",
+          "w.dog",
+          "w.monkey"
+        ]
+      },
+      "on_correct": "n9",
+      "on_wrong": "n9"
+    },
+    "n9": {
+      "speaker": "npc.leo",
+      "say": "p.whats_this",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "next": "n10"
+    },
+    "n10": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.hippo",
+        "prompt": {
+          "picture": "it.hippo"
+        },
+        "options": [
+          "w.hippo",
+          "w.elephant",
+          "w.frog"
+        ]
+      },
+      "on_correct": "n11",
+      "on_wrong": "n11"
+    },
+    "n11": {
+      "speaker": "npc.leo",
+      "say": "p.whats_this",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "next": "n12"
+    },
+    "n12": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.crocodile",
+        "prompt": {
+          "picture": "it.crocodile"
+        },
+        "options": [
+          "w.crocodile",
+          "w.snake",
+          "w.frog"
+        ]
+      },
+      "on_correct": "n13",
+      "on_wrong": "n13"
+    },
+    "n13": {
+      "speaker": "npc.leo",
+      "say": "p.whats_this",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "next": "n14"
+    },
+    "n14": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.snake",
+        "prompt": {
+          "picture": "it.snake"
+        },
+        "options": [
+          "w.snake",
+          "w.crocodile",
+          "w.bird"
+        ]
+      },
+      "on_correct": "n15",
+      "on_wrong": "n15"
+    },
+    "n15": {
+      "speaker": "npc.leo",
+      "say": "p.great_animals",
+      "action": {
+        "type": "emote",
+        "emote": "happy"
+      },
+      "next": "n16"
+    },
+    "n16": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попрощайся с Лео!",
+        "senior": "Попрощайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.goodbye"
+      },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

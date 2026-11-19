@@ -1,0 +1,242 @@
+{
+  "schemaVersion": 1,
+  "id": "d.play.mia_actions",
+  "npc": "npc.mia",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.mia",
+      "say": "p.hi_again",
+      "action": {
+        "type": "emote",
+        "emote": "wave"
+      },
+      "next": "n2"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Поздоровайся с Мией!",
+        "senior": "Поздоровайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.hello"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n3"
+    },
+    "n3": {
+      "speaker": "npc.mia",
+      "say": "p.i_can_run",
+      "ru_hint": {
+        "junior": "Смотри на Мию!",
+        "senior": "Что она умеет?"
+      },
+      "action": {
+        "type": "emote",
+        "emote": "run"
+      },
+      "next": "n4"
+    },
+    "n4_model": {
+      "speaker": "npc.mia",
+      "say": "p.i_can_run",
+      "next": "n5"
+    },
+    "n4": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что умеет Мия?",
+        "senior": "Что она делает?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.run",
+        "options": [
+          "w.run",
+          "w.jump",
+          "w.climb"
+        ]
+      },
+      "on_correct": "n5",
+      "on_wrong": "n4_model"
+    },
+    "n5": {
+      "speaker": "npc.mia",
+      "say": "p.i_can_climb",
+      "ru_hint": {
+        "junior": "Мия показывает на горку.",
+        "senior": "Ещё одно умение."
+      },
+      "next": "n6"
+    },
+    "n6_model": {
+      "speaker": "npc.mia",
+      "say": "p.i_can_climb",
+      "next": "n7"
+    },
+    "n6": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что умеет Мия?",
+        "senior": "Что она умеет?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.climb",
+        "options": [
+          "w.climb",
+          "w.swim",
+          "w.run"
+        ]
+      },
+      "on_correct": "n7",
+      "on_wrong": "n6_model"
+    },
+    "n7": {
+      "speaker": "npc.mia",
+      "say": "p.i_can_dance",
+      "ru_hint": {
+        "junior": "А теперь?",
+        "senior": "А это?"
+      },
+      "action": {
+        "type": "emote",
+        "emote": "dance"
+      },
+      "next": "n8"
+    },
+    "n8_model": {
+      "speaker": "npc.mia",
+      "say": "p.i_can_dance",
+      "next": "n9"
+    },
+    "n8": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что умеет Мия?",
+        "senior": "Что она умеет?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.dance",
+        "options": [
+          "w.dance",
+          "w.sing",
+          "w.jump"
+        ]
+      },
+      "on_correct": "n9",
+      "on_wrong": "n8_model"
+    },
+    "n9": {
+      "speaker": "npc.mia",
+      "say": "p.i_can_sing",
+      "ru_hint": {
+        "junior": "Послушай!",
+        "senior": "Ещё одно."
+      },
+      "next": "n10"
+    },
+    "n10_model": {
+      "speaker": "npc.mia",
+      "say": "p.i_can_sing",
+      "next": "n11"
+    },
+    "n10": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что умеет Мия?",
+        "senior": "Что она умеет?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.sing",
+        "options": [
+          "w.sing",
+          "w.dance",
+          "w.swim"
+        ]
+      },
+      "on_correct": "n11",
+      "on_wrong": "n10_model"
+    },
+    "n11": {
+      "speaker": "npc.mia",
+      "say": "p.i_can_swim",
+      "ru_hint": {
+        "junior": "Мия показывает на пруд.",
+        "senior": "Пруд рядом."
+      },
+      "next": "n12"
+    },
+    "n12_model": {
+      "speaker": "npc.mia",
+      "say": "p.i_can_swim",
+      "next": "n13"
+    },
+    "n12": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что умеет Мия?",
+        "senior": "Что она умеет?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.swim",
+        "options": [
+          "w.swim",
+          "w.climb",
+          "w.run"
+        ]
+      },
+      "on_correct": "n13",
+      "on_wrong": "n12_model"
+    },
+    "n13_model": {
+      "speaker": "npc.mia",
+      "say": "p.i_can_run",
+      "next": "n14"
+    },
+    "n13": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Скажи Мие: «Я умею бегать!»",
+        "senior": "Скажи, что умеешь бегать."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.i_can_run",
+        "allowed_types": [
+          "listen_choose",
+          "build_phrase"
+        ]
+      },
+      "on_correct": "n14",
+      "on_wrong": "n13_model"
+    },
+    "n14": {
+      "speaker": "npc.mia",
+      "say": "p.yes_well_done",
+      "action": {
+        "type": "emote",
+        "emote": "happy"
+      },
+      "next": "n15"
+    },
+    "n15": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попрощайся с Мией!",
+        "senior": "Попрощайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.goodbye"
+      },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

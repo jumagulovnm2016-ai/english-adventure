@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "q.play.actions",
+  "location": "playground",
+  "order": 2,
+  "title": {
+    "junior": "Что умеет Мия?",
+    "senior": "Мия показывает умения"
+  },
+  "intro": {
+    "junior": "Мия хочет показать, что она умеет!",
+    "senior": "Мия покажет пять умений. Узнаешь все?"
+  },
+  "giver": "npc.mia",
+  "requires": [
+    "q.play.mia"
+  ],
+  "introduces": [
+    "w.run",
+    "w.climb",
+    "w.dance",
+    "w.sing",
+    "w.swim",
+    "p.i_can_run"
+  ],
+  "practices": [
+    "w.jump"
+  ],
+  "steps": [
+    {
+      "id": "talk",
+      "type": "dialogue",
+      "dialogue": "d.play.mia_actions"
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

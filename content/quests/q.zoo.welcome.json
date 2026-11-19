@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "id": "q.zoo.welcome",
+  "location": "zoo",
+  "order": 1,
+  "title": {
+    "junior": "Добро пожаловать в зоопарк!",
+    "senior": "Экскурсия по зоопарку"
+  },
+  "intro": {
+    "junior": "В зоопарке тебя встречает Кейт. Подойди к ней!",
+    "senior": "Смотритель Кейт покажет зоопарк."
+  },
+  "giver": "npc.kate",
+  "requires": [
+    "q.play.actions"
+  ],
+  "introduces": [
+    "w.lion",
+    "w.elephant",
+    "w.monkey"
+  ],
+  "practices": [
+    "p.hello"
+  ],
+  "steps": [
+    {
+      "id": "talk",
+      "type": "dialogue",
+      "dialogue": "d.zoo.kate_welcome"
+    },
+    {
+      "id": "review",
+      "type": "review_slot",
+      "count": 1,
+      "prefer_topics": [
+        "actions",
+        "animals"
+      ]
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

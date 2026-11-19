@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "id": "q.play.kite",
+  "location": "playground",
+  "order": 3,
+  "title": {
+    "junior": "Воздушный змей",
+    "senior": "Где змей Мии?"
+  },
+  "intro": {
+    "junior": "Мия потеряла игрушку. Подойди к ней!",
+    "senior": "У Мии пропажа. Помоги найти."
+  },
+  "giver": "npc.mia",
+  "requires": [
+    "q.play.actions"
+  ],
+  "introduces": [
+    "w.kite",
+    "w.fly"
+  ],
+  "practices": [
+    "w.red",
+    "w.find",
+    "p.here_you_are"
+  ],
+  "steps": [
+    {
+      "id": "talk_start",
+      "type": "dialogue",
+      "dialogue": "d.play.mia_kite_start"
+    },
+    {
+      "id": "find_kite",
+      "type": "find_item",
+      "zone": "field",
+      "instruction": "p.find_my_kite",
+      "target": "it.kite_red",
+      "distractors": [
+        "it.kite_blue",
+        "it.kite_yellow",
+        "it.bike_red"
+      ],
+      "hint": {
+        "ru": {
+          "junior": "Kite — воздушный змей, red — красный. Нужен красный змей!",
+          "senior": "Два признака: kite и red. Красный велосипед — не то."
+        },
+        "say": "p.find_my_kite"
+      }
+    },
+    {
+      "id": "give_kite",
+      "type": "give_item",
+      "npc": "npc.mia",
+      "item": "it.kite_red",
+      "hint": {
+        "ru": {
+          "junior": "Отнеси змея Мие!",
+          "senior": "Верни змея Мие."
+        }
+      }
+    },
+    {
+      "id": "talk_end",
+      "type": "dialogue",
+      "dialogue": "d.play.mia_kite_end"
+    }
+  ],
+  "rewards": {
+    "stars": 3
+  }
+}

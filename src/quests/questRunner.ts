@@ -4,16 +4,18 @@ import type { QuestDef, StepDef } from '../content/types';
 export type QuestStatus = 'locked' | 'available' | 'active' | 'done';
 export interface QuestState { status: QuestStatus; step: string | null; stars: number; completedAt: string | null }
 
-export function questStatus(q: QuestDef, states: Map<string, QuestState>): QuestStatus {
+/** waived — требования, которые считаются выполненными без прохождения (ребёнок уже знает материал, D50). */
+export function questStatus(q: QuestDef, states: Map<string, QuestState>, waived: ReadonlySet<string> = NONE): QuestStatus {
   const s = states.get(q.id);
   if (s?.status === 'done' || s?.status === 'active') return s.status;
-  return q.requires.every((r) => states.get(r)?.status === 'done') ? 'available' : 'locked';
+  return q.requires.every((r) => states.get(r)?.status === 'done' || waived.has(r)) ? 'available' : 'locked';
 }
+const NONE: ReadonlySet<string> = new Set();
 
 /** Квест, который можно взять у этого персонажа сейчас (активный — в приоритете). */
-export function questForNpc(npcId: string, quests: QuestDef[], states: Map<string, QuestState>): QuestDef | null {
+export function questForNpc(npcId: string, quests: QuestDef[], states: Map<string, QuestState>, waived: ReadonlySet<string> = NONE): QuestDef | null {
   const mine = quests.filter((q) => q.giver === npcId).sort((a, b) => a.order - b.order);
-  return mine.find((q) => questStatus(q, states) === 'active') ?? mine.find((q) => questStatus(q, states) === 'available') ?? null;
+  return mine.find((q) => questStatus(q, states, waived) === 'active') ?? mine.find((q) => questStatus(q, states, waived) === 'available') ?? null;
 }
 
 export class QuestRunner {

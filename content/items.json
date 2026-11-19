@@ -270,6 +270,164 @@
       "pickable": true,
       "name_en": "three apples",
       "name_ru": "три яблока"
+    },
+    {
+      "id": "it.kite_red",
+      "words": [
+        "w.red",
+        "w.kite"
+      ],
+      "sprite": "kite_red",
+      "pickable": true
+    },
+    {
+      "id": "it.kite_blue",
+      "words": [
+        "w.blue",
+        "w.kite"
+      ],
+      "sprite": "kite_blue",
+      "pickable": true
+    },
+    {
+      "id": "it.kite_yellow",
+      "words": [
+        "w.yellow",
+        "w.kite"
+      ],
+      "sprite": "kite_yellow",
+      "pickable": true
+    },
+    {
+      "id": "it.bike_red",
+      "words": [
+        "w.red",
+        "w.bike"
+      ],
+      "sprite": "bike_red",
+      "pickable": true
+    },
+    {
+      "id": "it.bike_blue",
+      "words": [
+        "w.blue",
+        "w.bike"
+      ],
+      "sprite": "bike_blue",
+      "pickable": true
+    },
+    {
+      "id": "it.ice_cream",
+      "words": [
+        "w.ice_cream"
+      ],
+      "sprite": "ice_cream",
+      "pickable": true
+    },
+    {
+      "id": "it.bananas_three",
+      "words": [
+        "w.three",
+        "w.banana"
+      ],
+      "sprite": "bananas_three",
+      "pickable": true
+    },
+    {
+      "id": "it.monkey",
+      "words": [
+        "w.monkey"
+      ],
+      "sprite": "monkey",
+      "pickable": true
+    },
+    {
+      "id": "it.parrot",
+      "words": [
+        "w.parrot"
+      ],
+      "sprite": "parrot",
+      "pickable": true
+    },
+    {
+      "id": "it.penguin",
+      "words": [
+        "w.penguin"
+      ],
+      "sprite": "penguin",
+      "pickable": true
+    },
+    {
+      "id": "it.snake",
+      "words": [
+        "w.snake"
+      ],
+      "sprite": "snake",
+      "pickable": true
+    },
+    {
+      "id": "it.lion",
+      "words": [
+        "w.lion"
+      ],
+      "sprite": "lion",
+      "pickable": false
+    },
+    {
+      "id": "it.tiger",
+      "words": [
+        "w.tiger"
+      ],
+      "sprite": "tiger",
+      "pickable": false
+    },
+    {
+      "id": "it.elephant",
+      "words": [
+        "w.elephant"
+      ],
+      "sprite": "elephant",
+      "pickable": false
+    },
+    {
+      "id": "it.giraffe",
+      "words": [
+        "w.giraffe"
+      ],
+      "sprite": "giraffe",
+      "pickable": false
+    },
+    {
+      "id": "it.zebra",
+      "words": [
+        "w.zebra"
+      ],
+      "sprite": "zebra",
+      "pickable": false
+    },
+    {
+      "id": "it.bear",
+      "words": [
+        "w.bear"
+      ],
+      "sprite": "bear",
+      "pickable": false
+    },
+    {
+      "id": "it.hippo",
+      "words": [
+        "w.hippo"
+      ],
+      "sprite": "hippo",
+      "pickable": false
+    },
+    {
+      "id": "it.crocodile",
+      "words": [
+        "w.crocodile"
+      ],
+      "sprite": "crocodile",
+      "pickable": false
     }
   ]
 }

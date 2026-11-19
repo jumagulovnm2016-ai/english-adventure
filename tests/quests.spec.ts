@@ -72,6 +72,12 @@ describe('Квесты', () => {
   it('в начале доступен только первый квест каждого персонажа без требований', () => {
     for (const q of qs) expect(questStatus(q, states)).toBe(q.requires.length ? 'locked' : 'available');
   });
+  it('знающему ребёнку площадка открыта без квеста Бена (снятое требование, D50)', () => {
+    const mia = c.quest('q.play.mia');
+    expect(questStatus(mia, new Map())).toBe('locked');
+    expect(questStatus(mia, new Map(), new Set(['q.street.animals']))).toBe('available');
+    expect(questForNpc('npc.mia', qs, new Map(), new Set(['q.street.animals']))?.id).toBe('q.play.mia');
+  });
   it('цепочка открывается после выполнения', () => {
     const first = qs.find((q) => q.requires.length === 0)!;
     states.set(first.id, { status: 'done', step: null, stars: 3, completedAt: 'x' });

@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "id": "d.zoo.kate_welcome",
+  "npc": "npc.kate",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.kate",
+      "say": "p.welcome_zoo",
+      "ru_hint": {
+        "junior": "Это зоопарк!",
+        "senior": "Зоопарк."
+      },
+      "action": {
+        "type": "emote",
+        "emote": "wave"
+      },
+      "next": "n2"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Поздоровайся с Кейт!",
+        "senior": "Поздоровайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.hello"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n3"
+    },
+    "n3": {
+      "speaker": "npc.kate",
+      "say": "p.im_kate",
+      "ru_hint": {
+        "junior": "Кейт рассказывает о себе.",
+        "senior": "Кто она?"
+      },
+      "next": "n4"
+    },
+    "n4": {
+      "speaker": "npc.kate",
+      "say": "p.whats_this",
+      "ru_hint": {
+        "junior": "Кейт показывает на вольер.",
+        "senior": "Кто это?"
+      },
+      "next": "n5"
+    },
+    "n5_model": {
+      "speaker": "npc.kate",
+      "say": "p.its_a_lion",
+      "next": "n6"
+    },
+    "n5": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.lion",
+        "prompt": {
+          "picture": "it.lion"
+        },
+        "options": [
+          "w.lion",
+          "w.tiger",
+          "w.cat"
+        ]
+      },
+      "on_correct": "n6",
+      "on_wrong": "n5_model"
+    },
+    "n6": {
+      "speaker": "npc.kate",
+      "say": "p.whats_this",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "next": "n7"
+    },
+    "n7_model": {
+      "speaker": "npc.kate",
+      "say": "p.its_an_elephant",
+      "next": "n8"
+    },
+    "n7": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.elephant",
+        "prompt": {
+          "picture": "it.elephant"
+        },
+        "options": [
+          "w.elephant",
+          "w.hippo",
+          "w.bear"
+        ]
+      },
+      "on_correct": "n8",
+      "on_wrong": "n7_model"
+    },
+    "n8": {
+      "speaker": "npc.kate",
+      "say": "p.whats_this",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "next": "n9"
+    },
+    "n9_model": {
+      "speaker": "npc.kate",
+      "say": "p.its_a_monkey",
+      "next": "n10"
+    },
+    "n9": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Кто это?",
+        "senior": "Кто это?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "w.monkey",
+        "prompt": {
+          "picture": "it.monkey"
+        },
+        "options": [
+          "w.monkey",
+          "w.bear",
+          "w.lion"
+        ]
+      },
+      "on_correct": "n10",
+      "on_wrong": "n9_model"
+    },
+    "n10": {
+      "speaker": "npc.kate",
+      "say": "p.yes_well_done",
+      "action": {
+        "type": "emote",
+        "emote": "happy"
+      },
+      "next": "n11"
+    },
+    "n11": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попрощайся с Кейт!",
+        "senior": "Попрощайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.goodbye"
+      },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

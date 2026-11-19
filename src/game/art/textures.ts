@@ -6,6 +6,7 @@ import { allSprites, DIRS, kidFrameKey, blinkKey } from './catalog';
 import { LOOKS, drawPerson, drawPip, type Dir } from './character';
 import { ITEM_ART, type ItemArtKey } from './items';
 import { floorArt } from './floor';
+import { ICON_ART } from './icons';
 import { artDataUrl, RES, type Art } from './svg';
 import type { MapDef } from '../maps/types';
 
@@ -67,6 +68,11 @@ const urlCache = new Map<string, string>();
 export function itemImageUrl(sprite: string): string {
   const k = `item_${sprite}`;
   if (!urlCache.has(k)) { const f = ITEM_ART[sprite as ItemArtKey]; urlCache.set(k, f ? artDataUrl(f()) : ''); }
+  return urlCache.get(k)!;
+}
+export function iconImageUrl(name: string): string {
+  const k = `icon_${name}`;
+  if (!urlCache.has(k)) { const f = ICON_ART[name]; urlCache.set(k, f ? artDataUrl(f()) : ''); }
   return urlCache.get(k)!;
 }
 export function pipImageUrl(): string {

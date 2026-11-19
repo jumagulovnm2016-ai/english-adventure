@@ -239,6 +239,155 @@
         "min_correct_items": 3,
         "min_days_since_first_seen": 2
       }
+    },
+    {
+      "id": "cd.actions",
+      "order": 11,
+      "level": "preA1",
+      "title_ru": "Знает действия: бегать, прыгать, плавать…",
+      "explain_ru": "Узнал 6 из 8 действий (run, jump, swim, fly, climb, sing, dance, ride), когда они встретились снова — не раньше чем через 2 дня.",
+      "rule": {
+        "type": "accuracy_after_delay",
+        "items": [
+          "w.run",
+          "w.jump",
+          "w.swim",
+          "w.fly",
+          "w.climb",
+          "w.sing",
+          "w.dance",
+          "w.ride"
+        ],
+        "kinds": [
+          "comprehension",
+          "production",
+          "spoken"
+        ],
+        "min_correct_items": 6,
+        "min_days_since_first_seen": 2
+      }
+    },
+    {
+      "id": "cd.i_can",
+      "order": 12,
+      "level": "preA1",
+      "title_ru": "Может сказать, что умеет: «I can run», «Yes, I can»",
+      "explain_ru": "Сам ответил или составил фразу с can 2 раза в разных разговорах, в 2 разных дня.",
+      "rule": {
+        "type": "uses_in_contexts",
+        "items": [
+          "p.yes_i_can",
+          "p.i_can_run"
+        ],
+        "kinds": [
+          "production",
+          "spoken"
+        ],
+        "min_successes": 2,
+        "min_distinct_contexts": 2,
+        "min_distinct_days": 2
+      }
+    },
+    {
+      "id": "cd.weather",
+      "order": 13,
+      "level": "preA1",
+      "title_ru": "Знает погоду: солнечно, дождливо, жарко, холодно",
+      "explain_ru": "Узнал 3 из 4 слов о погоде, когда они встретились снова — не раньше чем через 2 дня.",
+      "rule": {
+        "type": "accuracy_after_delay",
+        "items": [
+          "w.sunny",
+          "w.rainy",
+          "w.hot",
+          "w.cold"
+        ],
+        "kinds": [
+          "comprehension",
+          "production",
+          "spoken"
+        ],
+        "min_correct_items": 3,
+        "min_days_since_first_seen": 2
+      }
+    },
+    {
+      "id": "cd.zoo_animals",
+      "order": 14,
+      "level": "preA1",
+      "title_ru": "Знает зверей зоопарка",
+      "explain_ru": "Узнал 9 из 12 зверей зоопарка, когда они встретились снова — не раньше чем через 2 дня.",
+      "rule": {
+        "type": "accuracy_after_delay",
+        "items": [
+          "w.lion",
+          "w.tiger",
+          "w.elephant",
+          "w.monkey",
+          "w.giraffe",
+          "w.zebra",
+          "w.bear",
+          "w.snake",
+          "w.penguin",
+          "w.hippo",
+          "w.crocodile",
+          "w.parrot"
+        ],
+        "kinds": [
+          "comprehension",
+          "production",
+          "spoken"
+        ],
+        "min_correct_items": 9,
+        "min_days_since_first_seen": 2
+      }
+    },
+    {
+      "id": "cd.body",
+      "order": 15,
+      "level": "preA1",
+      "title_ru": "Знает части тела",
+      "explain_ru": "Правильно показал 5 из 6 частей тела (голова, глаза, уши, нос, рот, ноги), когда они встретились снова — не раньше чем через 2 дня.",
+      "rule": {
+        "type": "accuracy_after_delay",
+        "items": [
+          "p.touch_your_head",
+          "p.touch_your_eyes",
+          "p.touch_your_ears",
+          "p.touch_your_nose",
+          "p.touch_your_mouth",
+          "p.touch_your_legs"
+        ],
+        "kinds": [
+          "comprehension",
+          "production",
+          "spoken"
+        ],
+        "min_correct_items": 5,
+        "min_days_since_first_seen": 2
+      }
+    },
+    {
+      "id": "cd.describe",
+      "order": 16,
+      "level": "preA1",
+      "title_ru": "Может описать: большой, маленький, длинный",
+      "explain_ru": "Верно ответил про big, small и long, когда они встретились снова — не раньше чем через 2 дня.",
+      "rule": {
+        "type": "accuracy_after_delay",
+        "items": [
+          "w.big",
+          "w.small",
+          "w.long"
+        ],
+        "kinds": [
+          "comprehension",
+          "production",
+          "spoken"
+        ],
+        "min_correct_items": 3,
+        "min_days_since_first_seen": 2
+      }
     }
   ]
 }

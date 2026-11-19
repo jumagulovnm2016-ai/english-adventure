@@ -1,6 +1,7 @@
 // Предметы 16×16 единиц мира (холст рисования 64×64). Названия совпадают с полем sprite в content/items.json.
 // Главное требование — узнаваемость без подписи: ребёнок отвечает по картинке.
 import { art, groundShadow, rgrad, shine, vgrad, tint, ST, ST2, INK, type Art } from './svg';
+import { ANIMALS, animal, type AnimalKind } from './animals';
 
 const item = (body: string, defs = ''): Art => art(16, 16, body, defs);
 
@@ -252,6 +253,45 @@ function apples3() {
   return item(`${groundShadow(32, 60, 26)}${apple(20, 44, 0.62)}${apple(44, 44, 0.62)}${apple(32, 25, 0.62)}`, appleDefs);
 }
 
+// ---------- юнит 2: площадка ----------
+function kite(base: string) {
+  return item(`${groundShadow(36, 60, 14, 3)}
+    <path d="M32 40 Q26 48 32 52 Q38 56 34 62" fill="none" stroke="${INK}" stroke-width="1.8"/>
+    <path d="M27 48 l-4 -2 l1 4Z M35 55 l4 -2 l-1 4Z" fill="${tint(base, -0.1)}" ${ST2}/>
+    <path d="M32 4 L50 22 L32 40 L14 22Z" fill="url(#c)" ${ST}/>
+    <path d="M32 4 V40 M14 22 H50" stroke="${tint(base, -0.35)}" stroke-width="2"/>
+    <path d="M32 4 L50 22 L32 22Z" fill="#fff" opacity="0.25"/>`,
+  vgrad('c', base, 0.3, -0.12));
+}
+
+function bike(base: string) {
+  const wheel = (cx: number) => `<circle cx="${cx}" cy="44" r="11" fill="none" stroke="${INK}" stroke-width="5"/><circle cx="${cx}" cy="44" r="11" fill="none" stroke="#4a4f5c" stroke-width="2.5"/><circle cx="${cx}" cy="44" r="2.5" fill="${INK}"/><path d="M${cx - 9} 44 H${cx + 9} M${cx} 35 V53" stroke="#9aa6b8" stroke-width="1.2"/>`;
+  return item(`${groundShadow(32, 58, 26, 4)}${wheel(15)}${wheel(49)}
+    <path d="M15 44 L27 26 L44 26 L49 44 M27 26 L32 44 L44 26 M32 44 L15 44" fill="none" stroke="${INK}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M15 44 L27 26 L44 26 L49 44 M27 26 L32 44 L44 26 M32 44 L15 44" fill="none" stroke="${base}" stroke-width="3.6" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M24 20 H32" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>
+    <path d="M27 26 L26 20" stroke="${INK}" stroke-width="2.5"/>
+    <path d="M44 26 L42 16 L48 14" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>`);
+}
+
+function iceCream() {
+  return item(`${groundShadow(32, 60, 10)}
+    <path d="M20 30 L32 60 L44 30Z" fill="url(#w)" ${ST}/>
+    <path d="M24 36 L38 50 M30 32 L42 42 M22 34 L34 46" stroke="#b07a3a" stroke-width="1.6" opacity="0.8"/>
+    <circle cx="32" cy="22" r="14" fill="url(#c)" ${ST}/>
+    <path d="M18 26 Q22 32 26 27 Q30 33 34 28 Q38 33 42 27 Q45 30 46 25" fill="url(#c)" ${ST2}/>
+    <circle cx="32" cy="8" r="4.5" fill="#e53935" ${ST2}/>
+    ${[[25, 18, '#3d8bf2'], [36, 16, '#ffd23f'], [30, 24, '#5fbf45'], [39, 23, '#fff']].map(([x, y, c]) => `<rect x="${x}" y="${y}" width="4" height="1.8" rx="0.9" fill="${c}"/>`).join('')}
+    ${shine(26, 16, 2.6, 4.5, 30)}`,
+  rgrad('c', '#ff9ec4', 0.3, -0.12) + vgrad('w', '#f2b968', 0.2, -0.15));
+}
+
+function bananas3() {
+  const b = (dx: number, rot: number) => `<g transform="rotate(${rot} 32 54) translate(${dx} 0)"><path d="M28 54 Q22 34 30 14 Q34 12 35 15 Q30 34 36 54Z" fill="url(#c)" ${ST}/></g>`;
+  return item(`${groundShadow(32, 60, 20)}${b(-8, -18)}${b(8, 18)}${b(0, 0)}
+    <rect x="27" y="50" width="10" height="8" rx="3" fill="#8a6a2a" ${ST2}/>`, vgrad('c', '#ffe14d', 0.3, -0.12));
+}
+
 const BLUE = '#2f7de1', RED = '#e53935', GREEN = '#3dae4a', YELLOW = '#ffcc1f';
 
 export const ITEM_ART = {
@@ -272,5 +312,9 @@ export const ITEM_ART = {
   book_red: () => book(RED),
   cake,
   lamp_blue: () => lamp(BLUE),
+  kite_red: () => kite(RED), kite_blue: () => kite(BLUE), kite_yellow: () => kite(YELLOW),
+  bike_red: () => bike(RED), bike_blue: () => bike(BLUE),
+  ice_cream: iceCream, bananas_three: bananas3,
+  ...Object.fromEntries(ANIMALS.map((k) => [k, () => animal(k)])) as Record<AnimalKind, () => Art>,
 };
 export type ItemArtKey = keyof typeof ITEM_ART;

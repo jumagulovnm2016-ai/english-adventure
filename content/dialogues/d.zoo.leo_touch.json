@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "id": "d.zoo.leo_touch",
+  "npc": "npc.leo",
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "speaker": "npc.leo",
+      "say": "p.hi_im_leo",
+      "ru_hint": {
+        "junior": "Это мальчик Лео.",
+        "senior": "Это Лео."
+      },
+      "action": {
+        "type": "emote",
+        "emote": "wave"
+      },
+      "next": "n2"
+    },
+    "n2": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Поздоровайся с Лео!",
+        "senior": "Поздоровайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.hello"
+      },
+      "on_correct": "n3",
+      "on_wrong": "n3"
+    },
+    "n3": {
+      "speaker": "npc.leo",
+      "say": "p.lets_play",
+      "ru_hint": {
+        "junior": "Лео предлагает игру: он говорит, а ты показываешь!",
+        "senior": "Игра: слушай и показывай."
+      },
+      "next": "n4"
+    },
+    "n4": {
+      "speaker": "npc.leo",
+      "say": "p.touch_your_head",
+      "next": "n5"
+    },
+    "n5": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что сказал Лео? Выбери картинку.",
+        "senior": "Что попросил Лео?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.touch_your_head",
+        "options": [
+          "p.touch_your_head",
+          "p.touch_your_nose",
+          "p.touch_your_ears"
+        ]
+      },
+      "on_correct": "n6",
+      "on_wrong": "n6"
+    },
+    "n6": {
+      "speaker": "npc.leo",
+      "say": "p.touch_your_nose",
+      "next": "n7"
+    },
+    "n7": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что сказал Лео? Выбери картинку.",
+        "senior": "Что попросил Лео?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.touch_your_nose",
+        "options": [
+          "p.touch_your_nose",
+          "p.touch_your_head",
+          "p.touch_your_ears"
+        ]
+      },
+      "on_correct": "n8",
+      "on_wrong": "n8"
+    },
+    "n8": {
+      "speaker": "npc.leo",
+      "say": "p.touch_your_ears",
+      "next": "n9"
+    },
+    "n9": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что сказал Лео? Выбери картинку.",
+        "senior": "Что попросил Лео?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.touch_your_ears",
+        "options": [
+          "p.touch_your_ears",
+          "p.touch_your_head",
+          "p.touch_your_nose"
+        ]
+      },
+      "on_correct": "n10",
+      "on_wrong": "n10"
+    },
+    "n10": {
+      "speaker": "npc.leo",
+      "say": "p.touch_your_eyes",
+      "next": "n11"
+    },
+    "n11": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что сказал Лео? Выбери картинку.",
+        "senior": "Что попросил Лео?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.touch_your_eyes",
+        "options": [
+          "p.touch_your_eyes",
+          "p.touch_your_head",
+          "p.touch_your_nose"
+        ]
+      },
+      "on_correct": "n12",
+      "on_wrong": "n12"
+    },
+    "n12": {
+      "speaker": "npc.leo",
+      "say": "p.touch_your_mouth",
+      "next": "n13"
+    },
+    "n13": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что сказал Лео? Выбери картинку.",
+        "senior": "Что попросил Лео?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.touch_your_mouth",
+        "options": [
+          "p.touch_your_mouth",
+          "p.touch_your_head",
+          "p.touch_your_nose"
+        ]
+      },
+      "on_correct": "n14",
+      "on_wrong": "n14"
+    },
+    "n14": {
+      "speaker": "npc.leo",
+      "say": "p.touch_your_legs",
+      "next": "n15"
+    },
+    "n15": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Что сказал Лео? Выбери картинку.",
+        "senior": "Что попросил Лео?"
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.touch_your_legs",
+        "options": [
+          "p.touch_your_legs",
+          "p.touch_your_head",
+          "p.touch_your_nose"
+        ]
+      },
+      "on_correct": "n16",
+      "on_wrong": "n16"
+    },
+    "n16": {
+      "speaker": "npc.leo",
+      "say": "p.yes_well_done",
+      "action": {
+        "type": "emote",
+        "emote": "dance"
+      },
+      "next": "n17"
+    },
+    "n17": {
+      "speaker": "player",
+      "ru_hint": {
+        "junior": "Попрощайся с Лео!",
+        "senior": "Попрощайся."
+      },
+      "task": {
+        "type": "auto",
+        "target": "p.goodbye"
+      },
+      "on_correct": "end",
+      "on_wrong": "end"
+    }
+  }
+}

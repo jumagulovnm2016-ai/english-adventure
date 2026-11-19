@@ -23,6 +23,7 @@ import { WorldScene, type WorldSceneDeps } from './game/scenes/WorldScene';
 import { MAPS } from './game/maps';
 import type { Exit } from './game/maps/types';
 import { prepareArt, prepareFloor, personImageUrl, pipImageUrl } from './game/art/textures';
+import { visualFor } from './ui/visuals';
 import { ItemCard } from './ui/itemCard';
 import { SettingsPanel } from './ui/settingsPanel';
 import { DialogueBox } from './ui/dialogueBox';
@@ -228,8 +229,13 @@ async function boot() {
     $('btn-pip').addEventListener('click', () => bus.emit('interact', { kind: 'companion', id: 'pip' }));
 
     const tasks = new TaskController(content, learning, new TaskPanel(audio));
+    // Входная проверка показала, что ребёнок знает слова первого юнита (80% и больше), — площадка и
+    // зоопарк открыты без прохождения всех квестов улицы (D50). Квесты юнита 1 остаются доступными.
+    const placement = await store.getMeta<{ known: number; total: number; skipped: boolean }>('placement');
+    const strongStart = !!placement && !placement.skipped && placement.total > 0 && placement.known / placement.total >= 0.8;
+    const waived: ReadonlySet<string> = new Set(strongStart ? ['q.street.animals'] : []);
     const quests = new QuestController({
-      content, learning, bus, clock, audio, tasks, canListen,
+      content, learning, bus, clock, audio, tasks, canListen, waived: () => waived, location: () => world.location,
       dialogue: new DialogueBox(audio),
       hud: new QuestHud(audio),
       states: questStates,
@@ -305,7 +311,7 @@ async function boot() {
     const start0 = savedWorld && savedWorld.x >= 0 ? { x: savedWorld.x, y: savedWorld.y } : null;
     game.scene.add('world', WorldScene, true, depsFor(loc0, start0));
     // для автотестов
-    Object.assign(window as object, { __game: game, __quests: quests, __learning: learning, __tasks: tasks, __companion: companion, __travel: travel, __maps: MAPS, __content: content, __tracker: tracker, __store: store });
+    Object.assign(window as object, { __game: game, __quests: quests, __learning: learning, __tasks: tasks, __companion: companion, __travel: travel, __maps: MAPS, __content: content, __tracker: tracker, __store: store, __visual: (id: string) => visualFor(content, id).kind });
   }
 }
 
