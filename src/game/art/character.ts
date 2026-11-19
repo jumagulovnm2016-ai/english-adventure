@@ -112,9 +112,11 @@ function hairFront(l: Look, b: Body, dir: Dir): string {
 }
 
 // ---------- лицо ----------
-function face(l: Look, b: Body, dir: Dir): string {
+function face(l: Look, b: Body, dir: Dir, blink = false): string {
   const { cx, headCY: y } = b;
-  const eye = (x: number) => `<ellipse cx="${x}" cy="${y + 5}" rx="3.6" ry="4.6" fill="${INK}"/><circle cx="${x + 1.3}" cy="${y + 3.2}" r="1.5" fill="#fff"/>`;
+  const eye = (x: number) => blink
+    ? `<path d="M${x - 3.6} ${y + 5} Q${x} ${y + 8} ${x + 3.6} ${y + 5}" fill="none" ${ST2}/>`
+    : `<ellipse cx="${x}" cy="${y + 5}" rx="3.6" ry="4.6" fill="${INK}"/><circle cx="${x + 1.3}" cy="${y + 3.2}" r="1.5" fill="#fff"/>`;
   if (dir === 'down') {
     let s = eye(cx - 8.5) + eye(cx + 8.5)
       + `<ellipse cx="${cx - 14}" cy="${y + 12}" rx="4" ry="2.5" fill="#ff8f8f" opacity="0.55"/><ellipse cx="${cx + 14}" cy="${y + 12}" rx="4" ry="2.5" fill="#ff8f8f" opacity="0.55"/>`
@@ -172,14 +174,14 @@ function sideBody(l: Look, b: Body, frame: number): string {
   return legs + torso + arm;
 }
 
-function personRight(l: Look, frame: number): Art {
+function personRight(l: Look, frame: number, blink = false): Art {
   const b = geometry(l, frame);
   const head = `<circle cx="${b.cx + 1}" cy="${b.headCY}" r="${b.headR}" fill="url(#skin)" ${ST}/>
     <circle cx="${b.cx - 9}" cy="${b.headCY + 5}" r="5" fill="${l.skin}" ${ST2}/>`;
-  return art(CHAR_W, b.H / 4, hairBack(l, b, 'right') + sideBody(l, b, frame) + head + hairFront(l, b, 'right') + face(l, b, 'right'), defs(l));
+  return art(CHAR_W, b.H / 4, hairBack(l, b, 'right') + sideBody(l, b, frame) + head + hairFront(l, b, 'right') + face(l, b, 'right', blink), defs(l));
 }
 
-function personFrontBack(l: Look, dir: 'down' | 'up', frame: number): Art {
+function personFrontBack(l: Look, dir: 'down' | 'up', frame: number, blink = false): Art {
   const b = geometry(l, frame);
   const back = dir === 'up';
   const head = `<circle cx="${b.cx}" cy="${b.headCY}" r="${b.headR}" fill="url(#skin)" ${ST}/>`;
@@ -187,7 +189,7 @@ function personFrontBack(l: Look, dir: 'down' | 'up', frame: number): Art {
   const body = back
     ? hairBack(l, b, dir) + frontBody(l, b, frame, true)
     : hairBack(l, b, dir) + frontBody(l, b, frame, false);
-  return art(CHAR_W, b.H / 4, body + ears + head + hairFront(l, b, dir) + face(l, b, dir), defs(l));
+  return art(CHAR_W, b.H / 4, body + ears + head + hairFront(l, b, dir) + face(l, b, dir, blink), defs(l));
 }
 
 function defs(l: Look): string {
@@ -202,6 +204,13 @@ export function drawLook(l: Look, dir: Dir, frame: 0 | 1 | 2): Art {
 
 export function drawPerson(lookKey: string, dir: Dir, frame: 0 | 1 | 2): Art {
   return drawLook(LOOKS[lookKey] ?? LOOKS.kid_1, dir, frame);
+}
+
+/** Стоит и моргнул (для «вверх» лица не видно — моргания нет). */
+export function drawPersonBlink(lookKey: string, dir: Exclude<Dir, 'up'>): Art {
+  const l = LOOKS[lookKey] ?? LOOKS.kid_1;
+  if (dir === 'left') return mirror(personRight(l, 0, true));
+  return dir === 'right' ? personRight(l, 0, true) : personFrontBack(l, 'down', 0, true);
 }
 
 /** Спутник Пип — лисёнок (собственный персонаж). 2 кадра: подпрыгивает и машет хвостом. Смотрит вправо. */

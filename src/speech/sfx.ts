@@ -27,4 +27,6 @@ export const sfx = {
   wrong: () => tone([330, 262], 0.2, 'sine', 0.12),
   pick: () => tone([520, 780], 0.12, 'triangle', 0.15),
   reward: () => tone([523, 659, 784, 1047], 0.22, 'triangle', 0.2),
+  /** Тихий мягкий шаг. */
+  step: () => tone([140 + Math.random() * 40], 0.05, 'sine', 0.05),
 };

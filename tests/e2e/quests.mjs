@@ -106,6 +106,8 @@ async function answer(correct = true) {
 
 /** Пройти диалог: «Дальше» на репликах, правильные ответы на задания — пока открыт диалог/задание. */
 async function playThrough({ stopWhen } = {}) {
+  // герой может ещё идти к персонажу — ждём, пока откроется диалог или задание
+  await page.waitForFunction(() => ['dialogue', 'task', 'quest-intro', 'reward'].some((id) => !document.getElementById(id).hidden), { timeout: 8000 }).catch(() => {});
   for (let i = 0; i < 60; i++) {
     if (stopWhen && (await stopWhen())) return;
     if (await visible('quest-intro')) { await page.click('#qi-go'); await sleep(250); continue; }

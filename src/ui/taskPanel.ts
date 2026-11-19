@@ -5,6 +5,7 @@ import type { Result } from '../learning/types';
 import type { Visual } from './visuals';
 import { matchPieces, matchTyped } from '../learning/matcher';
 import { sfx } from '../speech/sfx';
+import { confetti } from './fx';
 import { $ } from './dom';
 
 export interface Audio { id: string; text: string }
@@ -68,7 +69,9 @@ export class TaskPanel {
 
   async success(chosen?: string) {
     sfx.correct();
-    if (chosen) $('task-body').querySelector(`[data-id="${CSS.escape(chosen)}"]`)?.classList.add('correct');
+    const el = chosen ? $('task-body').querySelector(`[data-id="${CSS.escape(chosen)}"]`) : $('task-feedback');
+    el?.classList.add('correct');
+    confetti(el);
     this.feedback('Отлично! 🎉', 'good');
     $('task-body').querySelectorAll('button, input').forEach((b) => ((b as HTMLButtonElement).disabled = true));
     const v = this.view;

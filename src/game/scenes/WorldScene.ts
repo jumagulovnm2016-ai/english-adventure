@@ -4,8 +4,9 @@
 import Phaser from 'phaser';
 import type { EventBus, GameEvents, TargetKind } from '../../core/events';
 import type { ContentRegistry } from '../../content/registry';
-import { registerTextures, kidFrameKey, ART_SCALE, artScale } from '../art/textures';
+import { registerTextures, kidFrameKey, blinkKey, ART_SCALE, artScale } from '../art/textures';
 import { CHAR_H } from '../art/character';
+import { sfx } from '../../speech/sfx';
 import { hash } from '../art/svg';
 import type { Exit, MapDef } from '../maps/types';
 import { Grid, TILE, type Point } from '../world/grid';
@@ -55,8 +56,8 @@ export class WorldScene extends Phaser.Scene {
   private path: Point[] = [];
   private pendingTarget: Target | null = null;
   private targets: Target[] = [];
-  private npcMarkers = new Map<string, Phaser.GameObjects.Text>();
-  private marker!: Phaser.GameObjects.Text;
+  private npcMarkers = new Map<string, Phaser.GameObjects.Image>();
+  private marker!: Phaser.GameObjects.Image;
   private nearby: Target | null = null;
   private blocked = false;
   private unblockedAt = 0;
@@ -66,7 +67,12 @@ export class WorldScene extends Phaser.Scene {
   private lastCellKey = -1;
   private leaving = false;
   private pip: Phaser.GameObjects.Image | null = null;
-  private pipMarker: Phaser.GameObjects.Text | null = null;
+  private pipMarker: Phaser.GameObjects.Image | null = null;
+  /** «Живость»: моргание героя, пыль из-под ног; calm — у ребёнка включено «меньше движения». */
+  private heroBlinkUntil = 0;
+  private heroNextBlink = 0;
+  private lastPuff = 0;
+  private calm = false;
   private trail: Point[] = [];
   private props: Phaser.GameObjects.Image[] = [];
   private pipPos: Point = { x: 0, y: 0 };
@@ -80,6 +86,8 @@ export class WorldScene extends Phaser.Scene {
     this.nearby = null; this.blocked = false; this.unblockedAt = 0; this.lastFrameAt = 0;
     this.highlighted = null; this.leaving = false; this.carried = null;
     this.pip = null; this.pipMarker = null; this.trail = []; this.props = [];
+    this.heroBlinkUntil = 0; this.heroNextBlink = 0; this.lastPuff = 0;
+    this.calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
   create() {
@@ -100,8 +108,11 @@ export class WorldScene extends Phaser.Scene {
     this.hero = this.add.sprite(0, 0, kidFrameKey(this.deps.look, this.facing, 0)).setOrigin(0.5, 1).setScale(ART_SCALE);
     this.syncHero();
 
-    this.tapMark = this.add.image(0, 0, 'shadow').setTint(0xffe27a).setAlpha(0).setDepth(1).setScale(ART_SCALE);
-    this.marker = this.makeBubble('!', '#ffffff').setVisible(false);
+    this.tapMark = this.add.image(0, 0, 'fx_ring').setAlpha(0).setDepth(1).setScale(ART_SCALE);
+    this.marker = this.makeBubble('ui_look').setVisible(false);
+    // тихие шаги на каждом шаге анимации ходьбы
+    this.hero.on('animationupdate', (_a: unknown, f: Phaser.Animations.AnimationFrame) => { if (/_[12]$/.test(f.textureKey)) sfx.step(); });
+    this.startRipples();
 
     const cam = this.cameras.main;
     cam.setRoundPixels(true);
@@ -148,7 +159,9 @@ export class WorldScene extends Phaser.Scene {
       const look = this.deps.content.npc(npcId).sprite;
       const feet = this.grid.feetOf({ tx: pl.tx, ty: pl.ty });
       const spr = this.add.sprite(feet.x, feet.y + 1, kidFrameKey(look, pl.dir, 0)).setOrigin(0.5, 1).setDepth(feet.y).setScale(ART_SCALE);
-      spr.setData('look', look);
+      spr.setData('look', look).setData('dir', pl.dir).setData('blinkAt', this.time.now + 800 + Math.random() * 4000);
+      // еле заметное «дыхание» — жители не стоят как статуи
+      if (!this.calm) this.tweens.add({ targets: spr, scaleY: ART_SCALE * 1.025, yoyo: true, repeat: -1, duration: 1100 + Math.random() * 500, ease: 'Sine.inOut' });
       this.add.image(feet.x, feet.y, 'shadow').setAlpha(0.22).setDepth(feet.y - 0.5).setName(`shadow_${npcId}`).setScale(ART_SCALE);
       spr.setInteractive({ useHandCursor: true });
       this.grid.setDynamic(pl.tx, pl.ty, true);
@@ -165,7 +178,7 @@ export class WorldScene extends Phaser.Scene {
     const t = this.targets.find((x) => x.kind === 'npc' && x.id === npcId);
     let m = this.npcMarkers.get(npcId);
     if (on && t && !m) {
-      m = this.makeBubble('!', '#ffe27a');
+      m = this.makeBubble('ui_alert');
       this.npcMarkers.set(npcId, m);
     } else if ((!on || !t) && m) {
       m.destroy();
@@ -179,8 +192,10 @@ export class WorldScene extends Phaser.Scene {
     if (!t) return;
     const spr = t.obj as Phaser.GameObjects.Sprite;
     const dir = facingFor(this.pos.x - spr.x, this.pos.y - spr.y, 'down');
-    spr.setTexture(kidFrameKey(spr.getData('look'), dir, 0));
+    spr.setTexture(kidFrameKey(spr.getData('look'), dir, 0)).setData('dir', dir);
     if (emote === 'happy' || emote === 'wave') this.tweens.add({ targets: spr, y: spr.y - 3, yoyo: true, duration: 120, repeat: emote === 'happy' ? 1 : 0 });
+    if (emote === 'happy') this.floatUp('fx_heart', spr.x, spr.y - spr.displayHeight, 3);
+    else if (emote === 'wave') this.floatUp('fx_star', spr.x, spr.y - spr.displayHeight, 2);
   }
 
   /** Разложить предметы квеста «найди» по местам набора spotSet. */
@@ -237,7 +252,10 @@ export class WorldScene extends Phaser.Scene {
   /** Убрать один предмет «найди» (его взяли). */
   removePickable(itemId: string) {
     const t = this.targets.find((x) => x.kind === 'pick' && x.id === itemId);
-    if (t) this.removeTarget(t);
+    if (!t) return;
+    const o = t.obj as Phaser.GameObjects.Image;
+    this.burst('fx_star', o.x, o.y - o.displayHeight / 2, 7);
+    this.removeTarget(t);
   }
 
   /** Предмет в руках героя (рисуется над головой). */
@@ -280,9 +298,63 @@ export class WorldScene extends Phaser.Scene {
   /** Пикселей экрана на CSS-пиксель (холст рисуется в повышенном разрешении, см. main.ts). */
   private get dpr() { return 1 / (this.scale.zoom || 1); }
 
-  private makeBubble(text: string, color: string) {
-    return this.add.text(0, 0, text, { fontFamily: 'Nunito, system-ui, sans-serif', fontSize: '13px', color, stroke: '#3d2b24', strokeThickness: 3.5, fontStyle: '900' })
-      .setOrigin(0.5, 1).setResolution(10).setDepth(10000);
+  /** Значок-пузырь над персонажем или предметом; появляется с «пружинкой». */
+  private makeBubble(key: 'ui_alert' | 'ui_question' | 'ui_look') {
+    const b = this.add.image(0, 0, key).setOrigin(0.5, 1).setDepth(10000).setScale(this.calm ? ART_SCALE : 0);
+    if (!this.calm) this.tweens.add({ targets: b, scale: ART_SCALE, duration: 260, ease: 'Back.out' });
+    return b;
+  }
+
+  // ---------- эффекты ----------
+
+  /** Разлёт звёздочек (взял предмет). */
+  private burst(key: string, x: number, y: number, n: number) {
+    for (let i = 0; i < n; i++) {
+      const a = (Math.PI * 2 * i) / n + Math.random() * 0.5;
+      const img = this.add.image(x, y, key).setDepth(9500).setScale(ART_SCALE * 0.9);
+      this.tweens.add({ targets: img, x: x + Math.cos(a) * 14, y: y + Math.sin(a) * 10 - 6, alpha: 0, scale: ART_SCALE * 0.4, duration: this.calm ? 300 : 650, ease: 'Cubic.out', onComplete: () => img.destroy() });
+    }
+  }
+
+  /** Сердечки/звёздочки поднимаются над головой (персонаж рад). */
+  private floatUp(key: string, x: number, y: number, n: number) {
+    for (let i = 0; i < n; i++) {
+      const img = this.add.image(x + (i - (n - 1) / 2) * 7, y, key).setDepth(9500).setScale(ART_SCALE).setAlpha(0);
+      this.tweens.add({ targets: img, y: y - 14 - i * 2, alpha: { from: 1, to: 0 }, duration: 1000, delay: i * 140, ease: 'Sine.out', onComplete: () => img.destroy() });
+    }
+  }
+
+  /** Облачко пыли из-под ног при ходьбе. */
+  private puff(x: number, y: number) {
+    const img = this.add.image(x + (Math.random() - 0.5) * 6, y, 'fx_puff').setDepth(y - 1).setScale(ART_SCALE * 0.6).setAlpha(0.7);
+    this.tweens.add({ targets: img, y: y - 3, scale: ART_SCALE * 1.1, alpha: 0, duration: 450, onComplete: () => img.destroy() });
+  }
+
+  /** Круги на воде пруда. */
+  private startRipples() {
+    if (this.calm) return;
+    const cells: { tx: number; ty: number }[] = [];
+    this.deps.map.tiles.forEach((row, ty) => [...row].forEach((ch, tx) => { if (ch === '~') cells.push({ tx, ty }); }));
+    if (!cells.length) return;
+    this.time.addEvent({ delay: 650, loop: true, callback: () => {
+      const c = cells[Math.floor(Math.random() * cells.length)];
+      const img = this.add.image(c.tx * TILE + 4 + Math.random() * 8, c.ty * TILE + 4 + Math.random() * 8, 'fx_ripple').setDepth(-900).setScale(ART_SCALE * 0.4).setAlpha(0.9);
+      this.tweens.add({ targets: img, scale: ART_SCALE * 1.2, alpha: 0, duration: 1500, ease: 'Sine.out', onComplete: () => img.destroy() });
+    } });
+  }
+
+  /** Жители моргают в разное время (у стоящих спиной глаз не видно). */
+  private updateBlinks() {
+    const now = this.time.now;
+    for (const t of this.targets) {
+      if (t.kind !== 'npc') continue;
+      const spr = t.obj as Phaser.GameObjects.Sprite;
+      const dir = spr.getData('dir') as Facing;
+      if (dir === 'up' || now < (spr.getData('blinkAt') as number)) continue;
+      const look = spr.getData('look') as string;
+      spr.setTexture(blinkKey(look, dir)).setData('blinkAt', now + 2500 + Math.random() * 3500);
+      this.time.delayedCall(130, () => { if (spr.active && spr.getData('dir') === dir) spr.setTexture(kidFrameKey(look, dir, 0)); });
+    }
   }
 
   private addItemTarget(kind: TargetKind, itemId: string, px: number, py: number, cells: { tx: number; ty: number; tw: number; th: number }, blocksFloor: boolean) {
@@ -433,12 +505,17 @@ export class WorldScene extends Phaser.Scene {
     }
 
     const anim = `${this.deps.look}_walk_${this.facing}`;
+    const t = this.time.now;
     if (moving) {
       if (this.hero.anims.currentAnim?.key !== anim || !this.hero.anims.isPlaying) this.hero.play(anim);
+      if (!this.calm && t - this.lastPuff > 260) { this.lastPuff = t; this.puff(this.pos.x, this.pos.y); }
     } else {
       this.hero.anims.stop();
-      this.hero.setTexture(kidFrameKey(this.deps.look, this.facing, 0));
+      if (t > this.heroNextBlink) { this.heroBlinkUntil = t + 130; this.heroNextBlink = t + 2500 + Math.random() * 3000; }
+      const blink = this.facing !== 'up' && t < this.heroBlinkUntil;
+      this.hero.setTexture(blink ? blinkKey(this.deps.look, this.facing) : kidFrameKey(this.deps.look, this.facing, 0));
     }
+    this.updateBlinks();
     this.syncHero();
     this.checkExit();
     this.updatePip(dt);
@@ -496,14 +573,14 @@ export class WorldScene extends Phaser.Scene {
     if (moving) { const st = Math.min(d, 70 * dt); this.pipPos = { x: this.pipPos.x + (vx / d) * st, y: this.pipPos.y + (vy / d) * st }; }
     const frame = moving && Math.floor(this.time.now / 160) % 2 ? 1 : 0;
     const left = vx < -0.5 || (!moving && this.pos.x < this.pipPos.x);
-    this.pip.setTexture(`pip_${frame}${left ? '_l' : ''}`).setPosition(Math.round(this.pipPos.x), Math.round(this.pipPos.y)).setDepth(this.pipPos.y);
-    if (this.pipMarker) this.pipMarker.setPosition(this.pip.x, this.pip.y - 15 + Math.round(Math.sin(this.time.now / 180) * 1.5));
+    this.pip.setTexture(`pip_${frame}${left ? '_l' : ''}`).setPosition(this.pipPos.x, this.pipPos.y).setDepth(this.pipPos.y);
+    if (this.pipMarker) this.pipMarker.setPosition(this.pip.x, this.pip.y - 15 + Math.sin(this.time.now / 180) * 1.2);
   }
 
   /** «?» над спутником: у него есть вопрос (повторение в мире). */
   setCompanionMarker(on: boolean) {
     if (!this.pip) return;
-    if (on && !this.pipMarker) this.pipMarker = this.makeBubble('?', '#9cc8ff');
+    if (on && !this.pipMarker) this.pipMarker = this.makeBubble('ui_question');
     else if (!on && this.pipMarker) { this.pipMarker.destroy(); this.pipMarker = null; }
   }
 
@@ -516,7 +593,8 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private syncHero() {
-    const x = Math.round(this.pos.x), y = Math.round(this.pos.y);
+    // без округления до единиц мира: при крупном масштабе оно давало рывки по 5–9 пикселей
+    const { x, y } = this.pos;
     this.hero.setPosition(x, y + 1).setDepth(this.pos.y);
     this.heroShadow.setPosition(x, y).setDepth(this.pos.y - 0.5);
     this.carried?.setPosition(x, y - CHAR_H - 1);
@@ -542,14 +620,14 @@ export class WorldScene extends Phaser.Scene {
       if (best && best.kind !== 'npc') (best.obj as Phaser.GameObjects.Image).setTint(0xfff3b0);
       this.deps.bus.emit('nearby-target', best ? { kind: best.kind, id: best.id } : null);
     }
-    const bob = Math.round(Math.sin(this.time.now / 180) * 1.5);
+    const bob = Math.sin(this.time.now / 180) * 1.2;
     if (best && best.kind !== 'npc') {
       this.marker.setVisible(true).setPosition(best.obj.x, best.obj.y - best.obj.displayHeight - 2 + bob);
     } else this.marker.setVisible(false);
   }
 
   private updateMarkers() {
-    const bob = Math.round(Math.sin(this.time.now / 180) * 1.5);
+    const bob = Math.sin(this.time.now / 180) * 1.2;
     for (const [npcId, m] of this.npcMarkers) {
       const t = this.targets.find((x) => x.kind === 'npc' && x.id === npcId);
       if (t) m.setPosition(t.obj.x, t.obj.y - t.obj.displayHeight - 1 + bob);

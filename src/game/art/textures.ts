@@ -2,14 +2,14 @@
 // Спрайты готовятся один раз при запуске (prepareArt), пол — для каждой локации отдельно
 // перед её открытием (prepareFloor): так в памяти держится только пол текущей карты.
 import type Phaser from 'phaser';
-import { allSprites, DIRS, kidFrameKey } from './catalog';
+import { allSprites, DIRS, kidFrameKey, blinkKey } from './catalog';
 import { LOOKS, drawPerson, drawPip, type Dir } from './character';
 import { ITEM_ART, type ItemArtKey } from './items';
 import { floorArt } from './floor';
 import { artDataUrl, RES, type Art } from './svg';
 import type { MapDef } from '../maps/types';
 
-export { kidFrameKey };
+export { kidFrameKey, blinkKey };
 
 /** Масштаб, с которым спрайт выводится в мире (текстура нарисована с запасом в RES раз). */
 export const ART_SCALE = 1 / RES;

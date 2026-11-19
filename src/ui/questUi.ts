@@ -2,13 +2,19 @@
 import type { AudioPlayer } from '../speech/audioPlayer';
 import { sfx } from '../speech/sfx';
 import { $, Modal } from './dom';
+import { bump, confetti } from './fx';
 
 export class QuestHud {
   private sayAudio: { id: string; text: string } | null = null;
   constructor(private audio: AudioPlayer) {
     $('quest-say').addEventListener('click', () => { if (this.sayAudio) void this.audio.speak(this.sayAudio.id, this.sayAudio.text); });
   }
-  setStars(n: number) { $('hud-stars').querySelector('span')!.textContent = String(n); }
+  private stars = -1;
+  setStars(n: number) {
+    $('hud-stars').querySelector('span')!.textContent = String(n);
+    if (this.stars >= 0 && n > this.stars) bump($('hud-stars'));
+    this.stars = n;
+  }
   setGoal(goal: { title: string; text: string; say?: { id: string; text: string } } | null) {
     $('quest-goal').hidden = !goal;
     if (!goal) return;
@@ -43,7 +49,9 @@ export function showQuestIntro(title: string, text: string): Promise<void> {
 export function showReward(args: { stars: number; quest: string; words: { en: string; ru: string; say: () => void }[]; extra?: string }): Promise<void> {
   reward ??= rewardModal();
   sfx.reward();
-  $('rw-stars').textContent = '⭐'.repeat(args.stars) || '✔';
+  // звёзды выпрыгивают по одной
+  const stars = $('rw-stars');
+  stars.replaceChildren(...(args.stars ? Array.from({ length: args.stars }, (_, i) => { const s = document.createElement('span'); s.className = 'rw-star'; s.style.animationDelay = `${0.15 + i * 0.18}s`; s.textContent = '⭐'; return s; }) : [document.createTextNode('✔')]));
   $('rw-quest').textContent = args.quest;
   const box = $('rw-words');
   box.replaceChildren(...args.words.map((w) => {
@@ -56,7 +64,9 @@ export function showReward(args: { stars: number; quest: string; words: { en: st
     return b;
   }));
   $('rw-extra').textContent = args.extra ?? '';
-  return new Promise((r) => reward!.open(r));
+  const done = new Promise<void>((r) => reward!.open(r));
+  requestAnimationFrame(() => confetti(stars, 26));
+  return done;
 }
 
 export const isAnyModalOpen = () => ['card', 'settings', 'quest-intro', 'reward', 'task', 'gate', 'parent', 'limit'].some((id) => !$(id).hidden);

@@ -4,10 +4,12 @@ import { ITEM_ART } from './items';
 import { FURNITURE_ART } from './furniture';
 import { floorArt } from './floor';
 import { MAPS } from '../maps';
-import { LOOKS, drawPerson, drawPip, shadow, type Dir } from './character';
+import { LOOKS, drawPerson, drawPersonBlink, drawPip, shadow, type Dir } from './character';
+import { FX_ART } from './fx';
 
 export const DIRS: Dir[] = ['down', 'up', 'left', 'right'];
 export function kidFrameKey(look: string, dir: Dir, frame: number) { return `${look}_${dir}_${frame}`; }
+export function blinkKey(look: string, dir: Dir) { return dir === 'up' ? kidFrameKey(look, 'up', 0) : `${look}_${dir}_b`; }
 
 /** Все спрайты, кроме пола карт. */
 export function allSprites(): Record<string, Art> {
@@ -16,6 +18,8 @@ export function allSprites(): Record<string, Art> {
   for (const [k, f] of Object.entries(FURNITURE_ART)) out[`furn_${k}`] = f();
   for (const look of Object.keys(LOOKS)) for (const d of DIRS) for (const fr of [0, 1, 2] as const) out[kidFrameKey(look, d, fr)] = drawPerson(look, d, fr);
   out.pip_0 = drawPip(0); out.pip_1 = drawPip(1); out.pip_0_l = drawPip(0, true); out.pip_1_l = drawPip(1, true);
+  for (const look of Object.keys(LOOKS)) for (const d of ['down', 'left', 'right'] as const) out[blinkKey(look, d)] = drawPersonBlink(look, d);
+  for (const [k, f] of Object.entries(FX_ART)) out[k] = f();
   out.shadow = shadow();
   return out;
 }
