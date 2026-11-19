@@ -14,7 +14,7 @@ export interface OptionView { id: string; en: string; ru: string; visual: Visual
 export type TaskView =
   | { mode: 'listen_choose'; title: string; prompt?: Audio; picture?: string; playPromptFirst: boolean; options: OptionView[]; showText: boolean; correctId: string }
   | { mode: 'build_phrase'; title: string; prompt?: Audio; picture?: string; pieces: string[]; shuffled: string[]; answerAudio: Audio; tail?: string }
-  | { mode: 'type_word'; title: string; prompt?: Audio; picture?: string; expected: string; accept: string[]; answerAudio: Audio };
+  | { mode: 'type_word'; title: string; prompt?: Audio; picture?: string; expected: string; accept: string[]; other?: string[]; answerAudio: Audio };
 
 export interface Answer { result: Result; chosen?: string }
 
@@ -224,7 +224,7 @@ export class TaskPanel {
     row.append(input, ok);
     row.addEventListener('submit', (e) => {
       e.preventDefault();
-      const result = matchTyped(input.value, v.expected, v.accept);
+      const result = matchTyped(input.value, v.expected, v.accept, v.other);
       if (result === 'unsure') return;
       this.answer({ result });
     });

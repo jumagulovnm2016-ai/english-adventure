@@ -38,6 +38,7 @@ export class ContentRegistry {
     if (id.startsWith('w.')) { const w = this.word(id); return { id, en: w.en, ru: w.ru, accept: w.accept, topic: w.topic }; }
     const p = this.phrase(id); return { id, en: p.en, ru: p.ru, accept: p.accept, pieces: p.pieces };
   }
+  allWords(): Word[] { return [...this.words.values()]; }
   wordsByTopic(topic: string): Word[] { return [...this.words.values()].filter((w) => w.topic === topic); }
   productivePhrases(): Phrase[] { return [...this.phrases.values()].filter((p) => p.role === 'productive'); }
   topicOf(id: string): string | undefined { return id.startsWith('w.') ? this.words.get(id)?.topic : undefined; }

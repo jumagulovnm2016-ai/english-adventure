@@ -16,7 +16,9 @@ export function shuffle<T>(arr: T[], seed: number): T[] {
 export function buildOptions(content: ContentRegistry, target: string, given: string[] | undefined, count: number, seed: number): string[] {
   if (given?.length) return shuffle(given.includes(target) ? given : [target, ...given], seed);
   const picked: string[] = [target];
-  const add = (id: string) => { if (!picked.includes(id) && picked.length < count) picked.push(id); };
+  // одинаково звучащие варианты (orange-цвет и orange-фрукт) в одном наборе не различить на слух
+  const enOf = (id: string) => content.learnable(id).en.toLowerCase();
+  const add = (id: string) => { if (!picked.includes(id) && picked.length < count && enOf(id) !== enOf(target)) picked.push(id); };
   if (target.startsWith('w.')) {
     const w = content.word(target);
     for (const c of w.confusable ?? []) add(c);

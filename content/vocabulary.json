@@ -264,7 +264,9 @@
       "image": "two.png",
       "accept": [
         "two",
-        "2",
+        "2"
+      ],
+      "asr_accept": [
         "to",
         "too"
       ],
@@ -282,9 +284,10 @@
       "image": "three.png",
       "accept": [
         "three",
-        "3",
-        "free",
-        "tree"
+        "3"
+      ],
+      "asr_accept": [
+        "free"
       ],
       "confusable": [
         "w.two"
@@ -439,7 +442,9 @@
       "image": "four.png",
       "accept": [
         "four",
-        "4",
+        "4"
+      ],
+      "asr_accept": [
         "for"
       ],
       "confusable": [
@@ -472,8 +477,7 @@
       "image": "six.png",
       "accept": [
         "six",
-        "6",
-        "sex"
+        "6"
       ],
       "confusable": [
         "w.seven"
@@ -505,7 +509,9 @@
       "image": "eight.png",
       "accept": [
         "eight",
-        "8",
+        "8"
+      ],
+      "asr_accept": [
         "ate"
       ],
       "confusable": [

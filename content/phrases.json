@@ -310,7 +310,7 @@
     {
       "id": "p.my_cat_is_lost",
       "en": "Oh no! My cat is lost.",
-      "ru": "Ох! Моя кошка потерялась.",
+      "ru": "Ой! Моя кошка потерялась.",
       "level": "preA1",
       "role": "receptive",
       "words": [
@@ -421,7 +421,7 @@
     },
     {
       "id": "p.great_animals",
-      "en": "Great! You know animals!",
+      "en": "Great! You know your animals!",
       "ru": "Здорово! Ты знаешь животных!",
       "level": "preA1",
       "role": "receptive",
@@ -442,7 +442,7 @@
     {
       "id": "p.hello_can_i_help",
       "en": "Hello! Can I help you?",
-      "ru": "Здравствуйте! Чем помочь?",
+      "ru": "Здравствуйте! Чем могу помочь?",
       "level": "preA1",
       "role": "receptive",
       "words": [
@@ -584,7 +584,7 @@
     {
       "id": "p.im_ms_lee",
       "en": "I'm Ms Lee. I'm your teacher.",
-      "ru": "Я мисс Ли. Я твоя учительница.",
+      "ru": "Я мисс Ли. Я ваша учительница.",
       "level": "preA1",
       "role": "receptive",
       "words": [
@@ -866,7 +866,7 @@
     {
       "id": "p.look_it_can_fly",
       "en": "Look! It can fly!",
-      "ru": "Смотри! Он умеет летать!",
+      "ru": "Смотри! Он может летать!",
       "level": "preA1",
       "role": "receptive",
       "words": [

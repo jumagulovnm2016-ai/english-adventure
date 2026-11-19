@@ -93,7 +93,7 @@ PHRASES = [
     P("p.yes_i_can", "Yes, I can.", "Да, умею.", "productive", [], ["Yes,", "I", "can"], ["yes i can", "yes"],
       "Короткий ответ на вопрос с can: Yes, I can — да, умею. «Нет» — No, I can't."),
     P("p.find_my_kite", "Find my kite, please. It's red.", "Найди моего змея, пожалуйста. Он красный.", "receptive", ["w.find", "w.kite", "w.red", "w.please"]),
-    P("p.look_it_can_fly", "Look! It can fly!", "Смотри! Он умеет летать!", "receptive", ["w.fly"]),
+    P("p.look_it_can_fly", "Look! It can fly!", "Смотри! Он может летать!", "receptive", ["w.fly"]),
     P("p.find_my_bike", "Find my bike, please. It's blue.", "Найди мой велосипед, пожалуйста. Он синий.", "receptive", ["w.find", "w.bike", "w.blue", "w.please"]),
     P("p.lets_ride", "Let's ride a bike!", "Давай кататься на велосипеде!", "receptive", ["w.ride", "w.bike"]),
     P("p.its_sunny", "It's sunny.", "Солнечно.", "productive", ["w.sunny"], ["It's", "sunny"], ["it's sunny", "it is sunny", "sunny"]),

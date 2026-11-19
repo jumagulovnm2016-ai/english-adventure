@@ -5,7 +5,7 @@ export type Gender = 'f' | 'm';
 
 export interface Word {
   id: string; en: string; ru: string; topic: string; pos: string; level: 'preA1';
-  image: string; accept?: string[]; confusable?: string[];
+  image: string; accept?: string[]; asr_accept?: string[]; confusable?: string[];
 }
 export interface Phrase {
   id: string; en: string; ru: string; level: 'preA1'; role: 'productive' | 'receptive';

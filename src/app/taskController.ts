@@ -50,7 +50,10 @@ export class TaskController {
       return { mode, view: { mode, title: titleFromContent ?? `Собери: «${t.ru}»`, prompt, picture, pieces, shuffled, answerAudio, tail: tail?.trim() ? tail : undefined } };
     }
     if (mode === 'type_word') {
-      return { mode, view: { mode, title: titleFromContent ?? `Напиши по-английски: «${t.ru}»`, prompt: prompt ?? answerAudio, picture, expected: t.en, accept: t.accept ?? [], answerAudio } };
+      // другие настоящие слова (и созвучия для голоса) не считаем опечаткой: «tree» ≠ «three», «for» ≠ «four»
+      const asr = this.content.isWord(task.target) ? this.content.word(task.target).asr_accept ?? [] : [];
+      const other = [...this.content.allWords().filter((w) => w.id !== task.target).map((w) => w.en), ...asr];
+      return { mode, view: { mode, title: titleFromContent ?? `Напиши по-английски: «${t.ru}»`, prompt: prompt ?? answerAudio, picture, expected: t.en, accept: t.accept ?? [], other, answerAudio } };
     }
     if (mode === 'say_aloud') throw new Error('Режим «скажи вслух» включается только после проверки распознавания на устройстве (D7)');
 

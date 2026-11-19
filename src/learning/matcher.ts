@@ -21,12 +21,17 @@ export function levenshtein(a: string, b: string): number {
   return d[m][n];
 }
 
-/** Набранное слово: допускаем одну опечатку, если слово длиннее 3 букв. */
-export function matchTyped(input: string, expected: string, accept: string[] = []): Result {
+/**
+ * Набранное слово: допускаем одну опечатку, если слово длиннее 3 букв.
+ * other — другие слова словаря: если набрано именно другое настоящее слово («tree» вместо «three»,
+ * «for» вместо «four»), это не опечатка, а ошибка.
+ */
+export function matchTyped(input: string, expected: string, accept: string[] = [], other: string[] = []): Result {
   const got = normalize(input);
   if (!got) return 'unsure';
   const targets = [expected, ...accept].map(normalize);
   if (targets.includes(got)) return 'correct';
+  if (other.map(normalize).includes(got)) return 'wrong';
   if (targets.some((t) => t.length > 3 && levenshtein(got, t) <= 1)) return 'correct';
   return 'wrong';
 }

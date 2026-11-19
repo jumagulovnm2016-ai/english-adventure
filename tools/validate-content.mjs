@@ -100,6 +100,16 @@ for (const w of vocab?.words ?? []) {
   }
 }
 
+// accept/asr_accept не должны засчитывать другое слово словаря («tree» как ответ на «three»)
+{
+  const byEn = new Map();
+  for (const w of vocab?.words ?? []) { const k = w.en.toLowerCase(); byEn.set(k, [...(byEn.get(k) ?? []), w.id]); }
+  for (const w of vocab?.words ?? []) for (const a of [...(w.accept ?? []), ...(w.asr_accept ?? [])]) {
+    const owners = (byEn.get(a.toLowerCase()) ?? []).filter((id) => id !== w.id && index.get(id)?.data.en.toLowerCase() !== w.en.toLowerCase());
+    if (owners.length) err('content/vocabulary.json', `${w.id}: вариант ответа «${a}» — это другое слово словаря (${owners.join(', ')})`);
+  }
+}
+
 // ---------- 5. Задания ----------
 function checkTask(file, path, t) {
   if (t.options && !t.options.includes(t.target)) err(file, `${path}: options не содержат правильный ответ ${t.target}`);

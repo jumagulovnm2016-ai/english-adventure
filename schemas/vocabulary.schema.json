@@ -48,6 +48,10 @@
           "accept": {
             "$ref": "common.schema.json#/$defs/accept"
           },
+          "asr_accept": {
+            "description": "Только для голоса: созвучные слова, которые распознаватель выдаёт вместо нужного (two → to). При вводе с клавиатуры не засчитываются.",
+            "$ref": "common.schema.json#/$defs/accept"
+          },
           "confusable": {
             "description": "С чем часто путают — источник отвлекающих вариантов",
             "type": "array",

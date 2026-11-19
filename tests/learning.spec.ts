@@ -79,6 +79,12 @@ describe('Проверка ответов', () => {
     expect(matchTyped('green', 'blue')).toBe('wrong');
     expect(matchTyped('', 'blue')).toBe('unsure');
   });
+  it('ввод слова: другое настоящее слово — не опечатка', () => {
+    expect(matchTyped('tree', 'three', [], ['tree', 'free'])).toBe('wrong');
+    expect(matchTyped('for', 'four', [], ['for'])).toBe('wrong');
+    expect(matchTyped('thre', 'three', [], ['tree'])).toBe('correct');
+    expect(matchTyped('orange', 'orange', [], ['orange'])).toBe('correct');
+  });
   it('голос: точное совпадение, вариант в составе фразы, путаница, неуверенность', () => {
     expect(matchSpoken([{ text: 'Blue' }], 'blue')).toBe('correct');
     expect(matchSpoken([{ text: "it's blue" }], 'blue')).toBe('correct');
