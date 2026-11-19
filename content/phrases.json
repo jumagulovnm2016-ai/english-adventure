@@ -300,7 +300,7 @@
     {
       "id": "p.hello_dear",
       "en": "Hello, dear!",
-      "ru": "Здравствуй, дорогой!",
+      "ru": "Здравствуй, дружок!",
       "level": "preA1",
       "role": "receptive",
       "words": [
@@ -333,7 +333,7 @@
     {
       "id": "p.bye_dear",
       "en": "Goodbye, dear!",
-      "ru": "До свидания, дорогой!",
+      "ru": "До свидания, дружок!",
       "level": "preA1",
       "role": "receptive",
       "words": [
@@ -918,7 +918,7 @@
     },
     {
       "id": "p.oh_no_its_rainy",
-      "en": "Oh no! It's rainy!",
+      "en": "Oh no! It's raining!",
       "ru": "Ой! Пошёл дождь!",
       "level": "preA1",
       "role": "receptive",

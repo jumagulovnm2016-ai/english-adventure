@@ -97,7 +97,7 @@ PHRASES = [
     P("p.find_my_bike", "Find my bike, please. It's blue.", "Найди мой велосипед, пожалуйста. Он синий.", "receptive", ["w.find", "w.bike", "w.blue", "w.please"]),
     P("p.lets_ride", "Let's ride a bike!", "Давай кататься на велосипеде!", "receptive", ["w.ride", "w.bike"]),
     P("p.its_sunny", "It's sunny.", "Солнечно.", "productive", ["w.sunny"], ["It's", "sunny"], ["it's sunny", "it is sunny", "sunny"]),
-    P("p.oh_no_its_rainy", "Oh no! It's rainy!", "Ой! Пошёл дождь!", "receptive", ["w.rainy"]),
+    P("p.oh_no_its_rainy", "Oh no! It's raining!", "Ой! Пошёл дождь!", "receptive", ["w.rainy"]),
     P("p.its_rainy", "It's rainy.", "Дождливо.", "productive", ["w.rainy"], ["It's", "rainy"], ["it's rainy", "it is rainy", "rainy", "it's raining"]),
     P("p.ice_cream_hello", "Hello! Ice cream?", "Привет! Мороженое?", "receptive", ["w.hello", "w.ice_cream"]),
     P("p.one_ice_cream_please", "One ice cream, please.", "Одно мороженое, пожалуйста.", "productive", ["w.one", "w.ice_cream", "w.please"],
